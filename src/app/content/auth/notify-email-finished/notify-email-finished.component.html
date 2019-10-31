@@ -1,0 +1,18 @@
+<div class="card-wapper center-content">
+    <div *ngIf="is_complete" class="card sm">
+        <div class="card-header">
+            <h4 class="card-title">이메일 인증 완료!</h4>
+        </div>
+        <div class="card-body">
+            <p>{{user_name}}님, 인증한 아이디로 로그인 해주세요.</p>
+        </div>
+    </div>
+    <div *ngIf="!is_complete" class="card sm">
+        <div class="card-header">
+            <h4 class="card-title">이메일 인증 실패!</h4>
+        </div>
+        <div class="card-body">
+            <p>주소를 다시 한번 확인해주세요.</p>
+        </div>
+    </div>
+</div>

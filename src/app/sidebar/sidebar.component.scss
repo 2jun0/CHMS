@@ -1,0 +1,18 @@
+.nav-link{
+	cursor: pointer;
+}
+
+.logo>span {
+	text-transform: none !important;
+}
+
+.sidebar {
+	transition-duration: 0s, 0s !important;
+}
+
+.nav-mobile-menu {
+	display: none;
+	@media screen and (max-width: 991px){
+        display: block;
+    }
+}

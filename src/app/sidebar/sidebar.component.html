@@ -1,0 +1,138 @@
+<div #sidebar class="sidebar" data-image="../assets/img/sidebar-4.jpg">
+    <!--
+Tip 1: You can change the color of the sidebar using: data-color="purple | purpleblue | green | orange | red"
+
+Tip 2: you can also add an image using data-image tag
+-->
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            지원 시스템
+        </div>
+        <ul *ngIf="menuMode=='external-user'" class="nav nav-mobile-menu">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="'/auth/login'">
+                    <span class="no-icon">로그인</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="'/auth/join'">
+                    <span class="no-icon">회원가입</span>
+                </a>
+            </li>
+        </ul>
+        <ul *ngIf="menuMode!='external-user'" class="nav nav-mobile-menu">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="'/account/my'">
+                    <span class="no-icon">{{name}}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="logout()">
+                    <span class="no-icon">로그아웃</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav">
+            <li>
+                <a class="nav-link orange" data-toggle="collapse" href="#projectLists" aria-expanded="true">
+                    <i class="nc-icon nc-bullet-list-67"></i>
+                    <p>프로젝트 관리</p>
+                </a>
+            </li>
+            <li>
+                <div class="collapse" id="projectLists">
+                    <ul class="nav">
+                        <li>
+                            <a class="nav-link" (click)="gotoPublicProjectList()" aria-expanded="false">
+                                <i class="nc-icon nc-single-copy-04"></i>
+                                <p>공개 프로젝트 목록</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" (click)="gotoAllProjectList()" aria-expanded="false">
+                                <i class="nc-icon nc-single-copy-04"></i>
+                                <p>모든 프로젝트 목록</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" (click)="gotoMyProjectList()" aria-expanded="false">
+                                <i class="nc-icon nc-single-copy-04"></i>
+                                <p>참여 프로젝트 목록</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" (click)="gotoManageProjectList()" aria-expanded="false">
+                                <i class="nc-icon nc-single-copy-04"></i>
+                                <p>멘토링 프로젝트 목록</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a class="nav-link purpleblue" data-toggle="collapse" href="#mileage" aria-expanded="true">
+                    <i class="nc-icon nc-bullet-list-67"></i>
+                    <p>마일리지 관리</p>
+                </a>
+            </li>
+            <li>
+                <div class="collapse" id="mileage">
+                    <ul class="nav">
+                        <li>
+                            <a class="nav-link" data-toggle="collapse" href="#input-my-mileage" aria-expanded="true">
+                                <i class="nc-icon nc-bullet-list-67"></i>
+                                <p>My 마일리지 입력</p>
+                            </a>
+                        </li>
+                        <div class="collapse" id="input-my-mileage">
+                            <ul class="nav">
+                                <li>
+                                    <a class="nav-link yellow" aria-expanded="false">
+                                        <i class="nc-icon nc-paper-2"></i>
+                                        <p>참여마일리지</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link yellow" aria-expanded="false">
+                                        <i class="nc-icon nc-paper-2"></i>
+                                        <p>우수마일리지</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link yellow" aria-expanded="false">
+                                        <i class="nc-icon nc-paper-2"></i>
+                                        <p>봉사마일리지</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link yellow" aria-expanded="false">
+                                        <i class="nc-icon nc-paper-2"></i>
+                                        <p>연계전공마일리지</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <li>
+                            <a class="nav-link" aria-expanded="true">
+                                <i class="nc-icon nc-single-copy-04"></i>
+                                <p>My 마일리지 조회</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li *ngIf="menuMode=='admin'">
+                <a class="nav-link" (click)="gotoAllAccountList()" aria-expanded="false">
+                    <i class="nc-icon nc-bullet-list-67"></i>
+                    <p>모든 계정 목록</p>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" (click)="gotoMyAccount()">
+                    <i class="nc-icon nc-circle-09"></i>
+                    <p>내 계정 관리</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

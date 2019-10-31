@@ -1,0 +1,140 @@
+<div class="center-content">
+    <div [formGroup]='updateForm' class="card md t1">
+        <div class="card-header">
+            <h4 class="card-title">내 계정 관리</h4>
+        </div>
+        <div class="card-body">
+            <div class="col">
+                <div class="row item">
+                    <label class="col-md-2">사용자 번호</label>
+                    <div class="col-md-8">
+                        <span>{{user.user_num}}</span>
+                    </div>
+                </div>
+                <div class="row item">
+                    <label class="col-md-2">이름</label>
+                    <div class="col-md-8">
+                        <span *ngIf="!isUpdateMode">{{name.value}}</span>
+                        <input *ngIf="isUpdateMode" formControlName="name" class="form-control"
+                            type="text">
+                    </div>
+                </div>
+                <div *ngIf="user.user_type != 'admin'" class="row item">
+                    <label class="col-md-2">가입일</label>
+                    <div class="col-md-8">
+                        <span>{{formatDate(user.join_date)}}</span>
+                    </div>
+                </div>
+                <ng-container *ngIf="user.user_type == 'student'">
+                    <div class="row item">
+                        <label class="col-md-2">이메일</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.email}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="email" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                    <div class="row item">
+                        <label class="col-md-2">학년</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.year_of_study + "학년"}}</span>
+                            <select *ngIf="isUpdateMode" formControlName="year_of_study" class="form-control">
+                                <option *ngFor="let option of yearsOfStudyOptions" [ngValue]="option.value">{{option.str}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row item">
+                        <label class="col-md-2">전공</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{majorTypes[user.major_type]}}</span>
+                            <select *ngIf="isUpdateMode" formControlName="major_type" class="form-control">
+                                <option *ngFor="let option of majorOptions" [ngValue]="option.value">{{option.str}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="user.user_type == 'mento'">
+                    <div class="row item">
+                        <label class="col-md-2">직장</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.workplace}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="workplace" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                    <div class="row item">
+                        <label class="col-md-2">부서</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.department}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="department" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                    <div class="row item">
+                        <label class="col-md-2">직급</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.job_position}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="job_position" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="user.user_type == 'professor'">
+                    <div class="row item">
+                        <label class="col-md-2">연구분야</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.major}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="major" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                    <div class="row item">
+                        <label class="col-md-2">소속학과</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{majorTypes[user.department_type]}}</span>
+                            <select *ngIf="isUpdateMode" formControlName="department_type" class="form-control">
+                                <option *ngFor="let option of majorOptions" [ngValue]="option.value">{{option.str}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <button *ngIf="!isUpdateMode" class="btn pull-right" (click) = "activateUpdateMode()">수정</button>
+            <button *ngIf="!isUpdateMode" class="btn pull-right" (click) = "openPasswordUpdateModal()">비밀번호 변경</button>
+            <button *ngIf="isUpdateMode" class="btn pull-right" (click) = "updateUser()">저장</button>
+            <button *ngIf="isUpdateMode" class="btn pull-right" (click) = "deactivateUpdateMode()">취소</button>
+        </div>
+    </div>
+</div>
+<!-- 비밀번호 변경 modal -->
+<ng-template #passwordUpdateTemplate>
+    <div class="modal-wapper t1">
+        <div class="modal-header">
+            <h4 class="modal-title">비밀번호 변경</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="closePasswordUpdateModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" [formGroup]='updatePasswordForm'>
+            <div class="row item">
+                <label class="col-md-4">현재 비밀번호 입력</label>
+                <div class="col-md-6">
+                    <input formControlName="cur_password" class="form-control" type="password">
+                </div>
+            </div>
+            <div class="row item">
+                <label class="col-md-4">새 비밀번호 입력</label>
+                <div class="col-md-6">
+                    <input formControlName="new_password" class="form-control" type="password">
+                </div>
+            </div>
+            <div class="row item">
+            <label class="col-md-4">새 비밀번호 재입력</label>
+                <div class="col-md-6">
+                    <input formControlName="new_repeat_password" class="form-control" type="password">
+                </div>
+            </div>
+            <button class="btn pull-right" (click) = "updatePassword()">저장</button>
+        </div>
+    </div>
+</ng-template>

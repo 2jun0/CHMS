@@ -1,0 +1,121 @@
+<!-- peer reviewing -->
+<ng-template #peerReviewTemplate>
+	<div class="modal-header">
+		<h4 *ngIf="isMyMember" class="modal-title">본인평가({{memberIdx+1}}/{{members.length}})</h4>
+		<h4 *ngIf="!isMyMember" class="modal-title">동료평가
+				({{memberIdx+1}}/{{members.length}}) 
+				[{{(members[memberIdx].user)?members[memberIdx].user.name:''}} 
+				{{(members[memberIdx].is_leader)?'팀장':'팀원'}}
+				({{members[memberIdx].user_num}})]</h4>
+		<div class="pull-right">
+			<button type="button" class="close" aria-label="Close" (click)="closePeerReviewModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	</div>
+	<div class="modal-body">
+		<table [formGroup]="peerReviewForm" class="table table-hover table-striped">
+			<colgroup>
+				<col>
+				<col width="60px">
+				<col width="60px">
+				<col width="60px">
+				<col width="60px">
+				<col width="60px">
+			</colgroup>
+			<thead>
+				<tr>
+					<th score="col">질 문 영 역</th>
+					<th score="col">매우 잘했음(5)</th>
+					<th score="col">잘했음(4)</th>
+					<th score="col">보통(3)</th>
+					<th score="col">못했음(2)</th>
+					<th score="col">매우 못했음(1)</th>
+				</tr>
+			</thead>
+			<tbody formGroupName="position">
+				<tr class="gray">
+					<th colspan="6">다음은 PO 1: 기초지식과 관련된 질문 영역입니다.</th>
+				</tr>
+				<tr class="white">
+					<td>1. 수학, 기초과학, 기본소양의 원리에 따라 문제 해결 방법을 제시하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p1" name="p1" formControlName="p1">
+					</td>
+				</tr>
+				<tr class="gray">
+					<th colspan="6">다음은 PO 2: 모델링 능력과 관련된 질문 영역입니다.</th>
+				</tr>
+				<tr class="white">
+					<td>2. 주제에 대한 요구사항을 도출하는데 기여하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p2" name="p2" formControlName="p2">
+					</td>
+				</tr>
+				<tr class="white">
+					<td>3. 요구사항을 모델링 도구로 표현하는데 기여하였다.(수학공식, UML 다이어그램 등)</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p3" name="p3" formControlName="p3">
+					</td>
+				</tr>
+				<tr class="gray">
+					<th colspan="6">다음은 PO 3: 공학도구와 관련된 질문 영역입니다.</th>
+				</tr>
+				<tr class="white">
+					<td>4. 과제를 해결하기 위한 자료 및 정보를 수집하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p4" name="p4" formControlName="p4">
+					</td>
+				</tr>
+				<tr class="white">
+					<td>5. 과제 해결에 사용한 H/W 또는 S/W 도구를 다루는데 능숙하다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p5" name="p5" formControlName="p5">
+					</td>
+				</tr>
+				<tr class="gray">
+					<th colspan="6">다음은 PO 4: 설계 능력과 관련된 질문 영역입니다.</th>
+				</tr>
+				<tr class="white">
+					<td>6. 시스템 설계에 많은 부분을 담당하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p6" name="p6" formControlName="p6">
+					</td>
+				</tr>
+				<tr class="white">
+					<td>7. 과제 설계 과정에서 현실적 제한 조건을 반영하는 방법을 제시하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p7" name="p7" formControlName="p7">
+					</td>
+				</tr>
+				<tr class="gray">
+					<th colspan="6">다음은 PO 5: 협동 능력과 관련된 질문 영역입니다.</th>
+				</tr>
+				<tr class="white">
+					<td>8. 팀원의 역할이 명확하고 그 책임을 완전하게 수행하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p8" name="p8" formControlName="p8">
+					</td>
+				</tr>
+				<tr class="white">
+					<td>9. 팀 회의에서 과제 수행에 대한 의견을 적극적으로 제시하였고, Github로 개발 업무에 참여하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p9" name="p9" formControlName="p9">
+					</td>
+				</tr>
+				<tr class="gray">
+					<th colspan="6">다음은 PO 6: 의사소통 능력과 관련된 질문 영역입니다.</th>
+				</tr>
+				<tr class="white">
+					<td>10. 자신이 맡은 부분을 다른 팀원들에게 이해하기 쉽도록 설명하고 각종 산출물을 충실하게 만들기 위하여 의견을 충분히 제시하였다.</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="p10" name="p10" formControlName="p10">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<button *ngIf="memberIdx < members.length-1" type="button" class="btn pull-right" (click)="nextMember()">다음</button>
+		<button *ngIf="memberIdx == members.length-1" type="button" class="btn pull-right" (click)="submitPeerReview()">제출</button>
+		<button *ngIf="memberIdx > 0" type="button" class="btn pull-right" (click)="preMember()">이전</button>
+	</div>
+</ng-template>

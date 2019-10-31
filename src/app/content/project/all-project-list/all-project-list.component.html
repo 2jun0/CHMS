@@ -1,0 +1,217 @@
+<div class="card-wapper flex">
+    <div class="card left">
+        <div class="card-header">
+            <h4 class="card-title">모든 프로젝트</h4>
+            <button *ngIf="userType === 'student'" class="btn pull-right" [routerLink]="'/project/new'">프로젝트
+                생성</button>
+        </div>
+        <div class="card-body">
+            <button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
+            <ul class="pagination pagination-sm">
+                <li *ngIf="!isFirstPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoFirstPage()">
+                        <i class="material-icons">first_page</i>
+                    </a>
+                </li>
+                <li *ngIf="!isFirstPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoPreviousPageRange()">
+                        <i class="material-icons">chevron_left</i>
+                    </a>
+                </li>
+                <ng-container *ngFor="let i of pageIndexRange">
+                    <li *ngIf="i === pageIndex" class="page-item active">
+                        <a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+                    </li>
+                    <li *ngIf="i !== pageIndex" class="page-item">
+                        <a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+                    </li>
+                </ng-container>
+                <li *ngIf="!isLastPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoNextPageRange()">
+                        <i class="material-icons">chevron_right</i>
+                    </a>
+                </li>
+                <li *ngIf="!isLastPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoLastPage()">
+                        <i class="material-icons">last_page</i>
+                    </a>
+                </li>
+            </ul>
+            <div class="row">
+                <div *ngFor="let project of allProjects" class="col-md-12">
+                    <div class="card project p3" [routerLink]="['/project/detail', project.id]">
+                        <div class="card-header">
+                            <h4 class="card-title project-title">
+                                {{project.kr_title}}
+                            </h4>
+                            <div class="card-category">
+                                <span class="category-item">
+                                    <i class="material-icons">person</i>
+                                    팀장 : {{(project.leader) ? project.leader.name : ''}}
+                                </span>
+                                <span class="category-item">
+                                    <i class="material-icons">access_time</i>
+                                    진행기간 : {{formatDate(project.exec_period.start_date)}} ~
+                                    {{formatDate(project.exec_period.end_date)}}
+                                </span>
+                                <span class="category-item">
+                                    <i class="material-icons">label</i>
+                                    프로젝트 영역 : {{projectAreaTypes[project.project_area_type]}}
+                                </span>
+                                <span class="category-item">
+                                    <i class="material-icons">label</i>
+                                    상태 : {{projectStates[project.project_state]}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>{{project.intro.kr_description}}</p>
+                            <div class="languages">
+                                <span
+                                    *ngFor="let language of project.intro.languages">{{languages[language.type]}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="allProjects.length === 0" class="center-content">
+                    프로젝트 없음!
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isSearchActivated" class="card right search">
+        <div class="card-body">
+            <form [formGroup]='searchForm' class="form-inline form-search" role="form">
+
+                <div class="search-item">
+                    <label class="control-label">프로젝트 검색</label>
+                    <div>
+                        <input formControlName="name" class="form-control search-input" type="text"
+                            (keyup.enter)="gotoPage(0)" placeholder="프로젝트 키워드, 이름">
+                        <button class="btn" (click)="gotoPage(0)">검색</button>
+                    </div>
+                </div>
+
+                <div formGroupName="is_public" class="search-item">
+                    <label class="control-label">프로젝트 공개 여부</label>
+                    <div class="check-wapper">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" value='class' id="is_public1" formControlName="true"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="is_public1">공개</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" value='contest' id="is_public2" formControlName="false"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="is_public2">비공개</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div formGroupName="project_type" class="search-item">
+                    <label class="control-label">프로젝트 종류</label>
+                    <div class="check-wapper">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" value='class' id="project_type1" formControlName="class"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="project_type1">교과목 프로젝트</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" value='contest' id="project_type2" formControlName="contest"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="project_type2">공모전 프로젝트</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" value='others' id="project_type3" formControlName="others"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="project_type3">기타</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="project_type_class.value === true" class="search-item">
+                    <label class="control-label">교과목 이름으로 검색</label>
+                    <div>
+                        <input formControlName="class_name" class="form-control search-input" type="text"
+                            (keyup.enter)="gotoPage(0)" placeholder="교과목 이름">
+                        <button class="btn" (click)="gotoPage(0)">검색</button>
+                    </div>
+                </div>
+
+                <div *ngIf="project_type_contest.value === true" class="search-item">
+                    <label class="control-label">공모전 이름으로 검색</label>
+                    <div>
+                        <input formControlName="contest_name" class="form-control search-input" type="text"
+                            (keyup.enter)="gotoPage(0)" placeholder="공모전 이름">
+                        <button class="btn" (click)="gotoPage(0)">검색</button>
+                    </div>
+                </div>
+
+                <div formGroupName="project_state" class="search-item">
+                    <label class="control-label">프로젝트 상태</label>
+                    <div class="check-wapper">
+                        <div *ngFor="let option of projectStateOptions" class="custom-control custom-checkbox">
+                            <input type="checkbox" value='{{option.value}}' id='{{option.value}}'
+                                formControlName="{{option.value}}" class="custom-control-input" [checked]='true'
+                                (change)="gotoPage(0)">
+                            <label class="custom-control-label" for='{{option.value}}'>{{option.str}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div formGroupName="project_area_type" class="search-item">
+                    <label class="control-label">프로젝트 영역</label>
+                    <div class="check-wapper">
+                        <div *ngFor="let option of projectAreaOptions" class="custom-control custom-checkbox">
+                            <input type="checkbox" value='{{option.value}}' id='{{option.value}}'
+                                formControlName="{{option.value}}" class="custom-control-input" [checked]='true'
+                                (change)="gotoPage(0)">
+                            <label class="custom-control-label" for='{{option.value}}'>{{option.str}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div formGroupName="exec_time" class="search-item">
+                    <label class="control-label">프로젝트 진행시작일</label>
+                    <select formControlName="year" class="form-control year" (change)="gotoPage(0)">
+                        <option *ngFor="let year of yearRange" [ngValue]="year">{{year}}년</option>
+                        <option [ngValue]="'all'" [selected]='true'>모두</option>
+                    </select>
+                    <select formControlName="half" class="form-control half" (change)="gotoPage(0)">
+                        <ng-container *ngIf="year_of_exec_time.value !== 'all'">
+                            <option [ngValue]="'first'">상반기(1~6월)</option>
+                            <option [ngValue]="'second'">하반기(7~12월)</option>
+                        </ng-container>
+                        <option [ngValue]="'all'" [selected]='true'>모두</option>
+                    </select>
+                </div>
+
+                <div formGroupName="mean_member_year_of_study" class="search-item">
+                    <label class="control-label">팀원 평균 학년으로 검색</label>
+                    <div class="check-wapper">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="1year_of_study" formControlName="one"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="1year_of_study">1학년</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="2year_of_study" formControlName="two"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="2year_of_study">2학년</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="3year_of_study" formControlName="three"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="3year_of_study">3학년</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="4year_of_study" formControlName="four"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="4year_of_study">4학년</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

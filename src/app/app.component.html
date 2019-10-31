@@ -1,0 +1,26 @@
+<div class="wrapper" scroll="no">
+    <app-sidebar #sidebar></app-sidebar>
+    <div class="main-panel" #mainPanel> 
+        <!-- Navbar -->
+        <app-topnavi></app-topnavi>
+        <!-- End Navbar -->
+        <app-content (onContentResize)="onContentResize($event)"></app-content>
+        <footer class="footer">
+            <div class="container-fluid">
+                <!-- <nav>
+                    <p class="copyright text-center">
+                        ©2019
+                        <a href="http://www.cbnu.ac.kr">
+                    </p>
+                </nav> -->
+            </div>
+        </footer>
+    </div>
+
+    <div *ngIf="isGoScrollShow" class="go-scroll">
+        <button type="button" (click)="goScrollTop()" class="btn"><i class="nc-icon nc-stre-up"></i></button>
+        <button type="button" (click)="goScrollBottom()" class="btn"><i class="nc-icon nc-stre-down"></i></button>
+    </div>
+    <router-outlet></router-outlet>
+    <router-outlet name="print"></router-outlet>
+</div>

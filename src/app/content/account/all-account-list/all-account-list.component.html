@@ -1,0 +1,182 @@
+<div class="card-wapper flex">
+    <div class="card left">
+        <div class="card-header">
+            <h4 class="card-title">모든 계정 목록(관리자)</h4>
+            <div class="btn-group pull-right" dropdown>
+                <button id="button-basic" dropdownToggle type="button" class="btn dropdown-toggle"
+                        aria-controls="dropdown-basic">사용자 생성<span class="caret"></span>
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                    <ng-container *ngFor="let option of userTypeOptions">
+                        <li *ngIf="option.value !== 'admin'" role="menuitem"><a class="dropdown-item" (click)="newAccount.openModal(option.value)">{{option.str}}</a></li>
+                    </ng-container>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
+            <ul class="pagination pagination-sm">
+                <li *ngIf="!isFirstPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoFirstPage()">
+                        <i class="material-icons">first_page</i>
+                    </a>
+                </li>
+                <li *ngIf="!isFirstPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoPreviousPageRange()">
+                        <i class="material-icons">chevron_left</i>
+                    </a>
+                </li>
+                <ng-container *ngFor="let i of pageIndexRange">
+                    <li *ngIf="i === pageIndex" class="page-item active">
+                        <a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+                    </li>
+                    <li *ngIf="i !== pageIndex" class="page-item">
+                        <a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+                    </li>
+                </ng-container>
+                <li *ngIf="!isLastPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoNextPageRange()">
+                        <i class="material-icons">chevron_right</i>
+                    </a>
+                </li>
+                <li *ngIf="!isLastPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoLastPage()">
+                        <i class="material-icons">last_page</i>
+                    </a>
+                </li>
+            </ul>
+            <div> 
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>성명</th>
+                            <th>사용자 번호(학번)</th>
+                            <th>가입일</th>
+                            <th>학과/소속</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of allUsers" (click)="accountDetail.openModal(user)">
+                            <td>{{userTypes[user.user_type]}}</td>
+                            <td>{{user.name}}</td>
+                            <td>{{user.user_num}}</td>
+                            <td>{{formatDate(user.join_date)}}</td>
+                            <td *ngIf="user.user_type === 'student'">{{majorTypes[user.major_type]}}</td>
+                            <td *ngIf="user.user_type === 'mento'">{{user.workplace}}/{{user.department}}</td>
+                            <td *ngIf="user.user_type === 'professor'">{{majorTypes[user.department_type]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="allUsers.length === 0">
+                    검색 결과 없음!
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isSearchActivated" class="card right search">
+        <div class="card-body">
+            <form [formGroup]='searchForm' class="form-inline form-search" role="form">
+
+                <div class="search-item">
+                    <label class="control-label">이름으로 검색</label>
+                    <div>
+                        <input formControlName="name" class="form-control search-input" type="text"
+                            (keyup.enter)="gotoPage(0)" placeholder="이름">
+                        <button class="btn" (click)="gotoPage(0)">검색</button>
+                    </div>
+                </div>
+
+                <div class="search-item">
+                    <label class="control-label">사용자 번호로 검색</label>
+                    <div>
+                        <input formControlName="user_num" class="form-control search-input" type="number"
+                            (keyup.enter)="gotoPage(0)" placeholder="사용자 번호" min="1">
+                        <button class="btn" (click)="gotoPage(0)">검색</button>
+                    </div>
+                </div>
+
+                <div formGroupName="user_type" class="search-item">
+                    <label class="control-label">사용자 종류</label>
+                    <div class="check-wapper">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" formControlName='student' id="user_type1"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="user_type1">학생</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" formControlName='mento' id="user_type2" class="custom-control-input"
+                                [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="user_type2">멘토</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" formControlName='professor' id="user_type3"
+                                class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+                            <label class="custom-control-label" for="user_type3">교수</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-item">
+                    <label class="control-label">가입 기간</label>
+                    <div class="date-wapper">
+                        <input formControlName="join_date" type="text" class="form-control date" placeholder="기간 선택"
+                            bsDaterangepicker [maxDate]="today" (bsValueChange)="onJoinDateChange($event)"
+                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                        <a class="reset-btn" (click)="clearJoinDate()"><i class="material-icons">clear</i></a>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="false">
+                    <h4 class="search-title">학생 세부 검색</h4>
+                    <div formGroupName="auth_state" class="search-item">
+                        <label class="control-label">이메일 인증 여부</label>
+                        <div class="check-wapper">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" value='authenticated' id="auth_state1"
+                                    formControlName="authenticated" class="custom-control-input" [checked]='false'
+                                    (change)="gotoPage(0)">
+                                <label class="custom-control-label" for="auth_state1">인증</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" value='unauthenticated' id="auth_state2"
+                                    formControlName="unauthenticated" class="custom-control-input" [checked]='false'
+                                    (change)="gotoPage(0)">
+                                <label class="custom-control-label" for="auth_state2">미인증</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div formGroupName="year_of_study" class="search-item">
+                        <label class="control-label">학년으로 검색</label>
+                        <div class="check-wapper">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" id="1year_of_study" formControlName="one"
+                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <label class="custom-control-label" for="1year_of_study">1학년</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" id="2year_of_study" formControlName="two"
+                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <label class="custom-control-label" for="2year_of_study">2학년</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" id="3year_of_study" formControlName="three"
+                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <label class="custom-control-label" for="3year_of_study">3학년</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" id="4year_of_study" formControlName="four"
+                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <label class="custom-control-label" for="4year_of_study">4학년</label>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </form>
+        </div>
+    </div>
+</div>
+<app-account-detail #accountDetail></app-account-detail>
+<app-new-account #newAccount></app-new-account>

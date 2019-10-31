@@ -1,0 +1,18 @@
+{
+    "C": "C",
+    "CPP": "C++",
+    "Java": "Java",
+    "JS": "Javascript",
+    "Python": "Python",
+    "TS": "Typescript",
+    "CS": "C#",
+    "Go": "Go",
+    "VB": "Visual Basic",
+    "Ruby": "Ruby",
+    "PHP": "PHP",
+    "Scala": "Scala",
+    "Kotlin": "Kotlin",
+    "R": "R",
+    "Lua": "Lua",
+    "others": "기타"
+}

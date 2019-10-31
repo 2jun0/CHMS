@@ -1,0 +1,71 @@
+<!-- search prof mento modal -->
+<ng-template #searchProfMentoTemplate>
+	<div class="modal-header">
+		<h4 *ngIf="searchUserType == 'professor'">지도교수 검색</h4>
+		<h4 *ngIf="searchUserType == 'mento'">멘토 검색</h4>
+		<button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+			<ul class="pagination pagination-sm">
+					<li *ngIf="!isFirstPageRange" class="page-item">
+							<a class="page-link" (click)="gotoFirstPage()">
+									<i class="material-icons">first_page</i>
+							</a>
+					</li>
+					<li *ngIf="!isFirstPageRange" class="page-item">
+							<a class="page-link" (click)="gotoPreviousPageRange()">
+									<i class="material-icons">chevron_left</i>
+							</a>
+					</li>
+					<ng-container *ngFor="let i of pageIndexRange">
+							<li *ngIf="i === pageIndex" class="page-item active">
+									<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+							</li>
+							<li *ngIf="i !== pageIndex" class="page-item">
+									<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+							</li>
+					</ng-container>
+					<li *ngIf="!isLastPageRange" class="page-item">
+							<a class="page-link" (click)="gotoNextPageRange()">
+									<i class="material-icons">chevron_right</i>
+							</a>
+					</li>
+					<li *ngIf="!isLastPageRange" class="page-item">
+							<a class="page-link" (click)="gotoLastPage()">
+									<i class="material-icons">last_page</i>
+							</a>
+					</li>
+			</ul>
+			<table class="table table-hover table-striped">
+					<thead>
+							<tr>
+									<th>구분</th>
+									<th>성명</th>
+									<th>사용자 번호</th>
+									<th>학과/소속</th>
+							</tr>
+					</thead>
+					<tbody *ngIf="searchUserType == 'professor'">
+							<tr *ngFor="let user of profMentoUsers" (click)="setProf(user)">
+									<td>{{userTypes[user.user_type]}}</td>
+									<td>{{user.name}}</td>
+									<td>{{user.user_num}}</td>
+									<td>{{user.department_type}}</td>
+							</tr>
+					</tbody>
+					<tbody *ngIf="searchUserType == 'mento'">
+							<tr *ngFor="let user of profMentoUsers" (click)="setMento(user)">
+									<td>{{userTypes[user.user_type]}}</td>
+									<td>{{user.name}}</td>
+									<td>{{user.user_num}}</td>
+									<td>{{user.workplace}}/{{user.department}}</td>
+							</tr>
+					</tbody>
+			</table>
+			<div *ngIf="profMentoUsers.length === 0">
+					검색 결과 없음!
+			</div>
+	</div>
+</ng-template>

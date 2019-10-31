@@ -1,0 +1,80 @@
+<div *ngIf="member.user" class="card member t2 md">
+	<div class="card-header">
+		<h4 class="card-title"><i class="material-icons">face</i>{{member.user.name + ((member.is_leader)?' 팀장':' 팀원')}}
+		</h4>
+		<span *ngIf="isMine" class="extra-tag">내 정보</span> 
+	</div>
+	<div [formGroup]="updateForm" class="card-body">
+		<div class="item row">
+			<label class="col-md-2">이름</label>
+			<div class="col-md-8">
+				<span>{{member.user.name}}</span>
+			</div>
+		</div>
+		<div class="item row">
+			<label class="col-md-2">학번</label>
+			<div class="col-md-8">
+				<span>{{member.user_num}}</span>
+			</div>
+		</div>
+		<div class="item row">
+			<label class="col-md-2">역할</label>
+			<div class="col-md-8">
+				<span *ngIf="!isUpdateMode">{{member.role}}</span>
+				<input *ngIf="isUpdateMode" formControlName="role" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="item row">
+			<label class="col-md-2">기여도</label>
+				<div class="col-md-8">
+					<span *ngIf="!isUpdateMode">{{member.contribution_rate}}</span>
+					<input *ngIf="isUpdateMode" formControlName="contribution_rate" type="number" min="0" max="1" step="0.01" class="form-control">
+				</div>
+		</div>
+		<div class="item row languages">
+			<label class="col-md-2">사용언어</label>
+			<div class="col-md-8" formArrayName='languages'>
+				<ng-container *ngFor="let languageForm of languages.controls; let i = index;">
+					<ng-container [formGroupName]="i">
+						<span *ngIf="!isUpdateMode">
+							{{languageTypes[member.languages[i].type]}}:{{member.languages[i].total_line}}
+						</span>
+						<span *ngIf="isUpdateMode">
+							<div class="update">
+								<select formControlName="type" class="type" (change)="onSelectLanguage()">
+									<ng-container *ngFor="let option of languageOptions">
+										<option [hidden]="selectedLanguageOptions.includes(option)" [ngValue]="option.value">
+											{{option.str}}</option>
+									</ng-container>
+								</select>
+								<span>:</span>
+								<input formControlName="total_line" class="total_line" appAutowidth>
+								<i (click)="delLanguageForm(languageForm)" class="material-icons">clear</i>
+							</div>
+						</span>
+					</ng-container>
+				</ng-container>
+				<button *ngIf="isUpdateMode" (click)="addLanguageForm()" class="btn extra-btn"><i
+						class="material-icons">add</i></button>
+			</div>
+		</div>
+		<div class="item row">
+			<label class="col-md-2">깃허브 URL</label>
+			<div class="col-md-8">
+				<span *ngIf="!isUpdateMode">{{member.github_url}}</span>
+				<input *ngIf="isUpdateMode" formControlName="github_url" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="item row">
+			<label class="col-md-2">참여일</label>
+			<div class="col-md-8">
+				<span>{{formatDate(member.participate_date)}}</span>
+			</div>
+		</div>
+		<ng-container *ngIf="(isMine || isLeader) && ['recruiting','executing','submitting outputs'].includes(project.project_state)">
+			<button *ngIf="!isUpdateMode" class="btn pull-right" (click)="activateUpdateMode()">수정</button>
+			<button *ngIf="isUpdateMode" class="btn pull-right" (click)="updateMember()">저장</button>
+			<button *ngIf="isUpdateMode" class="btn pull-right" (click)="deActivateUpdateMode()">취소</button>
+		</ng-container>
+	</div>
+</div>

@@ -1,0 +1,9 @@
+{
+    "ready" : "준비중",
+    "recruiting" : "모집중",
+    "executing" : "수행중",
+    "submitting outputs" : "산출물 제출중",
+    "peer reviewing" : "동료평가 수행중",
+    "evaluating" : "평가중",
+    "finished" : "종료"
+}

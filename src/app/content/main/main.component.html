@@ -1,0 +1,30 @@
+<div class="center-content">
+        <div class="card xlg">
+                <div class="card-header center-content">
+                    <img class="main-img" src="/assets/img/main-img.jpg" alt="메인 이미지">
+                </div>
+                <div class="card-body">
+                        <h4>공개 프로젝트</h4>
+                        <div *ngIf="isLoad" class="card-wapper small-list">
+                            <div *ngFor="let project of allProjects" class="card xsm project p5" [routerLink]="['/project/detail', project.id]">
+                                <div class="card-header">
+                                    <h4 class="card-title">
+                                        {{project.kr_title}}
+                                    </h4>
+                                    <p class="card-category">
+                                        <span>
+                                            {{project.intro.kr_description}}
+                                        </span>
+                                        <br>
+                                        팀장 : {{(project.leader) ? project.leader.name : ''}}
+                                        <br>
+                                        진행기간 : {{formatDate(project.exec_period.start_date)}} ~ {{formatDate(project.exec_period.end_date)}}
+                                    </p>
+                                </div>
+                                <div class="card-body"></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-fill pull-right" [routerLink]="['/project/public-list',1]">더보기</button>
+                </div>
+        </div>
+</div>

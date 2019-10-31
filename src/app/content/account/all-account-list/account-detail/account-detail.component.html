@@ -1,0 +1,184 @@
+<!-- account detail modal -->
+<ng-template #accountDetailTemplate>
+    <div class="modal-header">
+        <h4 *ngIf="!isUpdateMode" class="modal-title">계정 정보 보기</h4>
+        <h4 *ngIf="isUpdateMode" class="modal-title">계정 정보 수정</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeAccountDetailModal()">
+            <span aria-hidden="true">&times;</span>
+        </button> 
+    </div>
+    <div class="modal-body">
+        <form [formGroup]='userForm'>
+            <table class="table table-hover table-striped">
+
+                <colgroup>
+                    <col width="20%">
+                    <col width="80%">
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">사용자 번호</th>
+                        <td>{{user.user_num}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">성명</th>
+                        <td *ngIf="!isUpdateMode">{{user.name}}</td>
+                        <td *ngIf="isUpdateMode">
+                            <input formControlName="name" class="form-control" type="text"
+                                value="{{user.name}}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">구분</th>
+                        <td>{{userTypes[user.user_type]}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">비밀번호 키값</th>
+                        <td>
+                            {{user.password}}
+                            <button class="btn pull-right" *ngIf="isUpdateMode" (click)="openPasswordUpdateModal()">비밀번호 재설정</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">가입일</th>
+                        <td *ngIf="!isUpdateMode">{{formatDate(user.join_date)}}</td>
+                        <td *ngIf="isUpdateMode">
+                            <input formControlName="join_date" type="text" class="form-control"
+                                placeholder="{{formatDate(user.join_date)}}" bsDatepicker
+                                [maxDate] = "today"
+                                [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green', dateInputFormat: 'YYYY-MM-DD'}">
+                        </td>
+                    </tr>
+                    <ng-container *ngIf="user.user_type === 'student'">
+                        <tr>
+                            <th scope="row">이메일</th>
+                            <td *ngIf="!isUpdateMode">{{user.email}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <input formControlName="email" type="text" class="form-control"
+                                    value="{{user.email}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">이메일 인증 키</th>
+                            <td>{{user.auth_key}}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">이메일 인증 여부</th>
+                            <td *ngIf="!isUpdateMode">{{authStates[user.auth_state]}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <select formControlName="auth_state">
+                                    <option value="authenticated">인증</option>
+                                    <option value="unauthenticated">미인증</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">학년</th>
+                            <td *ngIf="!isUpdateMode">{{user.year_of_study}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <select formControlName="year_of_study" class="form-control">
+                                    <option value="1">1 학년</option>
+                                    <option value="2">2 학년</option>
+                                    <option value="3">3 학년</option>
+                                    <option value="4">4 학년</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">학과</th>
+                            <td *ngIf="!isUpdateMode">{{majorTypes[user.major_type]}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <select formControlName="major_type">
+                                    <option *ngFor="let option of majorOptions" class="form-control"
+                                        [ngValue]="option.value">{{option.str}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="user.user_type === 'mento'">
+                        <tr>
+                            <th scope="row">회사</th>
+                            <td *ngIf="!isUpdateMode">{{user.workplace}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <input formControlName="workplace" type="text" class="form-control" value="{{user.workplace}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">부서</th>
+                            <td *ngIf="!isUpdateMode">{{user.department}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <input formControlName="department" type="text" class="form-control" value="{{user.department}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">직급</th>
+                            <td *ngIf="!isUpdateMode">{{user.job_position}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <input formControlName="job_position" type="text" class="form-control" value="{{user.job_position}}">
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="user.user_type === 'professor'">
+                        <tr>
+                            <th scope="row">연구분야/전공</th>
+                            <td *ngIf="!isUpdateMode">{{user.major}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <input formControlName="major" type="text" class="form-control" value="{{user.major}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">소속 학과</th>
+                            <td *ngIf="!isUpdateMode">{{majorTypes[user.department_type]}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <select formControlName="department_type" class="form-control">
+                                    <option *ngFor="let option of majorOptions"
+                                        [ngValue]="option.value">{{option.str}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </form>
+
+        <button *ngIf="!isUpdateMode" class="btn pull-right" (click)="openConfirmDeleteUserModal()">삭제</button>
+        <button *ngIf="!isUpdateMode" class="btn pull-right" (click)="activateUpdateMode()">수정</button>
+        <button *ngIf="isUpdateMode" class="btn pull-right" (click)="updateUser()">저장</button>
+        <button *ngIf="isUpdateMode" class="btn pull-right" (click)="deactivateUpdateMode()">취소</button>
+    </div>
+</ng-template>
+<ng-template #passwordUpdateTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title">비밀번호 재설정</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closePasswordUpdateModal()">
+            <span aria-hidden="true">&times;</span>
+        </button> 
+    </div>
+    <div class="modal-body text-center" [formGroup]='updatePasswordForm'>
+        <div class="row item">
+            <label class="col-md-4">새 비밀번호 입력</label>
+            <div class="col-md-6">
+                <input formControlName="new_password" class="form-control" type="password">
+            </div>
+        </div>
+        <div class="row item">
+        <label class="col-md-4">새 비밀번호 재입력</label>
+            <div class="col-md-6">
+                <input formControlName="new_repeat_password" class="form-control" type="password">
+            </div>
+        </div>
+        <button class="btn btn-fill" (click) = "updatePassword()">저장</button>
+    </div>
+</ng-template>
+<ng-template #confirmDeleteUserTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title">사용자 삭제</h4>
+    </div>
+    <div class="modal-body text-center">
+        <!-- <p>사용자를 정말로 삭제하시겠습니까?</p>
+        <button type="button" class="btn btn-fill btn-default" (click)="closeConfirmDeleteUserModal()">아니오</button>
+        <button type="button" class="btn btn-fill btn-primary" (click)="deleteUser()">네</button> -->
+        <p>사용자 삭제는 업데이트 중입니다.</p>
+    </div>
+</ng-template>

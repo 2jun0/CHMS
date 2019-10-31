@@ -1,0 +1,115 @@
+<!-- new account modal -->
+<ng-template #newAccountTemplate>
+    <div class="modal-header">
+        <h4 class="modal-title">계정 생성</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeNewAccountModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <form [formGroup]='userForm'>
+            <table class="table table-hover table-striped">
+                <colgroup>
+                    <col width="20%">
+                    <col width="80%">
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">사용자 번호</th>
+                        <td>
+                            <input formControlName="user_num" class="form-control" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">이름</th>
+                        <td>
+                            <input formControlName="name" class="form-control" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">비밀번호</th>
+                        <td>
+                            <input formControlName="password" class="form-control" type="password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">비밀번호 재입력</th>
+                        <td>
+                            <input formControlName="repeat_password" class="form-control" type="password">
+                        </td>
+                    </tr>
+                    <ng-container *ngIf="user_type === 'student'">
+                        <tr>
+                            <th scope="row">이메일</th>
+                            <td>
+                                <input formControlName="email" type="email" class="form-control">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">학년</th>
+                            <td>
+                                <select formControlName="year_of_study">
+                                    <option value="1" class="form-control">1 학년</option>
+                                    <option value="2" class="form-control">2 학년</option>
+                                    <option value="3" class="form-control">3 학년</option>
+                                    <option value="4" class="form-control">4 학년</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">학과</th>
+                            <td>
+                                <select formControlName="major_type">
+                                    <option *ngFor="let option of majorOptions" class="form-control"
+                                    [ngValue]="option.value">{{option.str}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="user_type === 'mento'">
+                        <tr>
+                            <th scope="row">회사</th>
+                            <td>
+                                <input formControlName="workplace" type="text" class="form-control" placeholder="필수 입력 아님">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">부서</th>
+                            <td>
+                                <input formControlName="department" type="text" class="form-control" placeholder="필수 입력 아님">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">직급</th>
+                            <td>
+                                <input formControlName="job_position" type="text" class="form-control" placeholder="필수 입력 아님">
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="user_type === 'professor'">
+                        <tr>
+                            <th scope="row">연구분야/전공</th>
+                            <td>
+                                <input formControlName="major" type="text" class="form-control" placeholder="필수 입력 아님">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">소속 학과</th>
+                            <td>
+                                <select formControlName="department_type">
+                                    <option [selected]="true" class="form-control">없음</option>
+                                    <option *ngFor="let option of majorOptions" class="form-control"
+                                        [ngValue]="option.value">{{option.str}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </form>
+
+        <button class="btn pull-right" (click)="newUser()">생성</button>
+    </div>
+</ng-template>

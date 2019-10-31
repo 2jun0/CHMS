@@ -1,0 +1,50 @@
+<div class="card-wapper center-content">
+    <div class="card md">
+        <div class="card-header">
+            <h4 class="card-title">회원가입</h4>
+        </div>
+        <div class="card-body">
+            <form [formGroup]='joinForm' (ngSubmit)='join()'>
+                <div class="col">
+                    <div class="form-group">
+                        <label>학번</label>
+                        <input formControlName="user_num" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호</label>
+                        <input formControlName="password" type="password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>비밀번호 재확인</label>
+                        <input formControlName="repeat_password" type="password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>이름</label>
+                        <input formControlName="name" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>학년</label>
+                        <select formControlName="year_of_study" class="form-control">
+                            <option *ngFor="let option of yearsOfStudyOptions" [ngValue]="option.value">{{option.str}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>이메일</label>
+                        <input formControlName="email" type="email" class="form-control" placeholder="example@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>전공</label>
+                        <select formControlName="major_type" class="form-control">
+                            <option *ngFor="let option of majorTypeOptions" [ngValue]="option.value">{{option.str}}</option>
+                        </select>
+                    </div>
+                </div>
+                <small class="light-gray1">
+                    이미 아이디가 있으신가요? <a [routerLink]="'/login'">로그인</a>
+                </small>
+                <button type="submit" class="btn btn-fill pull-right">회원가입</button>
+                <div class="clearfix"></div>
+            </form>
+        </div>
+    </div>
+</div>

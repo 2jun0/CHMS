@@ -1,0 +1,80 @@
+<div class="card-wapper flex">
+    <div class="card left">
+        <div class="card-header">
+            <h4 class="card-title">멘토링 프로젝트 목록</h4>
+            <button class="btn pull-right" [routerLink]="'/project/new'">프로젝트 생성</button>
+        </div>
+        <div class="card-body">
+            <ul class="pagination pagination-sm">
+                <li *ngIf="!isFirstPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoFirstPage()">
+                        <i class="material-icons">first_page</i>
+                    </a>
+                </li>
+                <li *ngIf="!isFirstPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoPreviousPageRange()">
+                        <i class="material-icons">chevron_left</i>
+                    </a>
+                </li>
+                <ng-container *ngFor="let i of pageIndexRange">
+                    <li *ngIf="i === pageIndex" class="page-item active">
+                        <a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+                    </li>
+                    <li *ngIf="i !== pageIndex" class="page-item">
+                        <a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+                    </li>
+                </ng-container>
+                <li *ngIf="!isLastPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoNextPageRange()">
+                        <i class="material-icons">chevron_right</i>
+                    </a>
+                </li>
+                <li *ngIf="!isLastPageRange" class="page-item">
+                    <a class="page-link" (click)="gotoLastPage()">
+                        <i class="material-icons">last_page</i>
+                    </a>
+                </li>
+            </ul>
+            <div class="row">
+                <div *ngFor="let project of myProjects" class="col-md-12">
+                    <div class="card project p3" [routerLink]="['/project/detail', project.id]">
+                        <div class="card-header">
+                            <h4 class="card-title project-title">
+                                {{project.kr_title}}
+                            </h4>
+                            <div class="card-category">
+                                <span class="category-item">
+                                    <i class="material-icons">person</i>
+                                    팀장 : {{(project.leader) ? project.leader.name : ''}}
+                                </span>
+                                <span class="category-item">
+                                    <i class="material-icons">access_time</i>
+                                    진행기간 : {{formatDate(project.exec_period.start_date)}} ~
+                                    {{formatDate(project.exec_period.end_date)}}
+                                </span>
+                                <span class="category-item">
+                                    <i class="material-icons">label</i>
+                                    프로젝트 영역 : {{projectAreaTypes[project.project_area_type]}}
+                                </span>
+                                <span class="category-item">
+                                    <i class="material-icons">label</i>
+                                    상태 : {{projectStates[project.project_state]}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>{{project.intro.kr_description}}</p>
+                            <div class="languages">
+                                <span
+                                    *ngFor="let language of project.intro.languages">{{languages[language.type]}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="myProjects.length === 0" class="center-content">
+                    프로젝트 없음!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

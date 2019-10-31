@@ -1,0 +1,57 @@
+<!-- submit outputs modal -->
+<ng-template #submitOutputsTemplate>
+	<div class="modal-header">
+		<h4 class="modal-title">프로젝트 산출물 제출</h4>
+		<div class="pull-right">
+			<span>파일 용량은 최대 50mb까지 올릴 수 있습니다.</span>
+			<button type="button" class="close" aria-label="Close" (click)="closeSubmitOutputsModal()">
+					<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	</div>
+	<div class="modal-body">
+		<table [formGroup]="submitForm" class="table table-hover table-striped">
+			<colgroup>
+				<col width="20%">
+				<col width="80%">
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row">깃허브 주소</th>
+					<td><input formControlName="github_url" class="form-control" type="text"></td>
+				</tr>
+				<tr>
+					<th scope="row">발표자료(.ppt)</th>
+					<td>
+						<div class="custom-file">
+							<input accept=".ppt, .pptx" class="custom-file-input" type="file" id="inputPptFile" #ppt_file
+								(change)="onPptFileChange(ppt_file.files)">
+							<label *ngIf="ppt_file.files && ppt_file.files.length > 0" class="custom-file-label"
+								for="inputPptFile">{{ppt_file.files[0].name}}</label>
+							<label *ngIf="!ppt_file.files || ppt_file.files.length == 0" class="custom-file-label"
+								for="inputPptFile">파일 선택</label>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">설계서 및 기타문서(.zip)</th>
+					<td>
+						<div class="custom-file">
+							<input accept=".zip" class="custom-file-input" type="file" id="inputZipFile" #zip_file
+								(change)="onZipFileChange(zip_file.files)">
+							<label *ngIf="zip_file.files && zip_file.files.length > 0" class="custom-file-label"
+								for="inputZipFile">{{zip_file.files[0].name}}</label>
+							<label *ngIf="!zip_file.files || zip_file.files.length == 0" class="custom-file-label"
+								for="inputZipFile">파일 선택</label>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">ucc 동영상 주소</th>
+					<td><input formControlName="url_ucc" class="form-control" type="text"></td>
+				</tr>
+			</tbody>
+		</table>
+		<button type="button" class="btn pull-right" (click)="submitOutputs()">제출</button>
+	</div>
+</ng-template>

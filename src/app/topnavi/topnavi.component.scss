@@ -1,0 +1,21 @@
+.navbar-brand {
+    @media screen and (max-width: 991px){
+        padding: 0px;
+    }
+}
+
+.navbar-brand > img {
+    width: 138px;
+    height: 30px;
+
+    @media screen and (min-width: 992px) {        
+        width: 184px;
+        height: 40px;
+    }
+}
+
+.nav-link {
+    span{
+        color: black;
+    }
+}

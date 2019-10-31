@@ -1,0 +1,78 @@
+<!-- submit evaluation modal -->
+<ng-template #submitEvaluationTemplate>
+	<div class="modal-header">
+		<h4 class="modal-title">프로젝트 평가 입력</h4>
+		<div class="pull-right">
+			<button type="button" class="close" aria-label="Close" (click)="closeSubmitEvaluationModal()">
+					<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	</div>
+	<div class="modal-body">
+		<table [formGroup]="submitForm" class="table table-hover table-striped">
+			<colgroup>
+				<col>
+				<col width="60px">
+				<col width="60px">
+				<col width="60px">
+				<col width="60px">
+				<col width="60px">
+			</colgroup>
+			<thead>
+				<tr>
+					<th score="col">점 수 영 역</th>
+					<th score="col">매우 잘했음(5)</th>
+					<th score="col">잘했음(4)</th>
+					<th score="col">보통(3)</th>
+					<th score="col">못했음(2)</th>
+					<th score="col">매우 못했음(1)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>작품개요 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="summary_score" name="summary_score" formControlName="summary_score">
+					</td>
+				</tr>
+				<tr>
+					<td>작품내용 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="contents_score" name="contents_score" formControlName="contents_score">
+					</td>
+				</tr>
+				<tr>
+					<td>작품수행내용 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="exec_contents_score" name="exec_contents_score" formControlName="exec_contents_score">
+					</td>
+				</tr>
+				<tr>
+					<td>작품의 기대효과 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="predicted_effect_score" name="predicted_effect_score" formControlName="predicted_effect_score">
+					</td>
+				</tr>
+				<tr>
+					<td>활용분야 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="application_field_score" name="application_field_score" formControlName="application_field_score">
+					</td>
+				</tr>
+				<tr>
+					<td>개발산출물 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="outputs_score" name="outputs_score" formControlName="outputs_score">
+					</td>
+				</tr>
+				<tr>
+					<td>오픈소스활용 점수</td>
+					<td class="content-center" *ngFor="let i of gradeRange">
+						<input class="radio" type="radio" [value]='i' id="opensource_score" name="opensource_score" formControlName="opensource_score">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<button type="button" class="btn pull-right" (click)="submitEvaluation()">제출</button>
+	</div>
+</ng-template>
