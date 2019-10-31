@@ -1,7 +1,7 @@
 const { body, oneOf } = require('express-validator');
 const { checks } = require('./validator.js');
 
-const STR_NOT_ALLOW_ACCESS = '비정상적인 접근입니다.';
+const STR_NOT_ALLOW_ACCESS = '비정상적인 접근입니다.'; 
 
 exports.checkMileageInputs = function(inputs_key, showError = true) {
     let checkArray = [
