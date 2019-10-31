@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
-})
+}) 
 export class PrintService {
   isPrinting = false;
+
+  @Output() print: EventEmitter<String> = new EventEmitter();
 
   constructor(private router: Router) { }
 
@@ -15,6 +17,7 @@ export class PrintService {
       { outlets: {
         'print': ['print', documentName, documentData]
       }}]);
+    this.print.emit();
   }
 
   onDataReady() {

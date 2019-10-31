@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
+// rxjs
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+// services
+import { AuthService } from './auth.service';
+// models
 import { User, StudentUser, AdminUser, ProfessorUser, MentoUser } from '../model/user';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'

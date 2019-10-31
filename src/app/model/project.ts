@@ -35,8 +35,6 @@ export interface Project {
         opensources: Array<Opensource>
     }
     outputs?: Outputs;
-    prob_sol_in_exec?: string;
-    feelings?: string;
     evaluation?: Evaluation;
 }
 

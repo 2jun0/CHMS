@@ -40,6 +40,9 @@ import { EvaluationComponent } from './project/project-detail/submit-evaluation/
 import { MyMilageComponent } from './mileage/my-milage/my-milage.component';
 import { MilageDetailComponent } from './mileage/milage-detail/milage-detail.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { PrintLayoutComponent } from '../print/print-layout/print-layout.component';
+import { PrintProjectComponent } from '../print/print-project/print-project.component';
+
 
 defineLocale('ko', koLocale);
 
@@ -109,6 +112,14 @@ const routes: Routes = [
   {
     path: 'project/member-role-list/:id',
     component: MemberRoleListComponent
+  },
+  {
+    path: 'print',
+    outlet: 'print',
+    component: PrintLayoutComponent,
+    children: [
+      { path: 'project/:id', component: PrintProjectComponent }
+    ]
   }
 ]
 
@@ -141,6 +152,8 @@ const routes: Routes = [
     MyMilageComponent,
     MilageDetailComponent,
     ResetPasswordComponent,
+    PrintLayoutComponent,
+    PrintProjectComponent,
   ],
   
   exports: [

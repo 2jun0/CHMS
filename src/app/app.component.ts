@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { PrintService } from './services/print.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,14 @@ export class AppComponent {
 
   title = 'CHMS';
   isGoScrollShow: boolean = false;
+  isPrinting: boolean = false;
   
-  constructor(){
+  constructor(
+    private printService: PrintService
+  ){
+    printService.print.subscribe(() => {
+      this.isPrinting = true;
+    });
   }
 
   goScrollTop() {

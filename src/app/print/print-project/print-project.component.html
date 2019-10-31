@@ -1,1 +1,146 @@
-<p>print works!</p>
+<table>
+	<colgroup>
+		<col width="40%" />
+		<col width="20%" />
+		<col width="20%" />
+		<col width="20%" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<th>프로젝트 제목(한글)</th>
+			<td colspan="3">{{project.kr_title}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 제목(영어)</th>
+			<td colspan="3">{{project.en_title}}}</td>
+		</tr>
+		<tr>
+			<th>예상 수행 팀원 수</th>
+			<td colspan="3">{{project.member_count}}</td>
+		</tr>
+		<tr>
+			<th>팀원 모집기간</th>
+			<td colspan="3">{{formatDate(project.recruit_period.start_date)}} ~
+				{{formatDate(project.recruit_period.end_date)}}</td>
+		</tr>
+		<tr>
+			<th>수행 기간</th>
+			<td colspan="3">{{formatDate(project.exec_period.start_date)}} ~
+				{{formatDate(project.exec_period.end_date)}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 상태</th>
+			<td colspan="3">{{projectStates[project.project_state]}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 구분</th>
+			<td colspan="3">{{projectTypes[project.project_type]}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 영역</th>
+			<td colspan="3">{{projectAreaTypes[project.project_area_type]}}</td>
+		</tr>
+		<tr *ngIf="project.project_type === 'class'">
+			<th>교과목 이름</th>
+			<td colspan="3">{{project.class_contest_name}}</td>
+		</tr>
+		<tr *ngIf="project.project_type === 'contest'">
+			<th>공모전 이름</th>
+			<td colspan="3">{{project.class_contest_name}}</td>
+		</tr>
+		<tr *ngIf="project.prof_num">
+			<th>지도교수 사용자 번호</th>
+			<td colspan="3">{{project.prof_num}}}</td>
+		</tr>
+		<tr *ngIf="project.mento_num">
+			<th>멘토 사용자 번호</th>
+			<td colspan="3">{{project.mento_num}}}</td>
+		</tr>
+		<tr>
+			<th>공개여부</th>
+			<td colspan="3">{{project.is_public}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 주요 내용 소개(한글)</th>
+			<td colspan="3">{{project.intro.kr_description}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 주요 내용 소개(영문)</th>
+			<td colspan="3">{{project.intro.en_description}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 기대효과 및 활용분야</th>
+			<td colspan="3">{{project.intro.expected_effect}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 개발 배경 및 필요성</th>
+			<td colspan="3">{{project.intro.necessity}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 예상 결과물 이미지</th>
+			<td colspan="3" *ngIf="project.intro.img_predicted_file">
+				<img class="md preview-img" alt="프로젝트 예상 결과물 이미지"
+					[src]="appUrl+'/project/files/'+project.id+'/'+project.intro.img_predicted_file.name">
+			</td>
+			<td colspan="3" *ngIf="!project.intro.img_predicted_file"> - </td>
+		</tr>
+		<tr>
+			<th>프로젝트 개발환경</th>
+			<td colspan="3">{{project.intro.develop_env}}</td>
+		</tr>
+		<tr>
+			<th>프로젝트 주요기능 소개</th>
+			<td colspan="3">{{project.intro.functions}}</td>
+		</tr>
+		<tr>
+			<th [attr.rowspan]="project.intro.languages.length+1">프로젝트 사용언어</th>
+			<th colspan="2">언어</th>
+			<th colspan="1">라인 수</th>
+		</tr>
+		<tr *ngFor="let language of project.intro.languages">
+			<td colspan="2">{{languageTypes[language.type]}}</td>
+			<td colspan="1">{{language.total_line}}줄</td>
+		</tr>
+		<tr>
+			<th [attr.rowspan]="project.intro.opensources.length+1">프로젝트 활용 오픈소스 소프트웨어</th>
+			<th>이름</th>
+			<th>라이선스</th>
+			<th>활용분야</th>
+		</tr>
+		<tr *ngFor="let opensource of project.intro.opensources">
+			<td>{{opensource.name}}</td>
+			<td>{{opensource.license}}</td>
+			<td>{{opensource.application_field}}</td>
+		</tr>
+		<ng-container *ngIf="project.evaluation">
+			<tr>
+				<th>작품개요 점수</th>
+				<td colspan="3">{{project.evaluation.summary_score}}/5점</td>
+			</tr>
+			<tr>
+				<th>작품내용 점수</th>
+				<td colspan="3">{{project.evaluation.contents_score}}/5점</td>
+			</tr>
+			<tr>
+				<th>작품수행내용 점수</th>
+				<td colspan="3">{{project.evaluation.exec_contents_score}}/5점</td>
+			</tr>
+			<tr>
+				<th>작품의 기대효과 점수</th>
+				<td colspan="3">{{project.evaluation.predicted_effect_score}}/5점</td>
+			</tr>
+			<tr>
+				<th>활용분야 점수</th>
+				<td colspan="3">{{project.evaluation.application_field_score}}/5점</td>
+			</tr>
+			<tr>
+				<th>개발산출물 점수</th>
+				<td colspan="3">{{project.evaluation.outputs_score}}/5점</td>
+			</tr>
+			<tr>
+				<th>오픈소스활용 점수</th>
+				<td colspan="3">{{project.evaluation.opensource_score}}/5점</td>
+			</tr>
+		</ng-container>
+	</tbody>
+</table>

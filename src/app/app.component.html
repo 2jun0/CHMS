@@ -1,4 +1,4 @@
-<div class="wrapper" scroll="no">
+<div class="wrapper" scroll="no" [class.isPrinting]="true">
     <app-sidebar #sidebar></app-sidebar>
     <div class="main-panel" #mainPanel> 
         <!-- Navbar -->
@@ -21,6 +21,5 @@
         <button type="button" (click)="goScrollTop()" class="btn"><i class="nc-icon nc-stre-up"></i></button>
         <button type="button" (click)="goScrollBottom()" class="btn"><i class="nc-icon nc-stre-down"></i></button>
     </div>
-    <router-outlet></router-outlet>
     <router-outlet name="print"></router-outlet>
 </div>

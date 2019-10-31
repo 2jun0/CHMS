@@ -12,8 +12,6 @@ import { Error400Component } from './error/error400/error400.component';
 import { TopnaviComponent } from './topnavi/topnavi.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { PrintLayoutComponent } from './print/print-layout/print-layout.component';
-import { PrintProjectComponent } from './print/print-project/print-project.component';
 
 @NgModule({
   declarations: [
@@ -22,8 +20,6 @@ import { PrintProjectComponent } from './print/print-project/print-project.compo
     Error404Component,
     Error400Component,
     TopnaviComponent,
-    PrintLayoutComponent,
-    PrintProjectComponent,
   ],
   imports: [
     BrowserModule,

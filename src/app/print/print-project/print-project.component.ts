@@ -1,9 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PrintService } from 'src/app/services/print.service';
+import { environment } from 'src/environments/environment';
+// models
 import { Project } from 'src/app/model/project';
+// services
+import { PrintService } from 'src/app/services/print.service';
 import { ProjectService } from 'src/app/services/project.service';
-import { notifyError } from 'src/util/util';
+// jsons
+import projectStates from 'src/assets/json/projectStates.json';
+import projectTypes from 'src/assets/json/projectTypes.json';
+import projectAreaTypes from 'src/assets/json/projectAreaTypes.json';
+import languages from 'src/assets/json/languages.json';
+// tuils
+import { notifyError, formatDate } from 'src/util/util';
 
 @Component({
   selector: 'app-print-project',
@@ -11,6 +20,15 @@ import { notifyError } from 'src/util/util';
   styleUrls: ['./print-project.component.scss']
 })
 export class PrintProjectComponent implements OnInit {
+
+  appUrl = environment.apiUrl;
+
+  // external functions and json
+  formatDate = formatDate;
+  projectTypes = projectTypes;
+  projectAreaTypes = projectAreaTypes;
+  projectStates = projectStates;
+  languageTypes = languages;
 
   project: Project;
   id: string;
@@ -22,13 +40,15 @@ export class PrintProjectComponent implements OnInit {
     private projectService: ProjectService
     ) {
     this.id = route.snapshot.params['id'];
-    console.log(this.id);
   }
 
   ngOnInit() {
-    this.projectService.getProject(this.id).subscribe(() =>
-      {
-        this.printService.onDataReady();
+    this.projectService.getProject(this.id).subscribe(
+      (project) => {
+        this.project = project;
+        setTimeout(() => {
+          this.printService.onDataReady();
+        }, 200);
       },({error}) => {
         notifyError(error);
       }
