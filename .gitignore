@@ -48,5 +48,6 @@ Thumbs.db
 server/.env
 
 .editorconfig
-server/environments/environment.ts
-server/environments/environment.prod.ts
+src/environments/environment.ts
+src/environments/environment.prod.ts
+server/files/*
