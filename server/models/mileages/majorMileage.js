@@ -25,6 +25,20 @@ const MajorMileage = mongoose.Schema({
             .catch(err => { console.log(err); });
     }
 
+    MajorMileage.statics.findAllCodes = function() {
+        return this.find({});
+    }
+
+    MajorMileage.methods.toCustomObject() = function() {
+        let customObj = {
+            id: this._id,
+            code: this.code,
+            description: this.description,
+        };
+
+        return customObj;
+    }
+
     MajorMileage.statics.holder = {};
 
 module.exports = mongoose.model('Codetype.MajorMileage', MajorMileage);

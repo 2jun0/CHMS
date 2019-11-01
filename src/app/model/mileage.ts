@@ -17,3 +17,24 @@ export interface Mileage {
 	is_accepted: boolean;
 	accept_date: Date;
 }
+
+export interface MileageCode {
+	id?: string;
+	code: string;
+	minor: string;	
+	score: number;
+	detail: string;
+	accept_method: string;
+	remark?: string;
+}
+
+export interface MinorMileage {
+	code: string;
+	major: MajorMileage;
+	description: string;
+}
+
+export interface MajorMileage {
+	code: string;
+	description: string;
+}

@@ -4,8 +4,12 @@ import { environment } from 'src/environments/environment';
 // rxjs
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+// jsons
+import mileageCode from "src/assets/json/mileageCode.json";
+import majorMileageCode from "src/assets/json/majorMileageCode.json";
+import minorMileageCode from "src/assets/json/minorMileageCode.json";
 // models
-import { Mileage } from '../model/mileage';
+import { Mileage, MinorMileage, MajorMileage, MileageCode } from '../model/mileage';
 // services
 import { AuthService } from './auth.service';
 
@@ -39,6 +43,44 @@ export class MileageService {
     formData.append('file_description', description);
     formData.append('mileage_id', mileage_id);
     return this.http.post<any>(`${this.appUrl}/mileage/upload-file`, formData, {headers : this.headers});
+  }
+
+  getAllMileageCodes(): Observable<MileageCode[]> {
+    return this.http.get<MileageCode[]>('/mileage/get-mileage-codes');
+  }
+
+  getAllMajorCodes(): Observable<MajorMileage[]> {
+    return this.http.get<MajorMileage[]>('/mileage/get-major-mileages');
+  }
+
+  getAllMinorCodes(): Observable<MinorMileage[]> {
+    return this.http.get<MinorMileage[]>('/mileage/get-minor-mileages');
+  }
+
+  updateMileageCodes() {
+    this.getAllMileageCodes().subscribe(
+      (codes) => {
+        for(let code of codes) {
+          mileageCode[code.code] = code;
+        }
+      }
+    )
+
+    this.getAllMajorCodes().subscribe(
+      (codes) => {
+        for(let code of codes) {
+          mileageCode[code.code] = code;
+        }
+      }
+    )
+
+    this.getAllMinorCodes().subscribe(
+      (codes) => {
+        for(let code of codes) {
+          mileageCode[code.code] = code;
+        }
+      }
+    )
   }
 
   get headers(): HttpHeaders{

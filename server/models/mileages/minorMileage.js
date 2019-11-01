@@ -26,6 +26,20 @@ const MinorMileage = mongoose.Schema({
             .catch(err => { console.log(err); });
     }
 
+    MinorMileage.statics.findByMajorCode = function(major) {
+        return this.find({major: major}).populate({path:"major"});
+    }
+
+    MinorMileage.statics.toCustomObject = function() {
+        let customObj = {
+            code: this.code,
+            major: this.major.code,
+            description: this.description,
+        };
+
+        return customObj;
+    }
+
     MinorMileage.statics.holder = {};
 
 module.exports = mongoose.model('Codetype.MinorMileage', MinorMileage);
