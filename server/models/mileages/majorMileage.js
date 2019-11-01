@@ -29,7 +29,7 @@ const MajorMileage = mongoose.Schema({
         return this.find({});
     }
 
-    MajorMileage.methods.toCustomObject() = function() {
+    MajorMileage.methods.toCustomObject = function() {
         let customObj = {
             id: this._id,
             code: this.code,
