@@ -30,7 +30,6 @@ export class MainComponent implements OnInit {
     this.projectService.getPublicProjects(0, 5)
       .subscribe(
         (projects) => {
-          console.log(projects);
           this.allProjects = projects;
 
           for(var i = 0; i < this.allProjects.length; i++) {

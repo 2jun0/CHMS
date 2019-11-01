@@ -31,8 +31,6 @@ $(document).ready(function() {
 
     // check if there is an image set for the sidebar's background
     lbd.checkSidebarImage();
-
-    console.log(this.location, $(window).width());
     // Init navigation toggle for small screens
     if (window_width <= 991) {
         lbd.initRightMenu();

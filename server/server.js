@@ -31,6 +31,6 @@ app.get('/', (req, res) => res.send('CHMS'));
 app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/users'));
 app.use('/project', require('./routes/projects/projects'));
-app.use('/mileage', require('./routes/mileage'));
+app.use('/mileage', require('./routes/mileages'));
 
 app.listen(port, host, () => console.log(`Server listening on port ${port}`));

@@ -46,15 +46,15 @@ export class MileageService {
   }
 
   getAllMileageCodes(): Observable<MileageCode[]> {
-    return this.http.get<MileageCode[]>('/mileage/get-mileage-codes');
+    return this.http.get<MileageCode[]>(`${this.appUrl}/mileage/get-mileage-codes`);
   }
 
   getAllMajorCodes(): Observable<MajorMileage[]> {
-    return this.http.get<MajorMileage[]>('/mileage/get-major-mileages');
+    return this.http.get<MajorMileage[]>(`${this.appUrl}/mileage/get-major-mileages`);
   }
 
   getAllMinorCodes(): Observable<MinorMileage[]> {
-    return this.http.get<MinorMileage[]>('/mileage/get-minor-mileages');
+    return this.http.get<MinorMileage[]>(`${this.appUrl}/mileage/get-minor-mileages`);
   }
 
   updateMileageCodes() {
@@ -69,7 +69,7 @@ export class MileageService {
     this.getAllMajorCodes().subscribe(
       (codes) => {
         for(let code of codes) {
-          mileageCode[code.code] = code;
+          majorMileageCode[code.code] = code;
         }
       }
     )
@@ -77,8 +77,9 @@ export class MileageService {
     this.getAllMinorCodes().subscribe(
       (codes) => {
         for(let code of codes) {
-          mileageCode[code.code] = code;
+          minorMileageCode[code.code] = code;
         }
+
       }
     )
   }

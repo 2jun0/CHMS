@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://113.198.137.68:8080'
+  apiUrl: 'http://localhost:3000',
+  whitelist: 'http://localhost:4700'
 };
 
 /*

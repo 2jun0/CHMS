@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const MileageCode = mongoose.Schema({
-    code:          { type: Number, required: true, unique: true },
+    code:          { type: String, required: true, unique: true },
     minor:         { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.MinorMileage', required: true },
     score:         { type: Number, required: true },
     detail:        { type: String, required: true },

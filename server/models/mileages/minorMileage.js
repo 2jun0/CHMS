@@ -30,8 +30,13 @@ const MinorMileage = mongoose.Schema({
         return this.find({major: major}).populate({path:"major"});
     }
 
-    MinorMileage.statics.toCustomObject = function() {
+    MinorMileage.statics.findAllCodes = function() {
+        return this.find({});
+    }
+
+    MinorMileage.methods.toCustomObject = function() {
         let customObj = {
+            id: this._id,
             code: this.code,
             major: this.major.code,
             description: this.description,
