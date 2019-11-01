@@ -1,11 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+// services
 import { PrintService } from './services/print.service';
 import { MileageService } from './services/mileage.service';
 
-
-import mileageCode from "src/assets/json/mileageCode.json";
-import majorMileageCode from "src/assets/json/majorMileageCode.json";
-import minorMileageCode from "src/assets/json/minorMileageCode.json";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -27,10 +24,6 @@ export class AppComponent {
     this.printService.print.subscribe(() => {
       this.isPrinting = true;
     });
-
-    setTimeout(() => {
-      console.log(mileageCode, minorMileageCode, majorMileageCode)
-    }, 2000)
   }
 
   goScrollTop() {

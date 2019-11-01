@@ -92,6 +92,7 @@ exports.uploadFileInProject = function (req, res, next) {
 	});
 }
 
+// input만
 exports.uploadFileInMileage = function (req, res, next) {
 	exports.upload(req, res, (err, next2) => {
 		if (err) {
@@ -107,51 +108,38 @@ exports.uploadFileInMileage = function (req, res, next) {
 
 		const formData = req.body;
 		const { mileage_id, file_description } = formData;
-		const file = req.files[0] || req.file;
+		const files = req.files;
 
 		if(!project_id) {
 			fs.unlinkSync(file);
 		}
 
 		Mileage.findOneById(mileage_id)
-			.then(mileage => {
-				let file_doc;
+			.then(doc_mileage => {
 				let file_type;
 
 				if (file_description == 'info_photo') {
-					file_doc = mileage.info_photos;
 					file_type = 'image';
 				}
 
-				// If the file exists, update file
-				if (file_doc) {
-					next2(`../files/mileages/${mileage_id}`, file_doc.name);
-					file_doc.original_name = file.originalname;
-					File.updateOne({_id: file_doc._id}, file_doc)
-				// If the file doesn't exist, create file
-				}else{
+				for(var file of files) {
 					exports.createFile(file, file_type)
-						.then(doc => {
-							next2(`../files/mileages/${mileage_id}`, doc._id);
+					.then(doc => {
+						next2(`../files/mileages/${mileage_id}`, doc._id);
 
-							doc.name = doc._id;
-							doc.save();
+						doc.name = doc._id;
+						doc.save();
 
-							if (file_description == 'img_predicted_file') {
-								project.intro.img_predicted_file = doc;
-							}else if(file_description == 'doc_ppt_file') {
-								project.outputs.doc_ppt_file = doc;
-							}else if(file_description == 'doc_zip_file') {
-								project.outputs.doc_zip_file = doc;
-							}else if(file_description == 'ucc_file') {
-								project.outputs.ucc_file = doc;
-							}
+						if (file_description == 'info_photo') {
+							doc_mileage.info_photos = doc;
+						}
 
-							Project.updateById(project._id, project);
-						}).catch(err => {
-							next(err);
-						})
+						doc_mileage.save();
+					}).catch(err => {
+						next(err);
+					});
 				}
+
 			}).then(() => {
 				next();
 			}).catch(err => {
@@ -175,10 +163,20 @@ exports.upload = function (req, res, next) {
 					}
 				})
 			}).any()(req, res, err => {
-				const file = req.files[0] || req.file;
-				next(err, (dest, name) => {
-					fs.mkdirSync(dest, { recursive: true });
-					fs.renameSync(file.path, `${dest}/${name}`, { recursive: true });
-				})
+
+				if(req.file)
+				{
+					next(err, (dest, name) => {
+						fs.mkdirSync(dest, { recursive: true });
+						fs.renameSync(req.file.path, `${dest}/${name}`, { recursive: true });
+					})
+				}else if(req.files){
+					next(err, (dest, name) => {
+						for(var i = 0; i < req.files.length; i++) {
+							fs.mkdirSync(dest, { recursive: true });
+							fs.renameSync(req.files[i].path, `${dest}/${name}`, { recursive: true });
+						}
+					})
+				}
 			})
 		}

@@ -29,7 +29,7 @@ export class MileageService {
     return this.http.post<Mileage>(`${this.appUrl}/mileage/add-mileage`, {mileage}, {headers: this.headers})
       .pipe(
         map(res => {
-          
+          this.uploadFile(info_photos, "info_photo", res.id);
 
           return res;
         })
@@ -37,9 +37,11 @@ export class MileageService {
   }
 
   // 파일 업로드
-  uploadFile(file, description, mileage_id): Observable<any> {
+  uploadFile(files: File[], description, mileage_id): Observable<any> {
     const formData = new FormData();
-    formData.append('file', file);
+    for(let i =0; i < files.length; i++){
+      formData.append(`files[${i}]`, files[i]);
+    }
     formData.append('file_description', description);
     formData.append('mileage_id', mileage_id);
     return this.http.post<any>(`${this.appUrl}/mileage/upload-file`, formData, {headers : this.headers});
