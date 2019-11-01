@@ -49,17 +49,17 @@ export class LoginComponent implements OnInit {
     let password = this.password;
     if (user_num.errors) {
       if (user_num.errors.required) {
-        Utils.showNotification('top', 'center', 'danger', '학번을 입력하세요!');
+        notifyError(new Error('학번을 입력하세요!'));
       } else if (user_num.errors.pattern && user_num.touched) {
-        Utils.showNotification('top', 'center', 'danger', '학번은 숫자로만 입력해야 합니다!');
+        notifyError(new Error('학번은 숫자로만 입력해야 합니다!'));
       }
     } else if(password.errors) {
       if (password.errors.required) {
-        Utils.showNotification('top', 'center', 'danger', '비밀번호를 입력하세요!');
+        notifyError(new Error('비밀번호를 입력하세요!'));
       } else if (password.errors.pattern && password.touched) {
-        Utils.showNotification('top', 'center', 'danger', '비밀번호는 영문또는 숫자로 입력해야 합니다!');
+        notifyError(new Error('비밀번호는 영문또는 숫자로 입력해야 합니다!'));
       } else if (password.errors.minlength && password.touched || password.errors.maxlength && password.touched) {
-        Utils.showNotification('top', 'center', 'danger', '비밀번호는 최소 6자, 최대16자로 입력해야 합니다!');
+        notifyError(new Error('비밀번호는 최소 6자, 최대16자로 입력해야 합니다!'));
       }
     }else {
       this.auth.login(this.loginForm.value)

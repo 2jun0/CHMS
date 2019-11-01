@@ -20,6 +20,7 @@ export function formatDate(date: Date) {
 }
 
 export function notifyError(error: Error, isOnlyOne? : boolean) {
+    isOnlyOne = true;
     if(error) {
         console.log(error.message);
         Utils.showNotification('top', 'center', 'danger', error.message, isOnlyOne);
@@ -29,6 +30,7 @@ export function notifyError(error: Error, isOnlyOne? : boolean) {
 }
 
 export function notifyInfo(message: string, isOnlyOne? : boolean) {
+    isOnlyOne = true;
     Utils.showNotification('top', 'center', 'success', message, isOnlyOne);
 }
 

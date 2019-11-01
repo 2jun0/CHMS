@@ -39,7 +39,7 @@ router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']
 router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']), (req, res, next) => {
   console.log('[POST] upload-file');
 
-  uploadFileInProject(req, res, (err) => {
+  uploadFilesInMileage(req, res, (err) => {
     if(err) {
       res.status(403).json({ success : false, message : err.message });
       console.log(err);
