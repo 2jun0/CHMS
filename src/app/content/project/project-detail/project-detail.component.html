@@ -1,8 +1,10 @@
 <div *ngIf="isLoad" class="card project p4">
     <div class="card-header">
         <h4 class="card-title project-title">{{project.kr_title}}</h4>
-        <span class="project-state">{{projectStates[project.project_state]}}</span>
-        <button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button>
+        <div class="extra">
+            <span class="project-state">{{projectStates[project.project_state]}}</span>
+            <button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button>
+        </div>
         <button class="btn top-right-btn" [routerLink]="['/project/member-role-list', project.id]">팀원 역할분담 보기</button>
         <button *ngIf="(isManageProject && ['submitting outputs', 'peer reviewing', 'evaluating', 'finished'].includes(project.project_state))" class="btn pull-right" (click)="showPeerReview.openModal(project)">동료평가 보기</button>
     </div>

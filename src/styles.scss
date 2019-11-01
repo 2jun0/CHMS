@@ -779,6 +779,12 @@ $card-t1-item-margin-size: 30px;
     &.project{
 
         .card-header{
+            .extra {
+                display: inline-block;
+                margin-left: 10px;
+                position: absolute;
+            }
+
             .project-state{
                 display: inline-block;
                 font-size: 18px;
@@ -787,21 +793,21 @@ $card-t1-item-margin-size: 30px;
                 -webkit-border-radius: 4px;
                 border-radius: 4px;
                 padding: 2px 4px;
-                margin-left: 10px;
-                position: absolute;
             }
 
             .extra-btn{
                 display: inline-block;
-                font-size: 18px;
                 background-color: #ebecec;
-                color: black;
                 -webkit-border-radius: 4px;
                 border-radius: 4px;
                 padding: 2px 4px;
-                margin-left: 60px;
-                position: absolute;
                 border: none;
+                margin-left: 10px;
+                
+                i{
+                    font-size: 20px;
+                    color: black;
+                }
 
                 :hover {
                     border-color: #c9c9c9;

@@ -174,15 +174,15 @@
                 <div formGroupName="exec_time" class="search-item">
                     <label class="control-label">프로젝트 진행시작일</label>
                     <select formControlName="year" class="form-control year" (change)="gotoPage(0)">
-                        <option *ngFor="let year of yearRange" [ngValue]="year">{{year}}년</option>
                         <option [ngValue]="'all'" [selected]='true'>모두</option>
+                        <option *ngFor="let year of yearRange" [ngValue]="year">{{year}}년</option>
                     </select>
                     <select formControlName="half" class="form-control half" (change)="gotoPage(0)">
+                        <option [ngValue]="'all'" [selected]='true'>모두</option>
                         <ng-container *ngIf="year_of_exec_time.value !== 'all'">
                             <option [ngValue]="'first'">상반기(1~6월)</option>
                             <option [ngValue]="'second'">하반기(7~12월)</option>
                         </ng-container>
-                        <option [ngValue]="'all'" [selected]='true'>모두</option>
                     </select>
                 </div>
 
