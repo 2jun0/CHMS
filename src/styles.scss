@@ -924,6 +924,29 @@ $card-t1-item-margin-size: 30px;
             }
 
             .card-body{
+                .content-value {
+                    width: 70%;
+                    @media screen and (max-width: 991px){
+                        width: 100%;
+                    }
+
+
+                }
+
+                .content-img {
+                    width: 50%;
+                    @media screen and (max-width: 991px){
+                        width: 100%;
+                    }
+                }
+
+                .label {
+                    width: 30%;
+                    @media screen and (max-width: 991px){
+                        width: 100%;
+                    }
+                }
+
                 h5{
                     font-weight: 500;
                     font-size: 25px;
@@ -939,6 +962,7 @@ $card-t1-item-margin-size: 30px;
                 .item {
                     padding-top: 18px;
                     padding-left: 30px;
+                    padding-right: 30px;
                 }
 
                 table{

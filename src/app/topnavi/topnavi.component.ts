@@ -10,17 +10,25 @@ import { Router } from '@angular/router';
 export class TopnaviComponent implements OnInit {
 
   menuMode = 'external-user';
+  user_name: string;
 
   constructor(
     private auth: AuthService,
     private router: Router
-  ) { }
+  ) { 
+    this.user_name = '';
+  }
 
   ngOnInit() {
     this.menuMode = this.getMenuMode();
 
     let onChange = () => {
       this.menuMode = this.getMenuMode();
+      if(this.auth.isAuthenticated()) {
+        this.user_name = this.auth.getUserName();
+      }else{
+        this.user_name = '';
+      }
     };
 
     this.auth.onLogout.subscribe(onChange);
@@ -37,10 +45,5 @@ export class TopnaviComponent implements OnInit {
     else { this.menuMode = 'internal-user'; }
 
     return this.menuMode;
-  }
-
-  get name() {
-    if (this.auth.isAuthenticated()) { return this.auth.getUserName(); }
-    else { return null; }
   }
 }

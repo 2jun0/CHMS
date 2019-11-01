@@ -17,6 +17,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // env
 import { environment } from 'src/environments/environment';
+import { UserService } from './services/user.service';
+import { AuthService } from './services/auth.service';
+import { ProjectService } from './services/project.service';
+import { PrintService } from './services/print.service';
+import { MileageService } from './services/mileage.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,13 @@ import { environment } from 'src/environments/environment';
     ModalModule.forRoot(),
     BsDropdownModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    UserService,
+    AuthService,
+    ProjectService,
+    PrintService,
+    MileageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

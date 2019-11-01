@@ -12,11 +12,13 @@ export class SidebarComponent implements OnInit {
   @ViewChild("sidebar", {static:false}) sidebar: ElementRef;
 
   menuMode = 'external-user';
+  user_name: string;
 
   constructor(
     private router : Router,
     private auth: AuthService
   ) {
+    this.user_name = '';
   }
 
   ngOnInit() {
@@ -24,6 +26,11 @@ export class SidebarComponent implements OnInit {
     
     let onChange = () => {
       this.menuMode = this.getMenuMode();
+      if(this.auth.isAuthenticated()) {
+        this.user_name = this.auth.getUserName();
+      }else{
+        this.user_name = '';
+      }
     };
 
     this.auth.onLogout.subscribe(onChange);
@@ -76,10 +83,5 @@ export class SidebarComponent implements OnInit {
   logout() {
     this.auth.logout();
     this.router.navigate(['/']);
-  }
-
-  get name() {
-    if (this.auth.isAuthenticated()) { return this.auth.getUserName(); }
-    else { return null; }
   }
 }

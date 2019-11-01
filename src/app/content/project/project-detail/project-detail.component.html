@@ -1,427 +1,429 @@
-<div *ngIf="isLoad" class="card project p4">
-    <div class="card-header">
-        <h4 class="card-title project-title">{{project.kr_title}}</h4>
-        <div class="extra">
-            <span class="project-state">{{projectStates[project.project_state]}}</span>
-            <button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button>
+<div class="center-content">
+    <div *ngIf="isLoad" class="card lg project p4">
+        <div class="card-header">
+            <h4 class="card-title project-title">{{project.kr_title}}</h4>
+            <div class="extra">
+                <span class="project-state">{{projectStates[project.project_state]}}</span>
+                <button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button>
+            </div>
+            <button class="btn top-right-btn" [routerLink]="['/project/member-role-list', project.id]">팀원 역할분담 보기</button>
+            <button *ngIf="(isManageProject && ['submitting outputs', 'peer reviewing', 'evaluating', 'finished'].includes(project.project_state))" class="btn pull-right" (click)="showPeerReview.openModal(project)">동료평가 보기</button>
         </div>
-        <button class="btn top-right-btn" [routerLink]="['/project/member-role-list', project.id]">팀원 역할분담 보기</button>
-        <button *ngIf="(isManageProject && ['submitting outputs', 'peer reviewing', 'evaluating', 'finished'].includes(project.project_state))" class="btn pull-right" (click)="showPeerReview.openModal(project)">동료평가 보기</button>
-    </div>
-    <div class="card-body" [formGroup]="updateForm">
-        <div class="item row">
-            <label class="col-md-2">프로젝트 제목(한글)</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{kr_title.value}}</span>
-                <input *ngIf="isUpdateMode" formControlName="kr_title" type="text" class="form-control">
-            </div>
-        </div>
-        <div class="item row">
-            <label class="col-md-2">프로젝트 제목(영문)</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{en_title.value}}</span>
-                <input *ngIf="isUpdateMode" formControlName="en_title" type="text" class="form-control">
-            </div>
-        </div>
-        <div class="item row">
-            <label class="col-md-2">예상 수행 팀원 수</label>
-            <div class="col sm">
-                <span *ngIf="!isUpdateMode">{{member_count.value}}명</span>
-                <input *ngIf="isUpdateMode" formControlName="member_count" type="number" class="form-control">
-            </div>
-            <span *ngIf="isUpdateMode" class='input-extra'>(명)</span> 
-        </div>
-        <div class="item row">
-            <label class="col-md-2">팀원 모집기간</label>
-            <div *ngIf="!isUpdateMode" class="col-md-6">
-                <span>{{formatDate(recruit_period.value.start_date)}} ~
-                    {{formatDate(recruit_period.value.end_date)}}</span>
-            </div>
-            <div *ngIf="isUpdateMode" formGroupName="recruit_period" class="col-sm-10 col-md-6 edit-date-range">
-                <div class="start">
-                    <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
-                        bsDatepicker [isDisabled]="true"
-                        [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" disabled>
-                </div>
-                <span>~</span>
-                <div class="end">
-                    <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
-                        bsDatepicker [minDate]="recruit_period.value.start_date" [maxDate]="exec_period.value.start_date"
-                        [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
-                </div>
-            </div>
-        </div>
-        <div class="item row">
-            <label class="col-md-2">수행 기간</label>
-            <div *ngIf="!isUpdateMode" class="col-md-6">
-                <span>{{formatDate(exec_period.value.start_date)}} ~
-                    {{formatDate(exec_period.value.end_date)}}</span>
-            </div>
-            <div *ngIf="isUpdateMode" formGroupName="exec_period" class="col-sm-10 col-md-6 edit-date-range">
-                <div class="start">
-                    <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
-                        bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
-                        [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
-                </div>
-                <span>~</span>
-                <div class="end">
-                    <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
-                        bsDatepicker [minDate]="exec_period.value.start_date"
-                        [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
-                </div>
-            </div>
-        </div>
-        <div class="item row">
-            <label class="col-md-2">프로젝트 구분</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{projectTypes[project_type.value]}} 프로젝트</span>
-                <select *ngIf="isUpdateMode" formControlName="project_type" class="form-control"
-                    (change)="onSelectProjectType()">
-                    <option *ngFor="let option of projectTypeOptions" [ngValue]="option.value">{{option.str}}</option>
-                </select>
-            </div>
-        </div>
-        <div *ngIf="project_type.value === 'class'" class="item row">
-            <label class="col-md-2">교과목 이름</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{class_contest_name.value}}</span>
-                <input *ngIf="isUpdateMode" formControlName="class_contest_name" type="text" class="form-control">
-            </div>
-        </div>
-        <div *ngIf="project_type.value === 'contest'" class="item row">
-            <label class="col-md-2">공모전 이름</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{class_contest_name.value}}</span>
-                <input *ngIf="isUpdateMode" formControlName="class_contest_name" type="text" class="form-control">
-            </div>
-        </div>
-        <div *ngIf="project.prof && !isUpdateMode" class="item row">
-            <label class="col-md-2">지도교수 성명</label>
-            <div class="col-md-6">
-                <span>{{project.prof.name}}</span>
-            </div>
-        </div>
-        <div *ngIf="isUpdateMode" class="item row">
-            <label class="col-md-2">지도교수 성명</label>
-            <div class="col-sm-10 col-md-3">
-                <input *ngIf="!prof_num.value" #profName type="text" class="form-control"
-                    (keydown.enter)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">
-                <input *ngIf="prof_num.value" type="text" class="form-control"
-                    value="{{(updateProf) ? updateProf.name : project.prof.name}}#{{prof_num.value}}" [disabled]="true">
-            </div>
-            <button *ngIf="!prof_num.value" class="btn btn-fill" type="button"
-                (click)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
-            <button *ngIf="prof_num.value" class="btn icon-btn" (click)="removeProfNum()" type="button">
-                <i class="nc-icon nc-simple-remove"></i>
-            </button>
-        </div>
-        <div *ngIf="project.mento && !isUpdateMode" class="item row">
-            <label class="col-md-2">멘토 성명</label>
-            <div class="col-md-6">
-                <span>{{project.mento.name}}</span>
-            </div>
-        </div>
-        <div *ngIf="isUpdateMode" class="item row">
-            <label class="col-md-2">멘토 성명</label>
-            <div class="col-sm-10 col-md-3">
-                <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control"
-                    (keydown.enter)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
-                <input *ngIf="mento_num.value" type="text" class="form-control"
-                    value="{{(updateMento) ? updateMento.name : project.mento.name}}#{{mento_num.value}}"
-                    [disabled]="true">
-            </div>
-            <button *ngIf="!mento_num.value" class="btn btn-fill" type="button"
-                (click)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
-            <button *ngIf="mento_num.value" class="btn icon-btn" (click)="removeMentoNum()" type="button">
-                <i class="nc-icon nc-simple-remove"></i></button>
-        </div>
-        <div class="item row">
-            <label class="col-md-2">프로젝트 영역</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{projectAreaTypes[project.project_area_type]}}</span>
-                <select *ngIf="isUpdateMode" formControlName="project_area_type" class="form-control">
-                    <option *ngFor="let option of projectAreaOptions" [ngValue]="option.value">{{option.str}}</option>
-                </select>
-            </div>
-        </div>
-        <ng-container formGroupName="intro">
+        <div class="card-body" [formGroup]="updateForm">
             <div class="item row">
-                <label class="col-md-2">프로젝트 주요 내용 소개(한글)</label>
-                <div class="col-md-6">
-                    <span *ngIf="!isUpdateMode">{{kr_description.value}}</span>
-                    <textarea *ngIf="isUpdateMode" formControlName="kr_description" type="text"
-                        class="form-control long-textarea"></textarea>
+                <label class="label">프로젝트 제목(한글)</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{kr_title.value}}</span>
+                    <input *ngIf="isUpdateMode" formControlName="kr_title" type="text" class="form-control">
                 </div>
             </div>
             <div class="item row">
-                <label class="col-md-2">프로젝트 주요 내용 소개(영문)</label>
-                <div class="col-md-6">
-                    <span *ngIf="!isUpdateMode">{{en_description.value}}</span>
-                    <textarea *ngIf="isUpdateMode" formControlName="en_description" type="text"
-                        class="form-control long-textarea"></textarea>
+                <label class="label">프로젝트 제목(영문)</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{en_title.value}}</span>
+                    <input *ngIf="isUpdateMode" formControlName="en_title" type="text" class="form-control">
                 </div>
             </div>
             <div class="item row">
-                <label class="col-md-2">프로젝트 기대효과 및 활용분야</label>
-                <div class="col-md-6">
-                    <span *ngIf="!isUpdateMode">{{expected_effect.value}}</span>
-                    <input *ngIf="isUpdateMode" formControlName="expected_effect" type="text" class="form-control">
+                <label class="label">예상 수행 팀원 수</label>
+                <div class="col sm">
+                    <span *ngIf="!isUpdateMode">{{member_count.value}}명</span>
+                    <input *ngIf="isUpdateMode" formControlName="member_count" type="number" class="form-control">
                 </div>
+                <span *ngIf="isUpdateMode" class='input-extra'>(명)</span> 
             </div>
             <div class="item row">
-                <label class="col-md-2">프로젝트 개발 배경 및 필요성</label>
-                <div class="col-md-6">
-                    <span *ngIf="!isUpdateMode">{{necessity.value}}</span>
-                    <textarea *ngIf="isUpdateMode" formControlName="necessity" type="text"
-                        class="form-control short-textarea"></textarea>
+                <label class="label">팀원 모집기간</label>
+                <div *ngIf="!isUpdateMode" class="content-value">
+                    <span>{{formatDate(recruit_period.value.start_date)}} ~
+                        {{formatDate(recruit_period.value.end_date)}}</span>
                 </div>
-            </div>
-            <div *ngIf="project.intro.img_predicted_file || isUpdateMode" class="item row">
-                <label class="col-md-2">프로젝트 예상 결과물 이미지</label>
-                <div class="col-md-6">
-                    <img *ngIf="!isUpdateMode || !previewUpdatePredictedImg" class="md preview-img"
-                        alt="프로젝트 예상 결과물 이미지"
-                        [src]="appUrl+'/project/files/'+project.id+'/'+project.intro.img_predicted_file.name">
-                    <img *ngIf="isUpdateMode && previewUpdatePredictedImg" class="md preview-img"
-                        [src]="previewUpdatePredictedImg">
-                    <div *ngIf="isUpdateMode" class="custom-file">
-                        <input accept="image/*" class="custom-file-input" type="file" id="inputGroupFile01"
-                            #img_predicted (change)="onPredictedImgChange(img_predicted.files)">
-                        <label *ngIf="img_predicted.files && img_predicted.files.length > 0" class="custom-file-label"
-                            for="inputGroupFile01">{{img_predicted.files[0].name}}</label>
-                        <label *ngIf="!img_predicted.files || img_predicted.files.length == 0" class="custom-file-label"
-                            for="inputGroupFile01">파일 선택</label>
+                <div *ngIf="isUpdateMode" formGroupName="recruit_period" class="col-sm-10 col-md-6 edit-date-range">
+                    <div class="start">
+                        <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
+                            bsDatepicker [isDisabled]="true"
+                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" disabled>
+                    </div>
+                    <span>~</span>
+                    <div class="end">
+                        <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
+                            bsDatepicker [minDate]="recruit_period.value.start_date" [maxDate]="exec_period.value.start_date"
+                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
                     </div>
                 </div>
             </div>
             <div class="item row">
-                <label class="col-md-2">프로젝트 개발환경</label>
-                <div class="col-md-6">
-                    <span *ngIf="!isUpdateMode">{{develop_env.value}}</span>
-                    <input *ngIf="isUpdateMode" formControlName="develop_env" type="text" class="form-control">
+                <label class="label">수행 기간</label>
+                <div *ngIf="!isUpdateMode" class="content-value">
+                    <span>{{formatDate(exec_period.value.start_date)}} ~
+                        {{formatDate(exec_period.value.end_date)}}</span>
+                </div>
+                <div *ngIf="isUpdateMode" formGroupName="exec_period" class="col-sm-10 col-md-6 edit-date-range">
+                    <div class="start">
+                        <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
+                            bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
+                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                    </div>
+                    <span>~</span>
+                    <div class="end">
+                        <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
+                            bsDatepicker [minDate]="exec_period.value.start_date"
+                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                    </div>
                 </div>
             </div>
             <div class="item row">
-                <label class="col-md-2">프로젝트 주요기능 소개</label>
-                <div class="col-md-6">
-                    <span *ngIf="!isUpdateMode">{{functions.value}}</span>
-                    <textarea *ngIf="isUpdateMode" formControlName="functions" type="text"
-                        class="form-control short-textarea"></textarea>
+                <label class="label">프로젝트 구분</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{projectTypes[project_type.value]}} 프로젝트</span>
+                    <select *ngIf="isUpdateMode" formControlName="project_type" class="form-control"
+                        (change)="onSelectProjectType()">
+                        <option *ngFor="let option of projectTypeOptions" [ngValue]="option.value">{{option.str}}</option>
+                    </select>
                 </div>
             </div>
-            <div class="item row languages" formArrayName="languages">
-                <label class="col-md-2">프로젝트 사용언어</label>
-                <div class="col-md-6">
-                    <ng-container *ngFor="let language of languages.controls; let i = index;">
-                        <ng-container [formGroupName]="i">
-                            <span *ngIf="!isUpdateMode">
-                                {{languageTypes[language.get('type').value]}} : {{language.get('total_line').value}}
-                            </span>
-                            <span *ngIf="isUpdateMode">
-                                <div class="update">
-                                    <select formControlName="type" class="type" (change)="onSelectLanguage()">
-                                        <ng-container *ngFor="let option of languageOptions">
-                                            <option [hidden]="selectedLanguageOptions.includes(option)"
-                                                [ngValue]="option.value">{{option.str}}</option>
-                                        </ng-container>
-                                    </select>
-                                    <span>:</span>
-                                    <input formControlName="total_line" class="total_line" appAutowidth>
-                                    <i (click)="delLanguageForm(language)" class="material-icons">clear</i>
-                                </div>
-                            </span>
-                        </ng-container>
-                    </ng-container>
-                    <button *ngIf="isUpdateMode" (click)="addLanguageForm()" class="btn extra-btn"><i
-                            class="material-icons">add</i></button>
+            <div *ngIf="project_type.value === 'class'" class="item row">
+                <label class="label">교과목 이름</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{class_contest_name.value}}</span>
+                    <input *ngIf="isUpdateMode" formControlName="class_contest_name" type="text" class="form-control">
                 </div>
             </div>
-            <div class="item row" formArrayName="opensources">
-                <label class="col-md-2">프로젝트 활용 오픈소스 소프트웨어</label>
-                <div class="col-md-6">
-                    <table class="table table-hover table-striped">
-                        <colgroup>
-                            <col width="30%" />
-                            <col width="20%" />
-                            <col width="50%" />
-                            <col width="5px" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>이름</th>
-                                <th>라이선스</th>
-                                <th colspan="2">활용분야</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let opensource of opensources.controls; let i = index;">
-                                <ng-container [formGroupName]="i">
-                                    <ng-container *ngIf="!isUpdateMode">
-                                        <td>{{opensource.get('name').value}}</td>
-                                        <td>{{opensource.get('license').value}}</td>
-                                        <td colspan="2">{{opensource.get('application_field').value}}</td>
-                                    </ng-container>
-                                    <ng-container *ngIf="isUpdateMode">
-                                        <td><input class="form-control" formControlName="name" type="text"></td>
-                                        <td><input class="form-control" formControlName="license" type="text"></td>
-                                        <td><input class="form-control" formControlName="application_field" type="text">
-                                        </td>
-                                        <td>
-                                            <button class='btn extra-btn' (click)="delOpensourceForm(opensource)">
-                                                <i class="material-icons">clear</i>
-                                            </button>
-                                        </td>
-                                    </ng-container>
-                                </ng-container>
-                            </tr>
-                            <tr *ngIf="isUpdateMode" (click)="addOpensourceForm()" class="gray">
-                                <td colspan="4">
-                                    <div class="center-content">
-                                        <i class="material-icons">add</i>
+            <div *ngIf="project_type.value === 'contest'" class="item row">
+                <label class="label">공모전 이름</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{class_contest_name.value}}</span>
+                    <input *ngIf="isUpdateMode" formControlName="class_contest_name" type="text" class="form-control">
+                </div>
+            </div>
+            <div *ngIf="project.prof && !isUpdateMode" class="item row">
+                <label class="label">지도교수 성명</label>
+                <div class="content-value">
+                    <span>{{project.prof.name}}</span>
+                </div>
+            </div>
+            <div *ngIf="isUpdateMode" class="item row">
+                <label class="label">지도교수 성명</label>
+                <div class="col-sm-10 col-md-3">
+                    <input *ngIf="!prof_num.value" #profName type="text" class="form-control"
+                        (keydown.enter)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">
+                    <input *ngIf="prof_num.value" type="text" class="form-control"
+                        value="{{(updateProf) ? updateProf.name : project.prof.name}}#{{prof_num.value}}" [disabled]="true">
+                </div>
+                <button *ngIf="!prof_num.value" class="btn btn-fill" type="button"
+                    (click)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
+                <button *ngIf="prof_num.value" class="btn icon-btn" (click)="removeProfNum()" type="button">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </button>
+            </div>
+            <div *ngIf="project.mento && !isUpdateMode" class="item row">
+                <label class="label">멘토 성명</label>
+                <div class="content-value">
+                    <span>{{project.mento.name}}</span>
+                </div>
+            </div>
+            <div *ngIf="isUpdateMode" class="item row">
+                <label class="label">멘토 성명</label>
+                <div class="col-sm-10 col-md-3">
+                    <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control"
+                        (keydown.enter)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
+                    <input *ngIf="mento_num.value" type="text" class="form-control"
+                        value="{{(updateMento) ? updateMento.name : project.mento.name}}#{{mento_num.value}}"
+                        [disabled]="true">
+                </div>
+                <button *ngIf="!mento_num.value" class="btn btn-fill" type="button"
+                    (click)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
+                <button *ngIf="mento_num.value" class="btn icon-btn" (click)="removeMentoNum()" type="button">
+                    <i class="nc-icon nc-simple-remove"></i></button>
+            </div>
+            <div class="item row">
+                <label class="label">프로젝트 영역</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{projectAreaTypes[project.project_area_type]}}</span>
+                    <select *ngIf="isUpdateMode" formControlName="project_area_type" class="form-control">
+                        <option *ngFor="let option of projectAreaOptions" [ngValue]="option.value">{{option.str}}</option>
+                    </select>
+                </div>
+            </div>
+            <ng-container formGroupName="intro">
+                <div class="item row">
+                    <label class="label">프로젝트 주요 내용 소개(한글)</label>
+                    <div class="content-value">
+                        <span *ngIf="!isUpdateMode">{{kr_description.value}}</span>
+                        <textarea *ngIf="isUpdateMode" formControlName="kr_description" type="text"
+                            class="form-control long-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="item row">
+                    <label class="label">프로젝트 주요 내용 소개(영문)</label>
+                    <div class="content-value">
+                        <span *ngIf="!isUpdateMode">{{en_description.value}}</span>
+                        <textarea *ngIf="isUpdateMode" formControlName="en_description" type="text"
+                            class="form-control long-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="item row">
+                    <label class="label">프로젝트 기대효과 및 활용분야</label>
+                    <div class="content-value">
+                        <span *ngIf="!isUpdateMode">{{expected_effect.value}}</span>
+                        <input *ngIf="isUpdateMode" formControlName="expected_effect" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="item row">
+                    <label class="label">프로젝트 개발 배경 및 필요성</label>
+                    <div class="content-value">
+                        <span *ngIf="!isUpdateMode">{{necessity.value}}</span>
+                        <textarea *ngIf="isUpdateMode" formControlName="necessity" type="text"
+                            class="form-control short-textarea"></textarea>
+                    </div>
+                </div>
+                <div *ngIf="project.intro.img_predicted_file || isUpdateMode" class="item row">
+                    <label class="label">프로젝트 예상 결과물 이미지</label>
+                    <div class="content-value">
+                        <img *ngIf="!isUpdateMode || !previewUpdatePredictedImg" class="md preview-img"
+                            alt="프로젝트 예상 결과물 이미지"
+                            [src]="appUrl+'/project/files/'+project.id+'/'+project.intro.img_predicted_file.name">
+                        <img *ngIf="isUpdateMode && previewUpdatePredictedImg" class="md preview-img"
+                            [src]="previewUpdatePredictedImg">
+                        <div *ngIf="isUpdateMode" class="custom-file">
+                            <input accept="image/*" class="custom-file-input" type="file" id="inputGroupFile01"
+                                #img_predicted (change)="onPredictedImgChange(img_predicted.files)">
+                            <label *ngIf="img_predicted.files && img_predicted.files.length > 0" class="custom-file-label"
+                                for="inputGroupFile01">{{img_predicted.files[0].name}}</label>
+                            <label *ngIf="!img_predicted.files || img_predicted.files.length == 0" class="custom-file-label"
+                                for="inputGroupFile01">파일 선택</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="item row">
+                    <label class="label">프로젝트 개발환경</label>
+                    <div class="content-value">
+                        <span *ngIf="!isUpdateMode">{{develop_env.value}}</span>
+                        <input *ngIf="isUpdateMode" formControlName="develop_env" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="item row">
+                    <label class="label">프로젝트 주요기능 소개</label>
+                    <div class="content-value">
+                        <span *ngIf="!isUpdateMode">{{functions.value}}</span>
+                        <textarea *ngIf="isUpdateMode" formControlName="functions" type="text"
+                            class="form-control short-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="item row languages" formArrayName="languages">
+                    <label class="label">프로젝트 사용언어</label>
+                    <div class="content-value">
+                        <ng-container *ngFor="let language of languages.controls; let i = index;">
+                            <ng-container [formGroupName]="i">
+                                <span *ngIf="!isUpdateMode">
+                                    {{languageTypes[language.get('type').value]}} : {{language.get('total_line').value}}
+                                </span>
+                                <span *ngIf="isUpdateMode">
+                                    <div class="update">
+                                        <select formControlName="type" class="type" (change)="onSelectLanguage()">
+                                            <ng-container *ngFor="let option of languageOptions">
+                                                <option [hidden]="selectedLanguageOptions.includes(option)"
+                                                    [ngValue]="option.value">{{option.str}}</option>
+                                            </ng-container>
+                                        </select>
+                                        <span>:</span>
+                                        <input formControlName="total_line" class="total_line" appAutowidth>
+                                        <i (click)="delLanguageForm(language)" class="material-icons">clear</i>
                                     </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                </span>
+                            </ng-container>
+                        </ng-container>
+                        <button *ngIf="isUpdateMode" (click)="addLanguageForm()" class="btn extra-btn"><i
+                                class="material-icons">add</i></button>
+                    </div>
+                </div>
+                <div class="item row" formArrayName="opensources">
+                    <label class="label">프로젝트 활용 오픈소스 소프트웨어</label>
+                    <div class="content-value">
+                        <table class="table table-hover table-striped">
+                            <colgroup>
+                                <col width="30%" />
+                                <col width="20%" />
+                                <col width="50%" />
+                                <col width="5px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>이름</th>
+                                    <th>라이선스</th>
+                                    <th colspan="2">활용분야</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let opensource of opensources.controls; let i = index;">
+                                    <ng-container [formGroupName]="i">
+                                        <ng-container *ngIf="!isUpdateMode">
+                                            <td>{{opensource.get('name').value}}</td>
+                                            <td>{{opensource.get('license').value}}</td>
+                                            <td colspan="2">{{opensource.get('application_field').value}}</td>
+                                        </ng-container>
+                                        <ng-container *ngIf="isUpdateMode">
+                                            <td><input class="form-control" formControlName="name" type="text"></td>
+                                            <td><input class="form-control" formControlName="license" type="text"></td>
+                                            <td><input class="form-control" formControlName="application_field" type="text">
+                                            </td>
+                                            <td>
+                                                <button class='btn extra-btn' (click)="delOpensourceForm(opensource)">
+                                                    <i class="material-icons">clear</i>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+                                    </ng-container>
+                                </tr>
+                                <tr *ngIf="isUpdateMode" (click)="addOpensourceForm()" class="gray">
+                                    <td colspan="4">
+                                        <div class="center-content">
+                                            <i class="material-icons">add</i>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="item row">
+                <label class="label">키워드</label>
+                <div class="content-value">
+                    <span *ngIf="!isUpdateMode">{{keywords.value}}</span>
+                    <input *ngIf="isUpdateMode" formControlName="keywords" type="text" class="form-control">
                 </div>
             </div>
-        </ng-container>
-        <div class="item row">
-            <label class="col-md-2">키워드</label>
-            <div class="col-md-6">
-                <span *ngIf="!isUpdateMode">{{keywords.value}}</span>
-                <input *ngIf="isUpdateMode" formControlName="keywords" type="text" class="form-control">
-            </div>
-        </div>
-        <div *ngIf="['peer reviewing', 'evaluating', 'finished'].includes(project.project_state) && (project.outputs || isUpdateMode)" formGroupName="outputs">
-            <h5>프로젝트 산출물</h5>
-            <div *ngIf="project.outputs.github_url || isUpdateMode" class="item row">
-                <label class="col-md-2">깃허브 저장소 주소</label>
-                <div class="col-md-6">
-                    <a *ngIf="!isUpdateMode" [attr.href]="github_url.value">{{github_url.value}}</a>
-                    <input *ngIf="isUpdateMode" formControlName="github_url" type="text" class="form-control">
+            <div *ngIf="['peer reviewing', 'evaluating', 'finished'].includes(project.project_state) && (project.outputs || isUpdateMode)" formGroupName="outputs">
+                <h5>프로젝트 산출물</h5>
+                <div *ngIf="project.outputs.github_url || isUpdateMode" class="item row">
+                    <label class="label">깃허브 저장소 주소</label>
+                    <div class="content-value">
+                        <a *ngIf="!isUpdateMode" [attr.href]="github_url.value">{{github_url.value}}</a>
+                        <input *ngIf="isUpdateMode" formControlName="github_url" type="text" class="form-control">
+                    </div>
                 </div>
-            </div>
-            <div *ngIf="project.outputs.doc_ppt_file || isUpdateMode" class="item row">
-                <label class="col-md-2">발표자료(.ppt)</label>
-                <div class="col-md-6">
-                    <a *ngIf="!isUpdateMode" class="download" href="(ppt, pptx)/{{appUrl+'/project/files/'+project.id+'/'+project.outputs.doc_ppt_file.name}}" download="{{project.outputs.doc_ppt_file.original_name}}">{{project.outputs.doc_ppt_file.original_name}}</a>
-                    <div *ngIf="isUpdateMode" class="custom-file">
-                        <input accept=".ppt, .pptx" class="custom-file-input" type="file" id="inputPptFile" #ppt_file
-                            (change)="onPptFileChange(ppt_file.files)">
-                        <label *ngIf="ppt_file.files && ppt_file.files.length > 0" class="custom-file-label"
-                            for="inputPptFile">{{ppt_file.files[0].name}}</label>
-                        <label *ngIf="!ppt_file.files || ppt_file.files.length == 0" class="custom-file-label"
-                            for="inputPptFile">파일 선택</label>
+                <div *ngIf="project.outputs.doc_ppt_file || isUpdateMode" class="item row">
+                    <label class="label">발표자료(.ppt)</label>
+                    <div class="content-value">
+                        <a *ngIf="!isUpdateMode" class="download" href="(ppt, pptx)/{{appUrl+'/project/files/'+project.id+'/'+project.outputs.doc_ppt_file.name}}" download="{{project.outputs.doc_ppt_file.original_name}}">{{project.outputs.doc_ppt_file.original_name}}</a>
+                        <div *ngIf="isUpdateMode" class="custom-file">
+                            <input accept=".ppt, .pptx" class="custom-file-input" type="file" id="inputPptFile" #ppt_file
+                                (change)="onPptFileChange(ppt_file.files)">
+                            <label *ngIf="ppt_file.files && ppt_file.files.length > 0" class="custom-file-label"
+                                for="inputPptFile">{{ppt_file.files[0].name}}</label>
+                            <label *ngIf="!ppt_file.files || ppt_file.files.length == 0" class="custom-file-label"
+                                for="inputPptFile">파일 선택</label>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="project.outputs.doc_zip_file || isUpdateMode" class="item row">
+                    <label class="label">설계서 및 기타파일(.zip)</label>
+                    <div class="content-value">
+                        <a *ngIf="!isUpdateMode" class="download" href="zip/{{appUrl+'/project/files/'+project.id+'/'+project.outputs.doc_zip_file.name}}" download="{{project.outputs.doc_zip_file.original_name}}">{{project.outputs.doc_zip_file.original_name}}</a>
+                        <div *ngIf="isUpdateMode" class="custom-file">
+                            <input accept=".zip" class="custom-file-input" type="file" id="inputZipFile" #zip_file
+                                (change)="onZipFileChange(zip_file.files)">
+                            <label *ngIf="zip_file.files && zip_file.files.length > 0" class="custom-file-label"
+                                for="inputZipFile">{{zip_file.files[0].name}}</label>
+                            <label *ngIf="!zip_file.files || zip_file.files.length == 0" class="custom-file-label"
+                                for="inputZipFile">파일 선택</label>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="project.outputs.url_ucc || isUpdateMode" class="item row">
+                    <label class="label">ucc 동영상 주소</label>
+                    <div class="content-value">
+                        <a *ngIf="!isUpdateMode" [attr.href]="url_ucc.value">{{url_ucc.value}}</a>
+                        <input *ngIf="isUpdateMode" formControlName="url_ucc" type="text" class="form-control">
                     </div>
                 </div>
             </div>
-            <div *ngIf="project.outputs.doc_zip_file || isUpdateMode" class="item row">
-                <label class="col-md-2">설계서 및 기타파일(.zip)</label>
-                <div class="col-md-6">
-                    <a *ngIf="!isUpdateMode" class="download" href="zip/{{appUrl+'/project/files/'+project.id+'/'+project.outputs.doc_zip_file.name}}" download="{{project.outputs.doc_zip_file.original_name}}">{{project.outputs.doc_zip_file.original_name}}</a>
-                    <div *ngIf="isUpdateMode" class="custom-file">
-                        <input accept=".zip" class="custom-file-input" type="file" id="inputZipFile" #zip_file
-                            (change)="onZipFileChange(zip_file.files)">
-                        <label *ngIf="zip_file.files && zip_file.files.length > 0" class="custom-file-label"
-                            for="inputZipFile">{{zip_file.files[0].name}}</label>
-                        <label *ngIf="!zip_file.files || zip_file.files.length == 0" class="custom-file-label"
-                            for="inputZipFile">파일 선택</label>
+            <div *ngIf="project.evaluation">
+                <h5>평가</h5>
+                <div *ngIf="project.evaluation.summary_score" class="item row">
+                    <label class="label">작품개요 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.summary_score}}/5점</span>
+                    </div>
+                </div>
+                <div *ngIf="project.evaluation.contents_score" class="item row">
+                    <label class="label">작품내용 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.contents_score}}/5점</span>
+                    </div>
+                </div>
+                <div *ngIf="project.evaluation.exec_contents_score" class="item row">
+                    <label class="label">작품수행내용 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.exec_contents_score}}/5점</span>
+                    </div>
+                </div>
+                <div *ngIf="project.evaluation.predicted_effect_score" class="item row">
+                    <label class="label">작품의 기대효과 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.predicted_effect_score}}/5점</span>
+                    </div>
+                </div>
+                <div *ngIf="project.evaluation.application_field_score" class="item row">
+                    <label class="label">활용분야 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.application_field_score}}/5점</span>
+                    </div>
+                </div>
+                <div *ngIf="project.evaluation.outputs_score" class="item row">
+                    <label class="label">개발산출물 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.outputs_score}}/5점</span>
+                    </div>
+                </div>
+                <div *ngIf="project.evaluation.opensource_score" class="item row">
+                    <label class="label">오픈소스활용 점수</label>
+                    <div class="content-value">
+                        <span>{{project.evaluation.opensource_score}}/5점</span>
                     </div>
                 </div>
             </div>
-            <div *ngIf="project.outputs.url_ucc || isUpdateMode" class="item row">
-                <label class="col-md-2">ucc 동영상 주소</label>
-                <div class="col-md-6">
-                    <a *ngIf="!isUpdateMode" [attr.href]="url_ucc.value">{{url_ucc.value}}</a>
-                    <input *ngIf="isUpdateMode" formControlName="url_ucc" type="text" class="form-control">
-                </div>
-            </div>
-        </div>
-        <div *ngIf="project.evaluation">
-            <h5>평가</h5>
-            <div *ngIf="project.evaluation.summary_score" class="item row">
-                <label class="col-md-2">작품개요 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.summary_score}}/5점</span>
-                </div>
-            </div>
-            <div *ngIf="project.evaluation.contents_score" class="item row">
-                <label class="col-md-2">작품내용 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.contents_score}}/5점</span>
-                </div>
-            </div>
-            <div *ngIf="project.evaluation.exec_contents_score" class="item row">
-                <label class="col-md-2">작품수행내용 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.exec_contents_score}}/5점</span>
-                </div>
-            </div>
-            <div *ngIf="project.evaluation.predicted_effect_score" class="item row">
-                <label class="col-md-2">작품의 기대효과 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.predicted_effect_score}}/5점</span>
-                </div>
-            </div>
-            <div *ngIf="project.evaluation.application_field_score" class="item row">
-                <label class="col-md-2">활용분야 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.application_field_score}}/5점</span>
-                </div>
-            </div>
-            <div *ngIf="project.evaluation.outputs_score" class="item row">
-                <label class="col-md-2">개발산출물 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.outputs_score}}/5점</span>
-                </div>
-            </div>
-            <div *ngIf="project.evaluation.opensource_score" class="item row">
-                <label class="col-md-2">오픈소스활용 점수</label>
-                <div class="col-md-6">
-                    <span>{{project.evaluation.opensource_score}}/5점</span>
-                </div>
-            </div>
-        </div>
-        <!-- 수정 모드 아님 -->
-        <ng-container *ngIf="!isUpdateMode">
-            <!-- 팀원 -->
-            <ng-container *ngIf="myMember">
-                <ng-container *ngIf="isMyProject">
-                    <button class="btn pull-right" type="button"
-                        *ngIf="['ready', 'recruiting'].includes(project.project_state)"
-                        (click)="deleteProject()">삭제</button>
-                    <button class="btn pull-right" type="button"
-                        (click)="activateUpdateMode()">수정</button>
-                    <button class="btn pull-right" type="button"
-                        *ngIf="project.project_state == 'submitting outputs'"
-                        (click)="submitOutputs.openModal(project)">산출물 제출</button>
+            <!-- 수정 모드 아님 -->
+            <ng-container *ngIf="!isUpdateMode">
+                <!-- 팀원 -->
+                <ng-container *ngIf="myMember">
+                    <ng-container *ngIf="isMyProject">
+                        <button class="btn pull-right" type="button"
+                            *ngIf="['ready', 'recruiting'].includes(project.project_state)"
+                            (click)="deleteProject()">삭제</button>
+                        <button class="btn pull-right" type="button"
+                            (click)="activateUpdateMode()">수정</button>
+                        <button class="btn pull-right" type="button"
+                            *ngIf="project.project_state == 'submitting outputs'"
+                            (click)="submitOutputs.openModal(project)">산출물 제출</button>
+                    </ng-container>
+                    <button class="btn pull-right" type="button" 
+                            *ngIf="project.project_state == 'peer reviewing' && !myMember.did_review_peer"
+                            (click)="submitPeerReview.openModal(project)">동료평가 입력</button>
                 </ng-container>
-                <button class="btn pull-right" type="button" 
-                        *ngIf="project.project_state == 'peer reviewing' && !myMember.did_review_peer"
-                        (click)="submitPeerReview.openModal(project)">동료평가 입력</button>
+                <!-- 팀원 아닌 다른 학생 -->
+                <ng-container *ngIf="!myMember && myUserType=='student'">
+                    <button class="btn pull-right" type="button"
+                        *ngIf="['recruiting','executing'].includes(project.project_state) && (!myRequestPart)"
+                        (click)="openRequestPartModal()">참여요청</button>
+                    <button class="btn pull-right" type="button" disabled='true'
+                        *ngIf="['recruiting','executing'].includes(project.project_state) && (myRequestPart)"
+                        (click)="openRequestPartModal()">참여요청중</button>
+                </ng-container>
+                <!-- 지도 -->
+                <ng-container *ngIf="isManageProject">
+                    <!-- 프로젝트 평가 -->
+                    <button class="btn pull-right" type="button" *ngIf="project.project_state == 'evaluating'"
+                        (click)="submitEvaluation.openModal(project)">평가 입력</button>
+                </ng-container>
+            <!-- 수정 모드 -->
             </ng-container>
-            <!-- 팀원 아닌 다른 학생 -->
-            <ng-container *ngIf="!myMember && myUserType=='student'">
-                <button class="btn pull-right" type="button"
-                    *ngIf="['recruiting','executing'].includes(project.project_state) && (!myRequestPart)"
-                    (click)="openRequestPartModal()">참여요청</button>
-                <button class="btn pull-right" type="button" disabled='true'
-                    *ngIf="['recruiting','executing'].includes(project.project_state) && (myRequestPart)"
-                    (click)="openRequestPartModal()">참여요청중</button>
+            <ng-container *ngIf="isUpdateMode">
+                <button class="btn pull-right" type="button" (click)="deActivateUpdateMode()">취소</button>
+                <button class="btn pull-right" type="button" (click)="updateProject()">저장</button>
             </ng-container>
-            <!-- 지도 -->
-            <ng-container *ngIf="isManageProject">
-                <!-- 프로젝트 평가 -->
-                <button class="btn pull-right" type="button" *ngIf="project.project_state == 'evaluating'"
-                    (click)="submitEvaluation.openModal(project)">평가 입력</button>
-            </ng-container>
-        <!-- 수정 모드 -->
-        </ng-container>
-        <ng-container *ngIf="isUpdateMode">
-            <button class="btn pull-right" type="button" (click)="deActivateUpdateMode()">취소</button>
-            <button class="btn pull-right" type="button" (click)="updateProject()">저장</button>
-        </ng-container>
+        </div>
     </div>
 </div>
 <div class="card" *ngIf="isMyProject && !isUpdateMode && ['ready', 'recruiting', 'executing'].includes(project.project_state)">
