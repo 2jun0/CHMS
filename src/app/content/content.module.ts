@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule, OutletContext } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -37,11 +37,12 @@ import { SubmitPeerReviewComponent } from './project/project-detail/submit-peer-
 import { ManageListComponent } from './project/manage-list/manage-list.component';
 import { ShowPeerReviewComponent } from './project/project-detail/show-peer-review/show-peer-review.component';
 import { EvaluationComponent } from './project/project-detail/submit-evaluation/submit-evaluation.component';
-import { MyMilageComponent } from './mileage/my-milage/my-milage.component';
-import { MilageDetailComponent } from './mileage/milage-detail/milage-detail.component';
+import { MyMileageComponent } from './mileage/my-mileage/my-mileage.component';
+import { MileageDetailComponent } from './mileage/mileage-detail/mileage-detail.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { PrintLayoutComponent } from '../print/print-layout/print-layout.component';
 import { PrintProjectComponent } from '../print/print-project/print-project.component';
+import { InputMileageComponent } from './mileage/input-mileage/input-mileage.component';
 
 
 defineLocale('ko', koLocale);
@@ -114,6 +115,16 @@ const routes: Routes = [
     component: MemberRoleListComponent
   },
   {
+    path: 'my-mileage/:page',
+    component: MyMileageComponent,
+    canActivate: [AuthGuard],
+    data: {userTypes: ['student'], errorMsg: 'My 마일리지 조회는 학생 사용자만 접근할 수 있습니다.'}
+  },
+  {
+    path: 'mileage/input-mileage/:type',
+    component: InputMileageComponent
+  },
+  {
     path: 'print',
     outlet: 'print',
     component: PrintLayoutComponent,
@@ -149,11 +160,12 @@ const routes: Routes = [
     ManageListComponent,
     ShowPeerReviewComponent,
     EvaluationComponent,
-    MyMilageComponent,
-    MilageDetailComponent,
+    MyMileageComponent,
+    MileageDetailComponent,
     ResetPasswordComponent,
     PrintLayoutComponent,
     PrintProjectComponent,
+    InputMileageComponent,
   ],
   
   exports: [

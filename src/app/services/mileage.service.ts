@@ -47,6 +47,10 @@ export class MileageService {
     return this.http.post<any>(`${this.appUrl}/mileage/upload-file`, formData, {headers : this.headers});
   }
 
+  getMileagesByUserNum(user_num: number): Observable<Mileage[]> {
+    return this.http.post<Mileage[]>(`${this.appUrl}/mileage/get-mileages`, {user_num}, {headers : this.headers});
+  }
+
   getAllMileageCodes(): Observable<MileageCode[]> {
     return this.http.get<MileageCode[]>(`${this.appUrl}/mileage/get-mileage-codes`);
   }

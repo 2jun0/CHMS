@@ -38,26 +38,30 @@
 				<table class="table table-hover table-striped">
 					<thead>
 						<tr>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
-							<th></th>
+							<th>코드</th>
+							<th>마일리지 명</th>
+							<th>추정 점수</th>
+							<th>점수</th>
+							<th>발생일자</th>
+							<th>활동상세내역</th>
+							<th>사업단확인</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngFor="let user of allUsers" (click)="accountDetail.openModal(user)">
-							<td>{{userTypes[user.user_type]}}</td>
-							<td>{{user.name}}</td>
-							<td>{{user.user_num}}</td>
-							<td>{{formatDate(user.join_date)}}</td>
-							<td *ngIf="user.user_type === 'student'">{{majorTypes[user.major_type]}}</td>
-							<td *ngIf="user.user_type === 'mento'">{{user.workplace}}/{{user.department}}</td>
-							<td *ngIf="user.user_type === 'professor'">{{majorTypes[user.department_type]}}</td>
+						<tr *ngFor="let mileage of myMileages">
+							<td>{{mileage.code}}</td>
+							<td>{{mileageCode[mileage.code].detail}}</td>
+							<td>{{mileage.score}}</td>
+							<td>{{(mileage.is_accepted)?mileage.score:0}}</td>
+							<td>{{mileage.act_date.from}} ~ {{mileage.act_date.to}}</td>
+							<td>{{mileage.detail}}</td>
+							<td>
+								<input type="checkbox" [checked]="mileage.is_accepted" disabled>
+							</td>
 						</tr>
 					</tbody>
 				</table>
-				<div *ngIf="allUsers.length === 0">
+				<div *ngIf="myMileages.length === 0">
 					검색 결과 없음!
 				</div>
 			</div>

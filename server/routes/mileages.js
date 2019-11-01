@@ -37,7 +37,7 @@ router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']
 /*
   마일리지 파일 업로드
   POST /mileage/upload-file
-  JWT Token student / formData { mileage_id, file_description }
+  JWT Token student, admin / formData { mileage_id, file_description }
 */
 router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']), (req, res, next) => {
   console.log('[POST] /mileage/upload-file');
@@ -50,6 +50,31 @@ router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']
 
     return res.json({success : true});
   })
+});
+
+/*
+  마일리지 다운로드
+  POST /mileage/get-mileages
+  JWT Token student, admin / user_num
+*/
+router.post('get-mileages', isAuthenticated, doesUserExist('user_num'), forceByAdmin(isSelf), (req, res, next) => {
+  console.log('[POST] /mileage/get-mileages');
+
+  const { user_num } = req.body;
+
+  Mileage.findByUserNum(user_num)
+    .then(docs => {
+      let objs = [];
+
+      for(var doc of docs) {
+        objs.push(doc.toCustomObject());
+      }
+
+      return res.send(objs);
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
 });
 
 /*

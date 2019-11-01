@@ -37,7 +37,7 @@ const Mileage = mongoose.Schema({
             user_name: this.user_name,
             department: this.department,
             input_date: this.input_date,
-            code: this.code,
+            code: this.code.code,
             score: this.score,
             act_date: {
                 from: this.act_date.from,
@@ -51,6 +51,10 @@ const Mileage = mongoose.Schema({
 
         return result;
     }
+
+    Mileage.statics.findByUserNum = function(user_num) {
+        this.find({user_num}).populate({path:'code', populate:{path:"minor", populate:{path:'major'}}});
+    };
 
 
 module.exports = mongoose.model('Mileage', Mileage);
