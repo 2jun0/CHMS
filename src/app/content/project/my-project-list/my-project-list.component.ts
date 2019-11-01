@@ -91,7 +91,6 @@ export class MyProjectListComponent implements OnInit {
     this.projectService.getProjectsByMemberNum(this.authService.getUserNum(), this.pageIndex * this.PROJECT_COUNT_IN_PAGE, this.PROJECT_COUNT_IN_PAGE)
       .subscribe(
         (projects) => {
-          console.log(projects);
           this.myProjects = projects;
           for(let project of projects) {
             this.projectService.getProjectLeader(project.id)
