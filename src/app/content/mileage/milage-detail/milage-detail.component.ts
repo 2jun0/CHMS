@@ -10,6 +10,7 @@ export class MilageDetailComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }

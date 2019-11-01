@@ -613,7 +613,7 @@ $card-t1-item-margin-size: 30px;
                 font-weight: $font-weight-t2;
                 color: #9A9A9A;
                 padding-top: 10px;
-                margin-left: -10px;
+                margin-left: 10px;
                 @media screen and (min-width: 992px){
                     padding-top: 18px;
                 }
@@ -938,6 +938,14 @@ $card-t1-item-margin-size: 30px;
                     @media screen and (max-width: 991px){
                         width: 100%;
                     }
+                }
+
+                .content-button {
+                    padding: 0px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    margin: 0px;
+                    margin-left: 10px;
                 }
 
                 .label {

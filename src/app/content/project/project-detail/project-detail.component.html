@@ -26,7 +26,7 @@
             </div>
             <div class="item row">
                 <label class="label">예상 수행 팀원 수</label>
-                <div class="col sm">
+                <div class="sm">
                     <span *ngIf="!isUpdateMode">{{member_count.value}}명</span>
                     <input *ngIf="isUpdateMode" formControlName="member_count" type="number" class="form-control">
                 </div>
@@ -38,7 +38,7 @@
                     <span>{{formatDate(recruit_period.value.start_date)}} ~
                         {{formatDate(recruit_period.value.end_date)}}</span>
                 </div>
-                <div *ngIf="isUpdateMode" formGroupName="recruit_period" class="col-sm-10 col-md-6 edit-date-range">
+                <div *ngIf="isUpdateMode" formGroupName="recruit_period" class="edit-date-range">
                     <div class="start">
                         <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
                             bsDatepicker [isDisabled]="true"
@@ -58,7 +58,7 @@
                     <span>{{formatDate(exec_period.value.start_date)}} ~
                         {{formatDate(exec_period.value.end_date)}}</span>
                 </div>
-                <div *ngIf="isUpdateMode" formGroupName="exec_period" class="col-sm-10 col-md-6 edit-date-range">
+                <div *ngIf="isUpdateMode" formGroupName="exec_period" class="edit-date-range">
                     <div class="start">
                         <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
                             bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
@@ -104,14 +104,14 @@
             </div>
             <div *ngIf="isUpdateMode" class="item row">
                 <label class="label">지도교수 성명</label>
-                <div class="col-sm-10 col-md-3">
+                <div class="md">
                     <input *ngIf="!prof_num.value" #profName type="text" class="form-control"
-                        (keydown.enter)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">
+                        (keydown.enter)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">
                     <input *ngIf="prof_num.value" type="text" class="form-control"
                         value="{{(updateProf) ? updateProf.name : project.prof.name}}#{{prof_num.value}}" [disabled]="true">
                 </div>
-                <button *ngIf="!prof_num.value" class="btn btn-fill" type="button"
-                    (click)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
+                <button *ngIf="!prof_num.value" class="btn btn-fill content-button" type="button"
+                    (click)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
                 <button *ngIf="prof_num.value" class="btn icon-btn" (click)="removeProfNum()" type="button">
                     <i class="nc-icon nc-simple-remove"></i>
                 </button>
@@ -124,15 +124,15 @@
             </div>
             <div *ngIf="isUpdateMode" class="item row">
                 <label class="label">멘토 성명</label>
-                <div class="col-sm-10 col-md-3">
+                <div class="md">
                     <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control"
-                        (keydown.enter)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
+                        (keydown.enter)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
                     <input *ngIf="mento_num.value" type="text" class="form-control"
                         value="{{(updateMento) ? updateMento.name : project.mento.name}}#{{mento_num.value}}"
                         [disabled]="true">
                 </div>
-                <button *ngIf="!mento_num.value" class="btn btn-fill" type="button"
-                    (click)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
+                <button *ngIf="!mento_num.value" class="btn btn-fill content-button" type="button"
+                    (click)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
                 <button *ngIf="mento_num.value" class="btn icon-btn" (click)="removeMentoNum()" type="button">
                     <i class="nc-icon nc-simple-remove"></i></button>
             </div>
@@ -179,8 +179,8 @@
                 </div>
                 <div *ngIf="project.intro.img_predicted_file || isUpdateMode" class="item row">
                     <label class="label">프로젝트 예상 결과물 이미지</label>
-                    <div class="content-value">
-                        <img *ngIf="!isUpdateMode || !previewUpdatePredictedImg" class="md preview-img"
+                    <div class="content-img">
+                        <img *ngIf="((!isUpdateMode || !previewUpdatePredictedImg)&&project.intro.img_predicted_file)" class="md preview-img"
                             alt="프로젝트 예상 결과물 이미지"
                             [src]="appUrl+'/project/files/'+project.id+'/'+project.intro.img_predicted_file.name">
                         <img *ngIf="isUpdateMode && previewUpdatePredictedImg" class="md preview-img"
@@ -475,7 +475,7 @@
     </div>
 </ng-template>
 <!-- 멘토 & 지도 교수 검색 -->
-<app-search-prof-mento #serachProfMento (setProf)="setProf($event)" (setMento)="setMento($event)"></app-search-prof-mento>
+<app-search-prof-mento #searchProfMento (setProf)="setProf($event)" (setMento)="setMento($event)"></app-search-prof-mento>
 <!-- 산출물 검색 -->
 <app-submit-outputs #submitOutputs></app-submit-outputs>
 <!-- 동료 평가 제출 -->

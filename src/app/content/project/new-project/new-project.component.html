@@ -38,10 +38,10 @@
                             <div class="item row">
                                 <label class="col-md-2 control-label">지도교수 성명</label>
                                 <div class="col-sm-10 col-md-3">
-                                    <input *ngIf="!prof_num.value" #profName type="text" class="form-control" (keydown.enter)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">
+                                    <input *ngIf="!prof_num.value" #profName type="text" class="form-control" (keydown.enter)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">
                                     <input *ngIf="prof_num.value"  type="text" class="form-control" value="{{newProf.name}}#{{prof_num.value}}" [disabled]="true">
                                 </div>
-                                <button *ngIf="!prof_num.value" class="btn btn-fill" type="button" (click)="serachProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
+                                <button *ngIf="!prof_num.value" class="btn btn-fill" type="button" (click)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
                                 <button *ngIf="prof_num.value" class="btn icon-btn" (click)="removeProfNum()" type="button">
                                         <i class="nc-icon nc-simple-remove"></i></button>
                             </div>
@@ -50,10 +50,10 @@
                             <div class="item row">
                                 <label class="col-md-2 control-label">멘토 성명</label>
                                 <div class="col-sm-10 col-md-3">
-                                    <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control" (keydown.enter)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
+                                    <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control" (keydown.enter)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
                                     <input *ngIf="mento_num.value"  type="text" class="form-control" value="{{newMento.name}}#{{mento_num.value}}" [disabled]="true">
                                 </div>
-                                <button *ngIf="!mento_num.value" class="btn btn-fill" type="button" (click)="serachProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
+                                <button *ngIf="!mento_num.value" class="btn btn-fill" type="button" (click)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
                                 <button *ngIf="mento_num.value" class="btn icon-btn" (click)="removeMentoNum()" type="button">
                                     <i class="nc-icon nc-simple-remove"></i></button>
                             </div>
@@ -293,5 +293,5 @@
             </div>
         </div>
     </div>
-    <app-search-prof-mento #serachProfMento (setProf)="setProf($event)" (setMento)="setMento($event)"></app-search-prof-mento>
+    <app-search-prof-mento #searchProfMento (setProf)="setProf($event)" (setMento)="setMento($event)"></app-search-prof-mento>
 </div>
