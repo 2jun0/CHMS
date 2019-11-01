@@ -50,8 +50,7 @@ export class NewProjectComponent implements OnInit {
 
   newProf: User;
   newMento: User;
-
-electedLanguageOptions
+  
   constructor(
     private router : Router,
     private formBuilder: FormBuilder,

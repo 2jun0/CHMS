@@ -16,7 +16,7 @@ export class MileageService {
   appUrl = environment.apiUrl;
 
   constructor(
-    private http: HttpClient,
+    private http: HttpClient, 
     private auth: AuthService
   ) { }
 

@@ -162,7 +162,7 @@ router.use('/files', express.static('../files/projects'));
   JWT Token leader / formData { project_id, file_description }
 */
 router.post('/upload-file', isAuthenticated, (req, res, next) => {
-  console.log('[POST] upload-file');
+  console.log('[POST] project/upload-file');
 
   uploadFileInProject(req, res, (err) => {
     if(err) {

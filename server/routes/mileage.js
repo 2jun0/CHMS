@@ -31,4 +31,22 @@ router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']
     });
 });
 
+/*
+  마일리지 파일 업로드
+  POST /mileage/upload-file
+  JWT Token student / formData { mileage_id, file_description }
+*/
+router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']), (req, res, next) => {
+  console.log('[POST] upload-file');
+
+  uploadFileInProject(req, res, (err) => {
+    if(err) {
+      res.status(403).json({ success : false, message : err.message });
+      console.log(err);
+    }
+
+    return res.json({success : true});
+  })
+});
+
 module.exports = router;
