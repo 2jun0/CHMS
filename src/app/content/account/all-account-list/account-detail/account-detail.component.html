@@ -91,7 +91,7 @@
                             <td *ngIf="isUpdateMode">
                                 <select formControlName="major_type">
                                     <option *ngFor="let option of majorOptions" class="form-control"
-                                        [ngValue]="option.value">{{option.str}}</option>
+                                        [ngValue]="option.key">{{option.value}}</option>
                                 </select>
                             </td>
                         </tr>
@@ -133,7 +133,7 @@
                             <td *ngIf="isUpdateMode">
                                 <select formControlName="department_type" class="form-control">
                                     <option *ngFor="let option of majorOptions"
-                                        [ngValue]="option.value">{{option.str}}</option>
+                                        [ngValue]="option.key">{{option.value}}</option>
                                 </select>
                             </td>
                         </tr>

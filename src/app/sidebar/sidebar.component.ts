@@ -76,12 +76,12 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['account/all-list', 1]);
   }
 
-  gotoInputMileage(type: string) {
-    this.router.navigate(['mileage/input-mileage', type])
+  gotoMyMileage() {
+    this.router.navigate(['mileage/my-mileage', 1]);
   }
 
-  gotoMymileage() {
-    this.router.navigate([]);
+  gotoInputMileage(type: string) {
+    this.router.navigate(['mileage/input-mileage', type]);
   }
 
   logout() {

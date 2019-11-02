@@ -115,7 +115,7 @@ const routes: Routes = [
     component: MemberRoleListComponent
   },
   {
-    path: 'my-mileage/:page',
+    path: 'mileage/my-mileage/:page',
     component: MyMileageComponent,
     canActivate: [AuthGuard],
     data: {userTypes: ['student'], errorMsg: 'My 마일리지 조회는 학생 사용자만 접근할 수 있습니다.'}

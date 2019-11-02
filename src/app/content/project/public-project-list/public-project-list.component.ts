@@ -289,7 +289,7 @@ export class PublicProjectListComponent implements OnInit {
   createProjectAreaTypeForm() {
     let obj = {};
     for (let option of this.projectAreaOptions) {
-      obj[option.value] = true;
+      obj[option.key] = true;
     }
 
     return this.formBuilder.group(obj);
@@ -298,7 +298,7 @@ export class PublicProjectListComponent implements OnInit {
   createProjectStateForm() {
     let obj = {};
     for (let option of this.projectStateOptions) {
-      obj[option.value] = true;
+      obj[option.key] = true;
     }
 
     return this.formBuilder.group(obj);

@@ -218,13 +218,11 @@ const Project = mongoose.Schema({
 
     // filter있는 프로젝트 검색
     Project.statics.findWithFilter = function(filter, dataIndex) {
-        if(filter){
-            // if start exists
-            if(dataIndex){
-                return this.updateProjectState(this.joinProject(this.find(filter).sort({ "created_date" : -1 }).skip(dataIndex.start).limit(dataIndex.count)));
-            }else{
-                return this.updateProjectState(this.joinProject(this.find(filter).sort({ "created_date" : -1 })));
-            }
+        // if start exists
+        if(dataIndex){
+            return this.updateProjectState(this.joinProject(this.find(filter).sort({ "created_date" : -1 }).skip(dataIndex.start).limit(dataIndex.count)));
+        }else{
+            return this.updateProjectState(this.joinProject(this.find(filter).sort({ "created_date" : -1 })));
         }
     };
 

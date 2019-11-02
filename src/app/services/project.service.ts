@@ -91,20 +91,11 @@ export class ProjectService {
 
   // Get public project & count with filter (or not)
   getPublicProjectCount(filter?): Observable<number> {
-    if(!filter){
-      return this.http.post<number>(`${this.appUrl}/project/get-public-project-count`, {});
-    }else{
-      return this.http.post<number>(`${this.appUrl}/project/get-public-project-count`, {_filter: filter});
-    }
+    return this.http.post<number>(`${this.appUrl}/project/get-public-project-count`, {_filter: filter});
   }
   getPublicProjects(start, count, filter?): Observable<Project[]> {
-    if(!filter){
-      return this.http.post<Project[]>(`${this.appUrl}/project/get-public-projects`, {_dataIndex: { start, count}})
-        .pipe(map(res => { ProjectService.adjustProjectsType(res); return res;}));
-    }else{
-      return this.http.post<Project[]>(`${this.appUrl}/project/get-public-projects`, {_dataIndex: { start, count}, _filter: filter})
-        .pipe(map(res => { ProjectService.adjustProjectsType(res); return res;}));
-    }
+    return this.http.post<Project[]>(`${this.appUrl}/project/get-public-projects`, {_dataIndex: { start, count}, _filter: filter})
+      .pipe(map(res => { ProjectService.adjustProjectsType(res); return res;}));
   }
   getPublicProject(projectId: string): Observable<Project> {
     return this.http.post<Project>(`${this.appUrl}/project/get-public-project`, { projectId})
@@ -113,20 +104,11 @@ export class ProjectService {
 
   // Get all project & count with filter (or not)
   getAllProjectCount(filter?): Observable<number> {
-    if(!filter){
-      return this.http.post<number>(`${this.appUrl}/project/get-all-project-count`, {}, {headers : this.headers});
-    }else{
-      return this.http.post<number>(`${this.appUrl}/project/get-all-project-count`, {_filter: filter}, {headers : this.headers});
-    }
+    return this.http.post<number>(`${this.appUrl}/project/get-all-project-count`, {_filter: filter}, {headers : this.headers});
   }
   getAllProjects(start, count, filter?): Observable<Project[]> {
-    if(!filter){
-      return this.http.post<Project[]>(`${this.appUrl}/project/get-all-projects`, {_dataIndex: {start, count}}, {headers : this.headers})
-        .pipe(map(res => { ProjectService.adjustProjectsType(res); return res; }));
-    }else{
-      return this.http.post<Project[]>(`${this.appUrl}/project/get-all-projects`, {_dataIndex: {start, count}, _filter: filter}, {headers : this.headers})
-        .pipe(map(res => { ProjectService.adjustProjectsType(res); return res; }));
-    }
+    return this.http.post<Project[]>(`${this.appUrl}/project/get-all-projects`, {_dataIndex: {start, count}, _filter: filter}, {headers : this.headers})
+      .pipe(map(res => { ProjectService.adjustProjectsType(res); return res; }));
   }
 
   // Get project & count by mento number

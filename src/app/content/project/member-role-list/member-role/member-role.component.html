@@ -43,8 +43,8 @@
 							<div class="update">
 								<select formControlName="type" class="type" (change)="onSelectLanguage()">
 									<ng-container *ngFor="let option of languageOptions">
-										<option [hidden]="selectedLanguageOptions.includes(option)" [ngValue]="option.value">
-											{{option.str}}</option>
+										<option [hidden]="selectedLanguageOptions.includes(option)" [ngValue]="option.key">
+											{{option.value}}</option>
 									</ng-container>
 								</select>
 								<span>:</span>

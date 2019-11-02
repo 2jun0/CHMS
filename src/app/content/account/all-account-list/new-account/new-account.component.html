@@ -63,7 +63,7 @@
                             <td>
                                 <select formControlName="major_type">
                                     <option *ngFor="let option of majorOptions" class="form-control"
-                                    [ngValue]="option.value">{{option.str}}</option>
+                                    [ngValue]="option.key">{{option.value}}</option>
                                 </select>
                             </td>
                         </tr>
@@ -101,7 +101,7 @@
                                 <select formControlName="department_type">
                                     <option [selected]="true" class="form-control">없음</option>
                                     <option *ngFor="let option of majorOptions" class="form-control"
-                                        [ngValue]="option.value">{{option.str}}</option>
+                                        [ngValue]="option.key">{{option.value}}</option>
                                 </select>
                             </td>
                         </tr>

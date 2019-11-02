@@ -506,10 +506,6 @@ $card-t1-item-margin-size: 30px;
             @media screen and (max-width: 991px){
                 width: 100%;
             }
-
-            &:last-child{
-
-            }
         }
         &.right{
             margin-left: 15px;
@@ -630,6 +626,37 @@ $card-t1-item-margin-size: 30px;
                 min-width: 100px;
             }
         }
+
+        .content-value {
+            width: 70%;
+            @media screen and (max-width: 991px){
+                width: 100%;
+            }
+
+
+        }
+
+        .content-img {
+            width: 50%;
+            @media screen and (max-width: 991px){
+                width: 100%;
+            }
+        }
+
+        .content-button {
+            padding: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin: 0px;
+            margin-left: 10px;
+        }
+
+        .label {
+            width: 30%;
+            @media screen and (max-width: 991px){
+                width: 100%;
+            }
+        }
     }
 
     &.xsm{
@@ -661,6 +688,14 @@ $card-t1-item-margin-size: 30px;
     &.xlg{
         width: 100%;
         max-width: 1300px;
+    }
+
+    &.p70{
+        width: 70%;
+
+        @media screen and (max-width: 991px){
+            width: 100%;
+        }
     }
 
     &.full{
@@ -924,36 +959,6 @@ $card-t1-item-margin-size: 30px;
             }
 
             .card-body{
-                .content-value {
-                    width: 70%;
-                    @media screen and (max-width: 991px){
-                        width: 100%;
-                    }
-
-
-                }
-
-                .content-img {
-                    width: 50%;
-                    @media screen and (max-width: 991px){
-                        width: 100%;
-                    }
-                }
-
-                .content-button {
-                    padding: 0px;
-                    padding-left: 10px;
-                    padding-right: 10px;
-                    margin: 0px;
-                    margin-left: 10px;
-                }
-
-                .label {
-                    width: 30%;
-                    @media screen and (max-width: 991px){
-                        width: 100%;
-                    }
-                }
 
                 h5{
                     font-weight: 500;

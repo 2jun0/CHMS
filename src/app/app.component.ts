@@ -19,8 +19,6 @@ export class AppComponent {
     private printService: PrintService,
     private mileageService: MileageService
   ){
-    this.mileageService.updateMileageCodes();
-
     this.printService.print.subscribe(() => {
       this.isPrinting = true;
     });

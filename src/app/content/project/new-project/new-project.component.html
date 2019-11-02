@@ -141,7 +141,7 @@
                                 <div class="col-sm-10 col-md-6">
                                     <select formControlName="project_area_type"  class="form-control">
                                         <option *ngFor="let option of projectAreaOptions"
-                                            [ngValue]="option.value">{{option.str}}</option>
+                                            [ngValue]="option.key">{{option.value}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
                                                         <select formControlName="type" class="type" (change)="onSelectLanguage(language.get('type').value)">
                                                             <ng-container *ngFor="let option of languageOptions">
                                                                 <option [hidden]="selectedLanguageOptions.includes(option)"
-                                                                    [ngValue]="option.value">{{option.str}}</option>
+                                                                    [ngValue]="option.key">{{option.value}}</option>
                                                             </ng-container>
                                                         </select>
                                                         <i (click)="delLanguageForm(language)" class="material-icons">clear</i>

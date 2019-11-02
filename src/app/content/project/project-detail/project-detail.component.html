@@ -1,5 +1,5 @@
 <div class="center-content">
-    <div *ngIf="isLoad" class="card lg project p4">
+    <div *ngIf="isLoad" class="card p70 project p4">
         <div class="card-header">
             <h4 class="card-title project-title">{{project.kr_title}}</h4>
             <div class="extra">
@@ -78,7 +78,7 @@
                     <span *ngIf="!isUpdateMode">{{projectTypes[project_type.value]}} 프로젝트</span>
                     <select *ngIf="isUpdateMode" formControlName="project_type" class="form-control"
                         (change)="onSelectProjectType()">
-                        <option *ngFor="let option of projectTypeOptions" [ngValue]="option.value">{{option.str}}</option>
+                        <option *ngFor="let option of projectTypeOptions" [ngValue]="option.key">{{option.value}}</option>
                     </select>
                 </div>
             </div>
@@ -141,7 +141,7 @@
                 <div class="content-value">
                     <span *ngIf="!isUpdateMode">{{projectAreaTypes[project.project_area_type]}}</span>
                     <select *ngIf="isUpdateMode" formControlName="project_area_type" class="form-control">
-                        <option *ngFor="let option of projectAreaOptions" [ngValue]="option.value">{{option.str}}</option>
+                        <option *ngFor="let option of projectAreaOptions" [ngValue]="option.key">{{option.value}}</option>
                     </select>
                 </div>
             </div>
@@ -223,7 +223,7 @@
                                         <select formControlName="type" class="type" (change)="onSelectLanguage()">
                                             <ng-container *ngFor="let option of languageOptions">
                                                 <option [hidden]="selectedLanguageOptions.includes(option)"
-                                                    [ngValue]="option.value">{{option.str}}</option>
+                                                    [ngValue]="option.key">{{option.value}}</option>
                                             </ng-container>
                                         </select>
                                         <span>:</span>

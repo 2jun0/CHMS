@@ -119,7 +119,7 @@ export class MemberRoleComponent implements OnInit {
     this.selectedLanguageOptions = [];
     for (var languageForm of this.languages.controls) {
       for (var option of this.languageOptions) {
-        if (option.value === languageForm.get('type').value) {
+        if (option.key === languageForm.get('type').value) {
           this.selectedLanguageOptions.push(option);
           break;
         }

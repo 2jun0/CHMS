@@ -12,7 +12,7 @@ import { User } from 'src/app/model/user';
 // services
 import { UserService } from 'src/app/services/user.service';
 // utils
-import { formatDate, notifyInfo } from 'src/util/util';
+import { formatDate, notifyInfo, notifyError } from 'src/util/util';
 import { Option, parseJsonToOptions } from 'src/util/options';
 
 @Component({
@@ -131,14 +131,19 @@ export class AllAccountListComponent implements OnInit {
           }else{
             this.isLastPageRange = false;
           }
+        },
+        ({ error }) => {
+          notifyError(error);
         }
       );
     
     this.userService.getAllUsers(this.pageIndex * this.USER_COUNT_IN_PAGE, this.USER_COUNT_IN_PAGE, filter)
         .subscribe(
           (users) => {
-            console.log(users);
             this.allUsers = users;
+          },
+          ({ error }) => {
+            notifyError(error);
           }
         )
   }

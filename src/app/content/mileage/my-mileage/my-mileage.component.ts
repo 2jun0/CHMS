@@ -1,34 +1,122 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+// ngx-bootstraps
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 // jsons
 import mileageCode from "src/assets/json/mileageCode.json";
+import majorCode from "src/assets/json/majorMileageCode.json";
+import minorCode from "src/assets/json/minorMileageCode.json";
 // services
 import { MileageService } from 'src/app/services/mileage.service';
 // models
-import { Mileage } from 'src/app/model/mileage';
+import { Mileage, MajorMileage } from 'src/app/model/mileage';
 // utils
-import { AuthService } from 'src/app/services/auth.service';
-import { notifyError } from 'src/util/util';
+import { notifyError, formatDate, notifyInfo } from 'src/util/util';
+import { parseJsonToOptions, Option } from 'src/util/options';
 @Component({
   selector: 'app-my-mileage',
   templateUrl: './my-mileage.component.html',
   styleUrls: ['./my-mileage.component.scss']
 })
 export class MyMileageComponent implements OnInit {
+  @HostListener('window:keydown', ['$event'])
+    handleKeyDown(event: KeyboardEvent) {
+      // f is search key
+      if(event.key == 'f'){
+        this.onFKeyPress();
+      }
+    }
+
+  MILEAGE_COUNT_IN_PAGE: number = 10;
+  PAGE_COUNT_IN_RANGE: number = 5;
+  
+  // external functions
+  formatDate = formatDate;
 
   // jsons for html
-  mileageCode = mileageCode;
+  mileageCodes = mileageCode;
+  majorCodes = majorCode;
+
+  majorCodeOptions: Option[];
+  
+  searchForm: FormGroup;
 
   myMileages: Mileage[];
+  myMileageCount: Number;
+  pageIndex: number;
+  maxPageIndex: number;
+  pageIndexRange: number[];
+
+  isFirstPageRange: boolean;
+  isLastPageRange: boolean;
+  isSearchActivated: boolean;
+
+  today: Date = new Date();
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
     private mileageService: MileageService,
-    private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private localeService: BsLocaleService,
   ) { 
+    this.localeService.use('ko');
     this.myMileages = [];
+    this.isSearchActivated = false;
   }
 
   ngOnInit() {
-    this.mileageService.getMileagesByUserNum(this.authService.getUserNum()).subscribe(
+    this.searchForm = this.formBuilder.group({
+      input_date: null,
+      major_code: '',
+    });
+
+    this.mileageService.loadMileageCodes.subscribe(
+      () => {
+        this.majorCodeOptions = parseJsonToOptions(majorCode);
+      }
+    )
+  }
+
+  reloadMileages(page?) {
+    console.log('[payload]', this.searchForm.value);
+
+    let filter = this.createFilter();
+
+    if(page === 0 || page){
+      this.pageIndex = page;
+    }else{
+      this.pageIndex = Number(this.route.snapshot.paramMap.get('page')) - 1;
+    }
+
+    this.mileageService.getMyMileageCount(filter).subscribe(
+      (count) => {
+        this.myMileageCount = count;
+        this.maxPageIndex = (count%this.MILEAGE_COUNT_IN_PAGE === 0) ? (count/this.MILEAGE_COUNT_IN_PAGE-1) : Math.floor(count/this.MILEAGE_COUNT_IN_PAGE);
+
+        for (var idx = this.pageIndex - this.pageIndex % this.PAGE_COUNT_IN_RANGE, i = 0; (i < this.PAGE_COUNT_IN_RANGE)&&(idx <= this.maxPageIndex); i++, idx++) {
+          this.pageIndexRange.push(idx);
+        }
+
+        if(this.pageIndexRange[0] === 0) {
+          this.isFirstPageRange = true;
+        }else{
+          this.isFirstPageRange = false;
+        }
+        
+        if(this.pageIndexRange[this.pageIndexRange.length-1] == this.maxPageIndex){
+          this.isLastPageRange = true;
+        }else{
+          this.isLastPageRange = false;
+        }
+      },
+      ({ error }) => {
+        notifyError(error);
+      }
+    )
+
+    this.mileageService.getMyMileages(this.pageIndex * this.MILEAGE_COUNT_IN_PAGE, this.MILEAGE_COUNT_IN_PAGE, filter).subscribe(
       (mileages) => {
         this.myMileages = mileages;
       },
@@ -37,4 +125,77 @@ export class MyMileageComponent implements OnInit {
       }
     );
   }
+
+  createFilter() {
+    let filter = {};
+
+    if(this.input_date.value) {
+      filter['input_date'] = {$gte: this.input_date.value[0], $lte: this.input_date.value[1]};
+    }
+
+    return filter;
+  }
+
+  onInputDateChange(date: Date[]) {
+    // 무한 루프를 방지하기 위함임
+    if(date){
+      if(!this.input_date.value || (this.input_date.value[0] !== date[0] || this.input_date.value[1] !== date[1])) {
+        this.input_date.setValue(date);
+        this.gotoPage(0);
+      }
+    }
+  }
+
+  clearInputDate() {
+    this.input_date.setValue(null);
+    this.gotoPage(0);
+  }
+
+  gotoFirstPage() {
+    this.gotoPage(0);
+  }
+
+  gotoLastPage() {
+    this.gotoPage(this.maxPageIndex);
+  }
+
+  gotoNextPageRange() {
+    let idx = this.pageIndexRange[0] + this.PAGE_COUNT_IN_RANGE;
+    if(idx >= this.maxPageIndex) { 
+      this.gotoLastPage();
+    }else {
+      this.gotoPage(idx);
+    }
+  }
+
+  gotoPreviousPageRange() {
+    let idx = this.pageIndexRange[0] - 1;
+    if(idx <= 0) {
+      this.gotoFirstPage();
+    }else{
+      this.gotoPage(idx);
+    }
+  }
+
+  gotoPage(page: number) {
+    this.router.navigate(['/mileage/my-mileage', page+1]);
+    this.reloadMileages(page);
+  }
+
+  onFKeyPress(){
+    if(this.isSearchActivated) this.deActivateSearch();
+    else this.activateSearch();
+  }
+
+  activateSearch() {
+    this.isSearchActivated = true;
+    notifyInfo('검색 모드 활성화', true);
+  }
+
+  deActivateSearch() {
+    this.isSearchActivated = false;
+    notifyInfo('검색 모드 비활성화', true);
+  }
+
+  get input_date() {return this.searchForm.get('input_date');}
 }

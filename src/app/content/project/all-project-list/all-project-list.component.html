@@ -151,10 +151,10 @@
                     <label class="control-label">프로젝트 상태</label>
                     <div class="check-wapper">
                         <div *ngFor="let option of projectStateOptions" class="custom-control custom-checkbox">
-                            <input type="checkbox" value='{{option.value}}' id='{{option.value}}'
-                                formControlName="{{option.value}}" class="custom-control-input" [checked]='true'
+                            <input type="checkbox" value='{{option.key}}' id='{{option.key}}'
+                                formControlName="{{option.key}}" class="custom-control-input" [checked]='true'
                                 (change)="gotoPage(0)">
-                            <label class="custom-control-label" for='{{option.value}}'>{{option.str}}</label>
+                            <label class="custom-control-label" for='{{option.key}}'>{{option.value}}</label>
                         </div>
                     </div>
                 </div>
@@ -163,10 +163,10 @@
                     <label class="control-label">프로젝트 영역</label>
                     <div class="check-wapper">
                         <div *ngFor="let option of projectAreaOptions" class="custom-control custom-checkbox">
-                            <input type="checkbox" value='{{option.value}}' id='{{option.value}}'
-                                formControlName="{{option.value}}" class="custom-control-input" [checked]='true'
+                            <input type="checkbox" value='{{option.key}}' id='{{option.key}}'
+                                formControlName="{{option.key}}" class="custom-control-input" [checked]='true'
                                 (change)="gotoPage(0)">
-                            <label class="custom-control-label" for='{{option.value}}'>{{option.str}}</label>
+                            <label class="custom-control-label" for='{{option.key}}'>{{option.value}}</label>
                         </div>
                     </div>
                 </div>

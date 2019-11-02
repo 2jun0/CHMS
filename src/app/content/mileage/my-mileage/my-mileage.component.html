@@ -1,9 +1,10 @@
-<div class="center-content">
-	<div class="card lg">
+<div class="card-wapper flex">
+	<div class="card left">
 		<div class="card-header">
 			<h4 class="card-title">내 마일리지 조회</h4>
 		</div>
 		<div class="card-body">
+				<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
 			<ul class="pagination pagination-sm">
 				<li *ngIf="!isFirstPageRange" class="page-item">
 					<a class="page-link" (click)="gotoFirstPage()">
@@ -50,10 +51,10 @@
 					<tbody>
 						<tr *ngFor="let mileage of myMileages">
 							<td>{{mileage.code}}</td>
-							<td>{{mileageCode[mileage.code].detail}}</td>
+							<td>{{mileageCodes[mileage.code].detail}}</td>
 							<td>{{mileage.score}}</td>
 							<td>{{(mileage.is_accepted)?mileage.score:0}}</td>
-							<td>{{mileage.act_date.from}} ~ {{mileage.act_date.to}}</td>
+							<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
 							<td>{{mileage.detail}}</td>
 							<td>
 								<input type="checkbox" [checked]="mileage.is_accepted" disabled>
@@ -67,4 +68,26 @@
 			</div>
 		</div>
 	</div>
+	<div *ngIf="isSearchActivated" class="card right search">
+			<div class="card-body">
+				<form [formGroup]='searchForm' class="form-inline form-search" role="form">
+					<div class="search-item">
+						<label class="control-label">입력날짜 검색</label>
+						<div class="date-wapper">
+							<input formControlName="input_date" type="text" class="form-control date" placeholder="입력날짜"
+								bsDaterangepicker [maxDate]="today" (bsValueChange)="onInputDateChange($event)"
+								[bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+							<a class="reset-btn" (click)="clearInputDate()"><i class="material-icons">clear</i></a>
+						</div>
+					</div>
+					<div class="search-item">
+						<label class="control-label">마일리지 구분</label>
+						<select formControlName="major_code" class="form-control year" (change)="gotoPage(0)">
+							<option [ngValue]="'all'" [selected]='true'>모두</option>
+							<option *ngFor="let option of majorCodeOptions" [ngValue]="option.key">{{option.key.description}}</option>
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
 </div>
