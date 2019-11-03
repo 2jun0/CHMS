@@ -20,6 +20,7 @@
                                 <select formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
                                     <option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
+                                <br>
                                 <select *ngIf="minor_code.value" formControlName="code" class="form-control" (change)="onChangeMileageCode(code.value)">
                                     <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
@@ -49,13 +50,13 @@
                                 <div class="start">
                                     <input formControlName="from" type="text" readonly class="form-control" placeholder="시작 날짜" 
                                             bsDatepicker [minDate]="act_date.value.from" [maxDate]="today"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer">
+                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer; background-color: white;">
                                 </div>
                                 <span>~</span>
                                 <div class="end">
                                     <input formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
                                             bsDatepicker [minDate]="act_date.value.from" [maxDate]="today"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer">
+                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer; background-color: white;">
                                 </div>
                             </div>
                         </div>
