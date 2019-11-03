@@ -25,7 +25,7 @@ export class NotifyEmailFinishedComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.auth.authenticateEmail({auth_key : this.auth_key})
+    this.auth.authenticateEmail(this.auth_key)
       .subscribe(
         () => this.is_complete = true,
         ({ error }) => {

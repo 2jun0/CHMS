@@ -42,15 +42,9 @@
                     </tr>
                     <tr>
                         <th scope="row">가입일</th>
-                        <td *ngIf="!isUpdateMode">{{formatDate(user.join_date)}}</td>
-                        <td *ngIf="isUpdateMode">
-                            <input formControlName="join_date" type="text" class="form-control"
-                                placeholder="{{formatDate(user.join_date)}}" bsDatepicker
-                                [maxDate] = "today"
-                                [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green', dateInputFormat: 'YYYY-MM-DD'}">
-                        </td>
+                        <td>{{formatDate(user.join_date)}}</td>
                     </tr>
-                    <ng-container *ngIf="user.user_type === 'student'">
+                    <ng-container *ngIf="user.user_type !== 'admin'">
                         <tr>
                             <th scope="row">이메일</th>
                             <td *ngIf="!isUpdateMode">{{user.email}}</td>
@@ -64,15 +58,19 @@
                             <td>{{user.auth_key}}</td>
                         </tr>
                         <tr>
-                            <th scope="row">이메일 인증 여부</th>
+                            <th scope="row">인증 상태</th>
                             <td *ngIf="!isUpdateMode">{{authStates[user.auth_state]}}</td>
                             <td *ngIf="isUpdateMode">
                                 <select formControlName="auth_state">
                                     <option value="authenticated">인증</option>
                                     <option value="unauthenticated">미인증</option>
+                                    <option value="email-changed">이메일 변경됨</option>
+                                    <option value="disabled">비활성화</option>
                                 </select>
                             </td>
                         </tr>
+                    </ng-container>
+                    <ng-container *ngIf="user.user_type === 'student'">
                         <tr>
                             <th scope="row">학년</th>
                             <td *ngIf="!isUpdateMode">{{user.year_of_study}}</td>
@@ -87,6 +85,20 @@
                         </tr>
                         <tr>
                             <th scope="row">학과</th>
+                            <td *ngIf="!isUpdateMode">{{user.department_type}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <div class="college_department row">
+                                    <select formControlName="college_type" class="form-control" (change)="onChangeCollegeType(college_type.value)">
+                                        <option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                    <select formControlName="department_type" class="form-control">
+                                        <option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">전공</th>
                             <td *ngIf="!isUpdateMode">{{majorTypes[user.major_type]}}</td>
                             <td *ngIf="isUpdateMode">
                                 <select formControlName="major_type">
@@ -176,9 +188,8 @@
         <h4 class="modal-title">사용자 삭제</h4>
     </div>
     <div class="modal-body text-center">
-        <!-- <p>사용자를 정말로 삭제하시겠습니까?</p>
+        <p>사용자를 정말로 삭제하시겠습니까?</p>
         <button type="button" class="btn btn-fill btn-default" (click)="closeConfirmDeleteUserModal()">아니오</button>
-        <button type="button" class="btn btn-fill btn-primary" (click)="deleteUser()">네</button> -->
-        <p>사용자 삭제는 업데이트 중입니다.</p>
+        <button type="button" class="btn btn-fill btn-primary" (click)="deleteUser()">네</button>
     </div>
 </ng-template>

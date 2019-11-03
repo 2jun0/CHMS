@@ -12,25 +12,27 @@ export interface AdminUser extends User {
 }
 
 export interface StudentUser extends User {
+    year_of_study: number,
+    major_type: string
+    department_type: string,
     email: string,
     auth_key?: string,
     auth_state?: string,
-    year_of_study: number,
-    major_type: string
 }
 
 export interface MentoUser extends User {
     workplace: string,
     department: string,
-    job_position: string
+    job_position: string,
+    email: string,
+    auth_key?: string,
+    auth_state?: string,
 }
 
 export interface ProfessorUser extends User {
     major: string,
     department_type: string
-}
-
-export interface AuthKey {
-    auth_key: string,
-
+    email: string,
+    auth_key?: string,
+    auth_state?: string,
 }

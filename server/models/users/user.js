@@ -31,7 +31,7 @@ const User = mongoose.Schema({
   workplace:  { type: String },
   department: { type: String },
   job_position: { type: String },
-  department_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Majortype' }
+  department_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Departmenttype' }
 }, {
     collection: 'User'
   });
@@ -177,6 +177,49 @@ const User = mongoose.Schema({
         return ProfessorUser.customObjectToOriginObject(customObj);
     }
   }
+
+  User.statics.findOneByAuthKey = function (auth_key) {
+    return this.joinPromise(this.findOne({ auth_key: auth_key}))
+      .then(doc => {
+        if(doc) {
+          switch(doc.user_type.description) {
+            case 'student':
+              return StudentUser(doc);
+            case 'mento':
+              return MentoUser(doc);
+            case 'professor':
+              return ProfessorUser(doc);
+            default:
+              return doc;
+          }
+        }else{
+          return null;
+        }
+      });
+  };
+
+  // 이메일 인증
+  User.statics.authenticateEmail = function (auth_key) {
+    return this.findOneByAuthKey(auth_key)
+      .then(user => {
+        if(!user) return null;
+        //이미 인증한 사용자
+        if (user.auth_state.description === 'authenticated') {
+          // nothing....
+        // 인증 안한 사용자
+        }else if (user.auth_state.description === 'email-changed') {
+          user.email = user.new_email;
+          user.new_email = null;
+
+          user.setAuthState('authenticated')
+            .then(() => { return user.save(); });
+        }else if (user.auth_state.description === 'unauthenticated') {
+          // 인증상태 변경
+          user.setAuthState('authenticated')
+            .then(() => { return user.save(); });
+        }
+      });
+  };
 
   /*
     User methods function 

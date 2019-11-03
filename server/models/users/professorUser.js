@@ -13,33 +13,69 @@ const ProfessorUser = mongoose.Schema({
   name: { type: String, required: true },
   major: { type: String },
   join_date: { type: Date, default: Date.now },
-  department_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Majortype' }
+  department_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Departmenttype' },
+  email:      { type: String, required: true},
+  auth_key:   { type: String, required: true},
+  auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
+  new_email:  { type: String }
 }, {
     collection: 'User'
   });
 
-  ProfessorUser.statics.create = function (user_num, password, name, major, department_type) {
+  ProfessorUser.statics.create = function (user) {
     return Promise.all([
       Codetype.Usertype.findOneByDescription('professor'),
-      Codetype.Majortype.findOneByDescription(department_type)
-    ]).then(([user_type, department_type]) => {
+      Codetype.Authstate.findOneByDescription('unauthenticated'),
+      Codetype.Departmenttype.findOneByDescription(department_type)
+    ]).then(([user_type, auth_state, department_type]) => {
+      let auth_key = User.getAuthKey(user.user_num);
 
-        return new this(filterNullInObject({
-          user_num: user_num,
-          user_type: user_type,
-          password: User.encrypt(password),
-          name: name,
-          major: major,
-          department_type: department_type
-        }))
-      });
+      return new this(filterNullInObject({
+        user_num: user.user_num,
+        user_type: user_type,
+        password: User.encrypt(user.password),
+        name: user.name,
+        major: user.major,
+        department_type: department_type,
+        email: user.email,
+        auth_key: auth_key,
+        auth_state: auth_state,
+      }))
+    });
   }
 
+  
+  // 이메일 인증
+  ProfessorUser.statics.authenticateEmail = function (auth_key) {
+    return this.findOneByAuthKey(auth_key)
+    .then(user => {
+      //이미 인증한 사용자
+      if (user.auth_state.description === 'authenticated') {
+        // nothing....
+        // 인증 안한 사용자
+      }else if (user.auth_state.description === 'email-changed') {
+        user.email = user.new_email;
+        user.new_email = null;
+        
+        user.setAuthState('authenticated')
+        .then(() => { return user.save(); });
+      }else if (user.auth_state.description === 'unauthenticated') {
+        // 인증상태 변경
+        user.setAuthState('authenticated')
+        .then(() => { return user.save(); });
+      }
+    });
+  };
+  
+  ProfessorUser.statics.joinPromise = function(promise) {
+    return promise.populate({ path: 'user_type', select: 'description'})
+    .populate({ path: 'auth_state', select: 'description'})
+    .populate({ path: 'department_type', select: 'description'})
+  }
+  
   // 이름으로 교수 검색
   ProfessorUser.statics.findByName = function (name) {
-    return this.find({ name: name })
-      .populate({ path: 'user_type', select: 'description' })
-      .populate({ path: 'department_type', select: 'description' });
+    return this.joinPromise(this.find({ name: name }));
   }
 
   // customObject -> originObject
@@ -54,8 +90,13 @@ const ProfessorUser = mongoose.Schema({
         .then(code => { doc.user_type = code; }));
     }
 
+    if(customObj.auth_state) { 
+      promiseArray.push(Codetype.Authstate.findOneByDescription(customObj.auth_state)
+        .then(code => { doc.auth_state = code; }));
+    }
+
     if(customObj.department_type) { 
-      promiseArray.push(Codetype.Majortype.findOneByDescription(customObj.department_type)
+      promiseArray.push(Codetype.Departmenttype.findOneByDescription(customObj.department_type)
         .then(code => { doc.department_type = code; }));
     }
 
@@ -74,7 +115,10 @@ const ProfessorUser = mongoose.Schema({
       name: this.name,
       join_date: this.join_date,
       major: this.major,
-      department_type: (this.department_type)?this.department_type.description:null
+      department_type: (this.department_type)?this.department_type.description:null,
+      email: this.email,
+      auth_key: this.auth_key,
+      auth_state: (this.auth_state)?this.auth_state.description:null,
     });
 
     return result;
@@ -84,14 +128,7 @@ const ProfessorUser = mongoose.Schema({
     let result;
     switch (user_type) {
       case 'admin':
-        result = filterNullInObject({
-          id: this._id,
-          user_num: this.user_num,
-          user_type: this.user_type.description,
-          password: this.password,
-          name: this.name,
-          join_date: this.join_date
-        })
+        result = this.toCustomObject();
         break;
       case 'student':
       case 'mento':
@@ -102,7 +139,8 @@ const ProfessorUser = mongoose.Schema({
           name: this.name,
           join_date: this.join_date,
           major: this.major,
-          department_type: (this.department_type)?this.department_type.description:null
+          department_type: (this.department_type)?this.department_type.description:null,
+          email: this.email
         })
         break;
       default:
@@ -117,6 +155,17 @@ const ProfessorUser = mongoose.Schema({
     }
 
     return result;
+  }
+
+  ProfessorUser.methods.isAuthenticated = function () {
+    return (this.auth_state)?this.auth_state.description:null === 'unauthenticated';
+  };
+
+  ProfessorUser.methods.setAuthState = function (auth_state) {
+    return Codetype.Authstate.findOneByDescription(auth_state)
+      .then(code => {
+        this.auth_state = code;
+      })
   }
 
   // password 검증

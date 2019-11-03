@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 // services
 import { PrintService } from './services/print.service';
 import { MileageService } from './services/mileage.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,12 @@ export class AppComponent {
   
   constructor(
     private printService: PrintService,
-    private mileageService: MileageService
+    private mileageService: MileageService,
+    private userService: UserService
   ){
+    this.mileageService.updateMileageCodes();
+    this.userService.updateCodes();
+
     this.printService.print.subscribe(() => {
       this.isPrinting = true;
     });

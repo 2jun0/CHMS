@@ -39,6 +39,8 @@ export class MyMileageComponent implements OnInit {
   majorCodes = majorCode;
 
   majorCodeOptions: Option[];
+  minorCodeOptions: Option[];
+  mileageCodeOptions: Option[];
   
   searchForm: FormGroup;
 
@@ -64,19 +66,26 @@ export class MyMileageComponent implements OnInit {
     this.localeService.use('ko');
     this.myMileages = [];
     this.isSearchActivated = false;
+    this.pageIndexRange = [];
   }
 
   ngOnInit() {
     this.searchForm = this.formBuilder.group({
       input_date: null,
-      major_code: '',
+      major_code: null,
+      minor_code: null,
+      mileage_code: null
     });
 
     this.mileageService.loadMileageCodes.subscribe(
       () => {
         this.majorCodeOptions = parseJsonToOptions(majorCode);
+        this.minorCodeOptions = parseJsonToOptions(minorCode);
+        this.mileageCodeOptions = parseJsonToOptions(mileageCode);
       }
     )
+
+    this.reloadMileages();
   }
 
   reloadMileages(page?) {
@@ -133,6 +142,15 @@ export class MyMileageComponent implements OnInit {
       filter['input_date'] = {$gte: this.input_date.value[0], $lte: this.input_date.value[1]};
     }
 
+    if(this.major_code.value) {
+      filter['code'] = this.major_code.value;
+      if(this.minor_code.value) {
+        filter['code'] += this.minor_code.value;
+        if(this.mileage_code.value) {
+          filter['code'] = "^"+this.mileage_code.value;
+        }
+      }
+    }
     return filter;
   }
 
@@ -198,4 +216,7 @@ export class MyMileageComponent implements OnInit {
   }
 
   get input_date() {return this.searchForm.get('input_date');}
+  get major_code() {return this.searchForm.get('major_code');}
+  get minor_code() {return this.searchForm.get('minor_code');}
+  get mileage_code() {return this.searchForm.get('mileage_code');}
 }

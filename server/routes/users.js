@@ -31,27 +31,6 @@ router.post('/get-user', isAuthenticatedButNotError, (req, res) => {
     });
 });
 
-
-function getFilterOfAllUser(_filter) {
-  return new Promise((resolve, reject) => {
-    let filter;
-    if (_filter) {
-      filter = createFilter({
-        name: _filter.name,
-        user_num: _filter.user_num,
-        join_date: _filter.join_date
-      })
-
-      return addCodetypeToFilter(filter, 'user_type', _filter.user_type, Codetype.Usertype)
-        .then(() => {
-          resolve(filter);
-        })
-    } else {
-      filter = {};
-      resolve(filter);
-    }
-  });
-}
 /*
   모든 사용자 개수 검색
   POST /user/get-all-user-count
@@ -119,7 +98,7 @@ router.post('/update-user', isAuthenticated, doesUserExist('user_num'),
     .then(doc => {
       delete doc._id;
 
-      if(req.user.user_type.description == 'student') {
+      if(['student', 'professor', 'mento'].includes(req.user.user_type.description)) {
         const prevEmail = req.user.email;
 
         // email change detect!
@@ -192,11 +171,16 @@ router.post('/update-password', isAuthenticated, doesUserExist('user_num'), forc
 router.post('/update-random-password', isAuthenticated, doesUserExist('user_num'), forceByAdmin(isSelf), (req, res) => {
   console.log('[POST] /user/update-random-password');
   const { user } = req;
+  const new_password = getRandomString(30);
 
-  user.updatePassword(getRandomString(30));
-  user.save();
+  User.updatePassword(user_num, new_password).then(() => {
+    sendNewPasswordEmail(user.email, user.name, new_password);
 
-  res.json({ success: true });
+    res.json({ success: true });
+  }).catch(err => {
+    res.status(403).json({ success: false, message: err.message });
+    console.log(err);
+  });
 });
 
 /*
@@ -209,14 +193,73 @@ router.post('/delete', isAuthenticated, doesUserExist('user_num'), verifyUserTyp
   console.log('[POST] /user/delete');
   const { user } = req;
 
-  // const { user_num } = req.body;
-  // User.deleteOneByUserNum(user_num)
-  //   .then(() => {
-  //     res.json({ success: true });
-  //   }).catch(err => {
-  //     res.status(403).json({ success: false, message: err.message });
-  //     console.log(err);
-  //   })
+  user.setAuthState('disabled').then(() => {
+    res.json({ success: true });
+  }).catch(err => {
+    res.status(403).json({ success: false, message: err.message });
+    console.log(err);
+  });
 });
+
+/*
+  학과 코드 다운로드
+  GET /user/get-department-types
+  nothing
+*/
+router.get('/get-department-types', (req, res) => {
+  console.log('[GET] /user/get-department-types');
+  Codetype.Departmenttype.findAll()
+    .then((doc_codes) => {
+      let objs = [];
+      for(let doc of doc_codes) {
+        objs.push(doc.toCustomObject());
+      }
+      return res.send(objs);
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
+});
+
+/*
+  학과 코드 다운로드
+  GET /user/get-college-types
+  nothing
+*/
+router.get('/get-college-types', (req, res) => {
+  console.log('[GET] /user/get-college-types');
+  Codetype.Collegetype.findAll()
+    .then((doc_codes) => {
+      let objs = [];
+      for(let doc of doc_codes) {
+        objs.push(doc.toCustomObject());
+      }
+      return res.send(objs);
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
+});
+
+function getFilterOfAllUser(_filter) {
+  return new Promise((resolve, reject) => {
+    let filter;
+    if (_filter) {
+      filter = createFilter({
+        name: _filter.name,
+        user_num: _filter.user_num,
+        join_date: _filter.join_date
+      })
+
+      return addCodetypeToFilter(filter, 'user_type', _filter.user_type, Codetype.Usertype)
+        .then(() => {
+          resolve(filter);
+        })
+    } else {
+      filter = {};
+      resolve(filter);
+    }
+  });
+}
 
 module.exports = router;

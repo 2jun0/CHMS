@@ -44,6 +44,20 @@
                         </div>
                     </div>
                     <div class="row item">
+                        <label class="col-md-2">학과</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.department_type}}</span>
+                            <div *ngIf="isUpdateMode" class="college_department row">
+                                <select formControlName="college_type" class="form-control" (change)="onChangeCollegeType(college_type.value)">
+                                    <option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                </select>
+                                <select formControlName="department_type" class="form-control">
+                                    <option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row item">
                         <label class="col-md-2">전공</label>
                         <div class="col-md-8">
                             <span *ngIf="!isUpdateMode">{{majorTypes[user.major_type]}}</span>
@@ -54,6 +68,14 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="user.user_type == 'mento'">
+                    <div class="row item">
+                        <label class="col-md-2">이메일</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.email}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="email" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
                     <div class="row item">
                         <label class="col-md-2">직장</label>
                         <div class="col-md-8">
@@ -81,6 +103,14 @@
                 </ng-container>
                 <ng-container *ngIf="user.user_type == 'professor'">
                     <div class="row item">
+                        <label class="col-md-2">이메일</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.email}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="email" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                    <div class="row item">
                         <label class="col-md-2">연구분야</label>
                         <div class="col-md-8">
                             <span *ngIf="!isUpdateMode">{{user.major}}</span>
@@ -92,9 +122,14 @@
                         <label class="col-md-2">소속학과</label>
                         <div class="col-md-8">
                             <span *ngIf="!isUpdateMode">{{majorTypes[user.department_type]}}</span>
-                            <select *ngIf="isUpdateMode" formControlName="department_type" class="form-control">
-                                <option *ngFor="let option of majorOptions" [ngValue]="option.key">{{option.value}}</option>
-                            </select>
+                            <div *ngIf="isUpdateMode" class="college_department row">
+                                <select formControlName="college_type" class="form-control" (change)="onChangeCollegeType(college_type.value)">
+                                    <option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                </select>
+                                <select formControlName="department_type" class="form-control">
+                                    <option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </ng-container>

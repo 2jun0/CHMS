@@ -11,13 +11,14 @@ const StudentUser = mongoose.Schema({
     user_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Usertype'},
     password:   { type: String, required: true },
     name:       { type: String, required: true },
-    email:      { type: String, required: true },
-    auth_key:   { type: String, required: true},
-    auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
     join_date:  { type: Date, default: Date.now },
     year_of_study:    { type: Number, required: true },
     major_type: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Majortype'},
-    new_email:  { type: String }
+    department_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Departmenttype'},
+    email:      { type: String, required: true},
+    auth_key:   { type: String, required: true},
+    auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
+    new_email:  { type: String },
   }, {
     collection: 'User'
   });
@@ -25,25 +26,27 @@ const StudentUser = mongoose.Schema({
   /*
     StudentUser static function 
   */
-  StudentUser.statics.create = function (user_num, password, name, email, year_of_study, major_type) {
+  StudentUser.statics.create = function (user) {
     // 비밀번호 암호화
     return Promise.all([
       Codetype.Usertype.findOneByDescription('student'),
       Codetype.Authstate.findOneByDescription('unauthenticated'),
-      Codetype.Majortype.findOneByDescription(major_type)
-    ]).then(([user_type, auth_state, major_type]) => { 
-      let auth_key = User.getAuthKey(user_num);
+      Codetype.Majortype.findOneByDescription(user.major_type),
+      Codetype.Departmenttype.findOneByDescription(user.department_type)
+    ]).then(([user_type, auth_state, major_type, department_type]) => { 
+      let auth_key = User.getAuthKey(user.user_num);
       
       student = new this(filterNullInObject({ 
-        user_num: user_num,
+        user_num: user.user_num,
         user_type: user_type,
-        password: User.encrypt(password),
-        name: name, 
-        email: email, 
+        password: User.encrypt(user.password),
+        name: user.name,
+        year_of_study: user.year_of_study,
+        major_type: major_type,
+        department_type: department_type,
+        email: user.email, 
         auth_key: auth_key,
         auth_state: auth_state,
-        year_of_study: year_of_study,
-        major_type: major_type
       }));
       return student;
     });
@@ -71,6 +74,11 @@ const StudentUser = mongoose.Schema({
         .then(code => { doc.major_type = code; }));
     }
 
+    if(customObj.department_type) { 
+      promiseArray.push(Codetype.Departmenttype.findOneByDescription(customObj.department_type)
+        .then(code => { doc.department_type = code; }));
+    }
+
     return Promise.all(promiseArray).then(() => { return doc;});
   }
 
@@ -87,40 +95,13 @@ const StudentUser = mongoose.Schema({
       return studentUser;
     });
   };
-   
-  // 이메일 인증
-  StudentUser.statics.authenticateEmail = function (auth_key) {
-    return this.findOneByAuthKey(auth_key)
-      .then(user => {
-        //이미 인증한 사용자
-        if (user.auth_state.description === 'authenticated') {
-          // nothing....
-        // 인증 안한 사용자
-        }else if (user.auth_state.description === 'email-changed') {
-          user.email = user.new_email;
-          user.new_email = null;
-
-          user.setAuthState('authenticated')
-            .then(() => { return user.save(); });
-        }else if (user.auth_state.description === 'unauthenticated') {
-          // 인증상태 변경
-          user.setAuthState('authenticated')
-            .then(() => { return user.save(); });
-        }
-      });
-  };
 
   StudentUser.statics.joinPromise = function(promise) {
     return promise.populate({ path: 'user_type', select: 'description'})
       .populate({ path: 'auth_state', select: 'description'})
       .populate({ path: 'major_type', select: 'description'})
+      .populate({ path: 'department_type', select: 'description' })
   }
-  
-  // user(student) 검색
-  StudentUser.statics.findOneByAuthKey = function (auth_key) {
-    return this.joinPromise(this.findOne({ auth_key: auth_key}));
-     
-  };
 
   // user(student) 검색
   StudentUser.statics.findOneByUserNum = function (user_num) {
@@ -143,7 +124,8 @@ const StudentUser = mongoose.Schema({
       auth_state: (this.auth_state)?this.auth_state.description:null,
       join_date: this.join_date,
       year_of_study: this.year_of_study,
-      major_type: (this.major_type)?this.major_type.description:null
+      major_type: (this.major_type)?this.major_type.description:null,
+      department_type: (this.department_type)?this.department_type.description:null
     });
 
     return result;
@@ -155,19 +137,7 @@ const StudentUser = mongoose.Schema({
     
     switch(user_type) {
       case 'admin':
-        result = filterNullInObject({
-          id: this._id,
-          user_num: this.user_num,
-          user_type: this.user_type.description,
-          password: this.password,
-          name: this.name,
-          email: this.email,
-          auth_key: this.auth_key,
-          auth_state: (this.auth_state)?this.auth_state.description:null,
-          join_date: this.join_date,
-          year_of_study: this.year_of_study,
-          major_type: (this.major_type)?this.major_type.description:null
-        })
+        result = this.toCustomObject();
         break;
       case 'student':
       case 'mento':
@@ -176,10 +146,11 @@ const StudentUser = mongoose.Schema({
           user_num: this.user_num,
           user_type: this.user_type.description,
           name: this.name,
-          email: this.email,
           join_date: this.join_date,
           year_of_study: this.year_of_study,
-          major_type: (this.major_type)?this.major_type.description:null
+          major_type: (this.major_type)?this.major_type.description:null,
+          department_type: (this.department_type)?this.department_type.description:null,
+          email: this.email,
         })
         break;
       default:
@@ -188,7 +159,8 @@ const StudentUser = mongoose.Schema({
           name: this.name,
           join_date: this.join_date,
           year_of_study: this.year_of_study,
-          major_type: (this.major_type)?this.major_type.description:null
+          major_type: (this.major_type)?this.major_type.description:null,
+          department_type: (this.department_type)?this.department_type.description:null,
         })
         break;
     }

@@ -40,13 +40,13 @@
                             <input formControlName="repeat_password" class="form-control" type="password">
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">이메일</th>
+                        <td>
+                            <input formControlName="email" type="email" class="form-control">
+                        </td>
+                    </tr>
                     <ng-container *ngIf="user_type === 'student'">
-                        <tr>
-                            <th scope="row">이메일</th>
-                            <td>
-                                <input formControlName="email" type="email" class="form-control">
-                            </td>
-                        </tr>
                         <tr>
                             <th scope="row">학년</th>
                             <td>

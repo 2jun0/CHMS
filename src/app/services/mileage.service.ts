@@ -21,24 +21,18 @@ export class MileageService {
 
   appUrl = environment.apiUrl;
 
-  areLoadedMileageCodes: boolean = false;
-
   constructor(
     private http: HttpClient, 
     private auth: AuthService
   ) {
-    if(!this.areLoadedMileageCodes) {
-      this.updateMileageCodes();
-      this.areLoadedMileageCodes = true;
-    }
    }
 
   // Create Mileage by mileage model
-  addMileage(mileage: Mileage, info_photos: File[]): Observable<Mileage> {
+  addMileage(mileage: Mileage, info_photos?: File[]): Observable<Mileage> {
     return this.http.post<Mileage>(`${this.appUrl}/mileage/add-mileage`, {mileage}, {headers: this.headers})
       .pipe(
         map(res => {
-          this.uploadFile(info_photos, "info_photo", res.id);
+          if(info_photos) this.uploadFile(info_photos, "info_photo", res.id);
 
           return res;
         })

@@ -80,11 +80,19 @@
 							<a class="reset-btn" (click)="clearInputDate()"><i class="material-icons">clear</i></a>
 						</div>
 					</div>
-					<div class="search-item">
+					<div class="search-item multi-select">
 						<label class="control-label">마일리지 구분</label>
-						<select formControlName="major_code" class="form-control year" (change)="gotoPage(0)">
-							<option [ngValue]="'all'" [selected]='true'>모두</option>
-							<option *ngFor="let option of majorCodeOptions" [ngValue]="option.key">{{option.key.description}}</option>
+						<select formControlName="major_code" class="form-control" (change)="gotoPage(0)">
+							<option [ngValue]="null">모두</option>
+							<option *ngFor="let option of majorCodeOptions" [ngValue]="option.key">{{option.value.description}}</option>
+						</select>
+						<select *ngIf="major_code.value != null" formControlName="minor_code" class="form-control" (change)="gotoPage(0)">
+							<option [ngValue]="null">모두</option>
+							<option *ngFor="let option of minorCodeOptions" [ngValue]="option.key">{{option.value.description}}</option>
+						</select>
+						<select *ngIf="major_code.value != null && minor_code.value != null" formControlName="mileage_code" class="form-control" (change)="gotoPage(0)">
+							<option [ngValue]="null">모두</option>
+							<option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value.detail}}</option>
 						</select>
 					</div>
 				</form>

@@ -768,6 +768,12 @@ $card-t1-item-margin-size: 30px;
             width: 100%;
             margin-bottom: 30px;
 
+            &.multi-select{
+                select{
+                    width: 100%;
+                }
+            }
+
             .search-input {
                 width: 70%;
             }
@@ -1165,4 +1171,13 @@ a.button {
 @media print {
     .isPrinting > * { display: none; }
     .isPrinting app-print-layout { display: block; }
+}
+
+.college_department {
+    margin: 0px;
+    padding: 0px !important;
+
+	select{
+		width: auto;
+	}
 }

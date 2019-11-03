@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 // jsons
 import majorTypes from "src/assets/json/majorTypes.json";
+import collegeTypes from "src/assets/json/collegeTypes.json";
+import departmentTypes from "src/assets/json/departmentTypes.json";
 // models
 import { User, StudentUser, MentoUser, ProfessorUser } from 'src/app/model/user';
 // services
@@ -12,8 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
 // utils
 import { formatDate, notifyError, notifyInfo } from 'src/util/util';
 import { Option, parseJsonToOptions } from 'src/util/options';
-
-declare const Utils: any;
+import { getDepartmentTypes } from 'src/util/codes';
 
 @Component({
   selector: 'app-my-account',
@@ -25,6 +26,7 @@ export class MyAccountComponent implements OnInit {
 
   // external jsons
   majorTypes = majorTypes;
+  departmentTypes = departmentTypes;
 
   // external functions
   formatDate = formatDate;
@@ -34,12 +36,14 @@ export class MyAccountComponent implements OnInit {
   updateForm: FormGroup;
   isUpdateMode: boolean;
 
-  majorOptions: Array<Option> = parseJsonToOptions(majorTypes);
-  yearsOfStudyOptions: Array<Option> = [
-    { value: 1, str: '1학년' },
-    { value: 2, str: '2학년' },
-    { value: 3, str: '3학년' },
-    { value: 4, str: '4학년' }
+  majorOptions: Option[] = parseJsonToOptions(majorTypes);
+  collegeTypeOptions: Option[];
+  departmentTypeOptions: Option[];
+  yearsOfStudyOptions: Option[] = [
+    { key: 1, value: '1학년' },
+    { key: 2, value: '2학년' },
+    { key: 3, value: '3학년' },
+    { key: 4, value: '4학년' }
   ];  
 
 
@@ -67,6 +71,34 @@ export class MyAccountComponent implements OnInit {
         this.closePasswordUpdateModal();
       }
     });
+
+    this.userService.loadCodes.subscribe(
+      () => {
+        this.loadCollegeAndDepartmentType();
+      }
+    )
+
+    this.loadCollegeAndDepartmentType();
+  }
+
+  loadCollegeAndDepartmentType() {
+    this.collegeTypeOptions = parseJsonToOptions(collegeTypes, undefined, (json, key)=>{
+      return json[key].description
+    });
+
+    if(['student', 'professor'].includes(this.user.user_type)) {
+      this.college_type.setValue(departmentTypes[this.user['department_type']].college_type);
+      this.onChangeCollegeType(this.college_type.value);
+
+      this.department_type.setValue(this.user['department_type']);
+    }
+  }
+
+  onChangeCollegeType(value) {
+    this.departmentTypeOptions = parseJsonToOptions(getDepartmentTypes(value), undefined, (json, key)=>{
+      return json[key].description;
+    });
+    this.department_type.setValue(this.departmentTypeOptions[0].key);
   }
 
   // update form set
@@ -96,6 +128,12 @@ export class MyAccountComponent implements OnInit {
           ]],
           major_type: [studentUser.major_type, [
             Validators.required
+          ]],
+          college_type: ['', [
+            Validators.required
+          ]],
+          department_type: [studentUser.department_type, [
+            Validators.required
           ]]
         });
         break;
@@ -105,6 +143,10 @@ export class MyAccountComponent implements OnInit {
         this.updateForm = this.formBuilder.group({
           name: [mentoUser.name, [
             Validators.required
+          ]],
+          email: [mentoUser.email, [
+            Validators.required,
+            Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
           workplace: [mentoUser.workplace, [
             Validators.required
@@ -123,6 +165,10 @@ export class MyAccountComponent implements OnInit {
         this.updateForm = this.formBuilder.group({
           name: [professorUser.name, [
             Validators.required
+          ]],
+          email: [professorUser.email, [
+            Validators.required,
+            Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
           major: [professorUser.major, [
             Validators.required
@@ -265,6 +311,8 @@ export class MyAccountComponent implements OnInit {
   get email() { return this.updateForm.get('email'); }
   get workplace() { return this.updateForm.get('workplace'); }
   get department() { return this.updateForm.get('department'); }
+  get college_type() { return this.updateForm.get('college_type'); }
+  get department_type() { return this.updateForm.get('department_type'); }
   get job_position() { return this.updateForm.get('job_position'); }
   get major() { return this.updateForm.get('major'); }
   get year_of_study() { return this.updateForm.get('year_of_study'); }

@@ -1,4 +1,6 @@
 {
     "authenticated": "인증",
-    "unauthenticated": "미인증"
+    "unauthenticated": "미인증",
+    "email-changed": "이메일 변경됨",
+    "disabled": "비활성화"
 }

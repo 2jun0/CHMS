@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
 import { tap, shareReplay } from 'rxjs/operators'; 
 // models
-import { User, StudentUser, AuthKey, MentoUser, ProfessorUser } from '../model/user';
+import { User, StudentUser, MentoUser, ProfessorUser } from '../model/user';
 import { Token } from '../model/token';
 
 @Injectable({
@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   joinStudentUser(user: StudentUser): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/join/student`, user)
+    return this.http.post<Token>(`${this.appUrl}/auth/join/student`, {user})
       .pipe(
         tap(res => { this.setToken(res.token);}),
         shareReplay()
@@ -77,7 +77,7 @@ export class AuthService {
   }
   
   joinMentoUser(user: MentoUser): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/join/mento`, user)
+    return this.http.post<Token>(`${this.appUrl}/auth/join/mento`, {user})
       .pipe(
         tap(res => { this.setToken(res.token);}),
         shareReplay()
@@ -85,15 +85,15 @@ export class AuthService {
   }
 
   joinProfessorUser(user: ProfessorUser): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/join/professor`, user)
+    return this.http.post<Token>(`${this.appUrl}/auth/join/professor`, {user})
       .pipe(
         tap(res => { this.setToken(res.token);}),
         shareReplay()
       )
   }
 
-  authenticateEmail(credential: AuthKey): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/email-auth`, credential)
+  authenticateEmail(auth_key: string): Observable<Token> {
+    return this.http.post<Token>(`${this.appUrl}/auth/email-auth`, {auth_key})
       .pipe(
         tap(res => { this.setToken(res.token);}),
         shareReplay()

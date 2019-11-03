@@ -1,7 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
+// jsons
+import collegeTypes from "src/assets/json/collegeTypes.json";
+import departmentTypes from "src/assets/json/departmentTypes.json";
 // rxjs
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,6 +17,7 @@ import { User, StudentUser, AdminUser, ProfessorUser, MentoUser } from '../model
   providedIn: 'root'
 })
 export class UserService {
+  @Output() loadCodes: EventEmitter<any> = new EventEmitter();
 
   appUrl = environment.apiUrl;
 
@@ -33,22 +37,13 @@ export class UserService {
 
   // Get count of all users
   getAllUserCount(filter?): Observable<number> {
-    if(filter) {
-      return this.http.post<number>(`${this.appUrl}/user/get-all-user-count`, {_filter: filter}, { headers: this.headers });
-    }else{
-      return this.http.post<number>(`${this.appUrl}/user/get-all-user-count`, {}, { headers: this.headers });
-    }
+    return this.http.post<number>(`${this.appUrl}/user/get-all-user-count`, {_filter: filter}, { headers: this.headers });
   }
   // Get all users
   getAllUsers(start, count, filter?): Observable<User[]> {
-    if(filter) {
-      return this.http.post<User[]>(`${this.appUrl}/user/get-all-users`, {_dataIndex: {start: start,  count: count}, _filter: filter}, { headers: this.headers })
-        .pipe(map(res => { UserService.adjustUsersType(res); return res; }));
-    }else{
-      return this.http.post<User[]>(`${this.appUrl}/user/get-all-users`, {_dataIndex: {start: start,  count: count}}, { headers: this.headers })
-        .pipe(map(res => { UserService.adjustUsersType(res); return res; }));
-    } 
-  }
+    return this.http.post<User[]>(`${this.appUrl}/user/get-all-users`, {_dataIndex: {start: start,  count: count}, _filter: filter}, { headers: this.headers })
+      .pipe(map(res => { UserService.adjustUsersType(res); return res; }));
+}
 
   // update user
   update(user_num: number, user: User): Observable<any> {
@@ -108,6 +103,46 @@ export class UserService {
     }
 
     return user;
+  }
+
+  getAllCollegeTypes(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.appUrl}/user/get-college-types`);
+  } 
+
+  getAllDepartmentTypes(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.appUrl}/user/get-department-types`);
+  }
+
+  updateCodes() {
+    let finished: boolean[] = [false, false];
+
+    this.getAllCollegeTypes().subscribe(
+      (codes) =>
+      {
+        for(let code of codes) {
+          collegeTypes[code['description']] = code;
+        }
+
+        finished[0] = true;
+        if(finished[0]&&finished[1]) {
+          this.loadCodes.emit();
+        }
+      }
+    )
+
+    this.getAllDepartmentTypes().subscribe(
+      (codes) =>
+      {
+        for(let code of codes) {
+          departmentTypes[code['description']] = code;
+        }
+
+        finished[1] = true;
+        if(finished[0]&&finished[1]) {
+          this.loadCodes.emit();
+        }
+      }
+    )
   }
 
   get headers(): HttpHeaders{

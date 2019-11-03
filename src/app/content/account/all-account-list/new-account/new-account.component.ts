@@ -98,6 +98,9 @@ export class NewAccountComponent implements OnInit {
           repeat_password: ['', [
             Validators.required
           ]],
+          email: ['', [
+            Validators.required,  Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
+          ]],
           workplace: '',
           department: '',
           job_position: '',
@@ -120,6 +123,9 @@ export class NewAccountComponent implements OnInit {
           ]],
           repeat_password: ['', [
             Validators.required
+          ]],
+          email: ['', [
+            Validators.required,  Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
           major: '',
           department_type: '',
@@ -149,6 +155,7 @@ export class NewAccountComponent implements OnInit {
 
     let newUser;
 
+    let emailVal = this.email.value.trim();
     let user_numVal = this.user_num.value.trim() as number;
     let nameVal = this.name.value.trim();
     let passwordVal = this.password.value;
@@ -176,20 +183,19 @@ export class NewAccountComponent implements OnInit {
       }
     }else if(passwordVal != repeat_passwordVal) {
       notifyError(new Error('비밀번호가 일치하지 않습니다.'));
+    }if (this.email.errors) {
+      if (this.email.errors.required) { 
+        notifyError(new Error('이메일을 입력하세요!')); 
+      } else if (this.email.errors.pattern) { 
+        notifyError(new Error('이메일 형식을 확인해주세요!'));
+      }
     }else{
       switch(this.user_type) {
         case 'student':
-          let emailVal = this.email.value.trim();
           let year_of_studyVal = this.year_of_study.value;
           let major_typeVal = this.major_type.value.replace('_', ' ');
   
-          if (this.email.errors) {
-            if (this.email.errors.required) { 
-              notifyError(new Error('이메일을 입력하세요!')); 
-            } else if (this.email.errors.pattern) { 
-              notifyError(new Error('이메일 형식을 확인해주세요!'));
-            }
-          }else if(this.year_of_study.errors && this.year_of_study.errors.required) {
+          if(this.year_of_study.errors && this.year_of_study.errors.required) {
             notifyError(new Error('학년을 선택해주세요!')); 
           }else if(this.major_type.errors && this.major_type.errors.required) {
               notifyError(new Error('전공을 선택해주세요!')); 
@@ -210,7 +216,8 @@ export class NewAccountComponent implements OnInit {
             user_num: user_numVal,
             name: nameVal,
             password: passwordVal,
-            repeat_password: repeat_passwordVal
+            repeat_password: repeat_passwordVal,
+            email: emailVal
           };
 
           if(this.workplace.value) newUser.workplace = this.workplace.value.trim();
@@ -223,7 +230,8 @@ export class NewAccountComponent implements OnInit {
             user_num: user_numVal,
             name: nameVal,
             password: passwordVal,
-            repeat_password: repeat_passwordVal
+            repeat_password: repeat_passwordVal,
+            email: emailVal
           };
 
           if(this.major.value) newUser.major = this.major.value.trim();
