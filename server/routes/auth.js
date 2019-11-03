@@ -132,7 +132,15 @@ router.post('/login', [
       if (!user) { throw new Error('가입하지 않은 사용자 입니다.'); }
       
       // 비밀번호 체크
-      if (!user.verifyPassword(password)) { throw new Error('비밀번호가 일치하지 않습니다.'); }
+      if (!user.verifyPassword(password)) {
+        // 비밀번호 바꾼건가요?
+        if (!user.verifyNewPassword(password)) {
+          throw new Error('비밀번호가 일치하지 않습니다.'); 
+        }else{
+          user.password = user.new_password;
+          user.save();
+        }
+      }
 
       // 이메일 인증 체크
       if (user.user_type.description !== 'admin') {

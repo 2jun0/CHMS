@@ -17,7 +17,8 @@ const ProfessorUser = mongoose.Schema({
   email:      { type: String, required: true},
   auth_key:   { type: String, required: true},
   auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
-  new_email:  { type: String }
+  new_email:  { type: String },
+  new_password:     { type: String }
 }, {
     collection: 'User'
   });
@@ -177,5 +178,10 @@ const ProfessorUser = mongoose.Schema({
   ProfessorUser.methods.updatePassword = function (password) {
     this.password = User.encrypt(password);
   }
+
+  // new password 검증
+  ProfessorUser.methods.verifyNewPassword = function (new_password) {
+    return this.new_password === encrypt(new_password);
+  };
 
 module.exports = mongoose.model('ProfessorUser', ProfessorUser)

@@ -19,6 +19,7 @@ const MentoUser = mongoose.Schema({
     auth_key:   { type: String, required: true},
     auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
     new_email:  { type: String },
+    new_password:     { type: String }
   }, {
     collection: 'User'
   });
