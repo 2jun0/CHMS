@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router'; 
+import { Router } from '@angular/router';
 // ngx-bootstraps
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 // jsons
 import majorMileageCode from "src/assets/json/majorMileageCode.json";
-
+// utils
+import { range, notifyError, notifyInfo } from 'src/util/util';
+// services
+import { MileageService } from 'src/app/services/mileage.service';
 @Component({
   selector: 'app-input-mileage',
   templateUrl: './input-mileage.component.html',
@@ -23,7 +27,9 @@ export class InputMileageComponent implements OnInit {
   type: string;
 
   constructor(
+    private router : Router,
     private route: ActivatedRoute,
+    private mileage: MileageService,
     private localeService: BsLocaleService,
     private formBuilder: FormBuilder
     ) { 
@@ -48,4 +54,20 @@ export class InputMileageComponent implements OnInit {
 
     get act_date() { return this.newMileageForm.get('act_date');}
 
+    //새로운 마일리지 입력
+    addProject() {
+      console.log('[payload]', this.newMileageForm.value);
+  
+      let payload = this.newMileageForm.value;
+  
+      this.mileage.addMileage(payload)
+        .subscribe(
+          () => { 
+            notifyInfo('성공적으로 생성되었습니다.');
+            this.router.navigate(['/mileage/my-mileage', 1]);
+          },
+          ({ error }) => {
+            notifyError(error);
+        })
+    }
 }
