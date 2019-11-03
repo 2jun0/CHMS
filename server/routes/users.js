@@ -168,15 +168,14 @@ router.post('/update-password', isAuthenticated, doesUserExist('user_num'), forc
   POST /user/update-random-password
   JWT Token all / user_num
 */
-router.post('/update-random-password', doesUserExist('user_num'), (req, res) => {
+router.post('/update-random-password', isAuthenticated, doesUserExist('user_num'), forceByAdmin(isSelf), (req, res) => {
   console.log('[POST] /user/update-random-password');
   const { user } = req;
-  const { user_num } = req.body;
-  const new_password = getRandomString(10);
+  const new_password = getRandomString(30);
 
-  User.setNewPassword(user_num, new_password).then(() => {
+  User.updatePassword(user_num, new_password).then(() => {
     sendNewPasswordEmail(user.email, user.name, new_password);
-    
+
     res.json({ success: true });
   }).catch(err => {
     res.status(403).json({ success: false, message: err.message });

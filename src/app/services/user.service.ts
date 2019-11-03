@@ -43,7 +43,7 @@ export class UserService {
   getAllUsers(start, count, filter?): Observable<User[]> {
     return this.http.post<User[]>(`${this.appUrl}/user/get-all-users`, {_dataIndex: {start: start,  count: count}, _filter: filter}, { headers: this.headers })
       .pipe(map(res => { UserService.adjustUsersType(res); return res; }));
-  }
+}
 
   // update user
   update(user_num: number, user: User): Observable<any> {
@@ -53,7 +53,7 @@ export class UserService {
     return this.http.post<any>(`${this.appUrl}/user/update-password`, { user_num: user_num, cur_password:cur_password, new_password:new_password, repeat_new_password:repeat_new_password}, { headers: this.headers })
   }
   updateRandomPassword(user_num: number): Observable<any> {
-    return this.http.post<any>(`${this.appUrl}/user/update-random-password`, { user_num : user_num});
+    return this.http.post<any>(`${this.appUrl}/user/update-random-password`, { user_num : user_num}, { headers: this.headers});
   }
 
   // Delete user

@@ -19,7 +19,6 @@ const StudentUser = mongoose.Schema({
     auth_key:   { type: String, required: true},
     auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
     new_email:  { type: String },
-    new_password:     { type: String }
   }, {
     collection: 'User'
   });
@@ -182,11 +181,6 @@ const StudentUser = mongoose.Schema({
   // password 검증
   StudentUser.methods.verifyPassword = function (password) {
     return this.password === encrypt(password);
-  };
-
-  // new password 검증
-  StudentUser.methods.verifyNewPassword = function (new_password) {
-    return this.new_password === encrypt(new_password);
   };
 
 module.exports = mongoose.model('StudentUser',StudentUser);

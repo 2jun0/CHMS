@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private auth: AuthService,
+    private userService: UserService,
     private router: Router
   ) { }
 
@@ -78,6 +79,16 @@ export class LoginComponent implements OnInit {
           }
         )
     }
+  }
+
+  updateRandomPassword() {
+    this.userService.updateRandomPassword(this.auth.getUserNum())
+      .subscribe(
+        () => { notifyInfo('비밀번호가 재설정 되었습니다. 이메일을 확인해주세요!'); },
+        ({ error }) => {
+          notifyError(error);
+        }
+      )
   }
 
   get user_num() { return this.loginForm.get('user_num'); }

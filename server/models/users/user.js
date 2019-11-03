@@ -30,9 +30,8 @@ const User = mongoose.Schema({
   major:      { type: String },
   workplace:  { type: String },
   department: { type: String },
-  job_position:     { type: String },
-  department_type:  { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Departmenttype' },
-  new_password:     { type: String }
+  job_position: { type: String },
+  department_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Departmenttype' }
 }, {
     collection: 'User'
   });
@@ -222,16 +221,6 @@ const User = mongoose.Schema({
       });
   };
 
-  User.statics.setNewPassword = function (user_num, new_password) {
-    return this.findOneByUserNum(user_num)
-      .then(user => {
-        if(!user) return null;
-        
-        user.new_password = encrypt(new_password);
-        user.save();
-      });
-  }
-
   /*
     User methods function 
   */
@@ -264,11 +253,6 @@ const User = mongoose.Schema({
   // password 검증
   User.methods.verifyPassword = function (password) {
     return this.password === encrypt(password);
-  };
-
-  // new password 검증
-  User.methods.verifyNewPassword = function (new_password) {
-    return this.new_password === encrypt(new_password);
   };
 
   // Admin, Student, Mento assign

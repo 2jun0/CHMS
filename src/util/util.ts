@@ -37,6 +37,3 @@ export function notifyInfo(message: string, isOnlyOne? : boolean) {
 export function refresh(): void {
     window.location.reload();
 }
-export function load(url:string, type): void {
-    window.location.href = url + type;
-}

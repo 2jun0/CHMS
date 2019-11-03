@@ -65,10 +65,6 @@ const routes: Routes = [
     component: NotifyEmailFinishedComponent
   },
   {
-    path: 'auth/reset-password',
-    component: ResetPasswordComponent,
-  },
-  {
     path: 'account/all-list/:page',
     component: AllAccountListComponent,
     canActivate: [AuthGuard],
