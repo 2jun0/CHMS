@@ -22,7 +22,7 @@ export function getMinorMileagesCodes(majorCode: string) {
 export function getMileagesCodes(majorCode: string, minorCode: string) {
 	let mileageCodes = {};
 
-	let str = `${majorCode}${minorCode}`;
+	let str = `${minorCode}`//`${majorCode}${minorCode}`;
 
 	for(var key in mileageCode) {
 		let code = mileageCode[key];

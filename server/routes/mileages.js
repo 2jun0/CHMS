@@ -233,11 +233,19 @@ async function getFilterOfMileage(_filter) {
   }
 
   if(filter.code) {
-    await MileageCode.findOneByCode({'$regex': filter.code}).then(code => {
-      filter.code = code;
-    }).catch(err => {
-      console.log(err);
-    });
+    if(filter.code.length = 1) {
+      await MileageCode.findByCode({'$regex': RegExp('^'+filter.code)}).then(code => {
+        filter.code = {$in: code};
+      }).catch(err => {
+        console.log(err);
+      });
+    }else{
+      await MileageCode.findOneByCode({'$regex': RegExp('^'+filter.code)}).then(code => {
+        filter.code = code;
+      }).catch(err => {
+        console.log(err);
+      });
+    }
   }
 
   return filter;

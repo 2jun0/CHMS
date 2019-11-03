@@ -55,7 +55,8 @@ export class MileageService {
     return this.http.post<number>(`${this.appUrl}/mileage/get-my-mileage-count`, {_filter: filter}, {headers : this.headers})
   }
   getMyMileages(start: number, count: number, filter?): Observable<Mileage[]> {
-    return this.http.post<Mileage[]>(`${this.appUrl}/mileage/get-my-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers});
+    return this.http.post<Mileage[]>(`${this.appUrl}/mileage/get-my-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers})
+      .pipe(map(res => { MileageService.adjustMileagesType(res); return res; }));
   }
 
   // get mileages & count (Only admin)
@@ -63,7 +64,8 @@ export class MileageService {
     return this.http.post<number>(`${this.appUrl}/mileage/get-mileage-count`, {_filter: filter}, {headers : this.headers})
   }
   getMileages(start: number, count: number, filter?): Observable<Mileage[]> {
-    return this.http.post<Mileage[]>(`${this.appUrl}/mileage/get-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers});
+    return this.http.post<Mileage[]>(`${this.appUrl}/mileage/get-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers})
+      .pipe(map(res => { MileageService.adjustMileagesType(res); return res; }));
   }
 
   // Get mileage codes
@@ -109,7 +111,7 @@ export class MileageService {
     this.getAllMinorCodes().subscribe(
       (codes) => {
         for(let code of codes) {
-          minorMileageCode[code.code] = code;
+          minorMileageCode[`${code.major}${code.code}`] = code;
         }
 
         finished[2] = true;
@@ -118,6 +120,20 @@ export class MileageService {
         }
       }
     )
+  }
+
+  // Adjust date type in mileage object
+  static adjustMileageType(mileage: Mileage) {
+    if(mileage.input_date) mileage.input_date = new Date(mileage.input_date);
+    if(mileage.act_date) {
+      mileage.act_date.from = new Date(mileage.act_date.from);
+      mileage.act_date.to = new Date(mileage.act_date.to);
+    }
+  }
+  static adjustMileagesType(mileages: Mileage[]) {
+    for(var mileage of mileages) {
+      MileageService.adjustMileageType(mileage);
+    }
   }
 
   get headers(): HttpHeaders{

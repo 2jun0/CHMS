@@ -14,6 +14,7 @@ import { Mileage, MajorMileage } from 'src/app/model/mileage';
 // utils
 import { notifyError, formatDate, notifyInfo } from 'src/util/util';
 import { parseJsonToOptions, Option } from 'src/util/options';
+import { getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
 @Component({
   selector: 'app-my-mileage',
   templateUrl: './my-mileage.component.html',
@@ -38,8 +39,8 @@ export class MyMileageComponent implements OnInit {
   mileageCodes = mileageCode;
   majorCodes = majorCode;
 
-  majorCodeOptions: Option[];
-  minorCodeOptions: Option[];
+  majorMileageCodeOptions: Option[];
+  minorMileageCodeOptions: Option[];
   mileageCodeOptions: Option[];
   
   searchForm: FormGroup;
@@ -79,19 +80,21 @@ export class MyMileageComponent implements OnInit {
 
     this.mileageService.loadMileageCodes.subscribe(
       () => {
-        this.majorCodeOptions = parseJsonToOptions(majorCode);
-        this.minorCodeOptions = parseJsonToOptions(minorCode);
-        this.mileageCodeOptions = parseJsonToOptions(mileageCode);
+        this.loadMileageCodes();
+      },
+      ({ error }) => {
+        notifyError(error);
       }
     )
+
+    this.loadMileageCodes();
 
     this.reloadMileages();
   }
 
   reloadMileages(page?) {
-    console.log('[payload]', this.searchForm.value);
-
-    let filter = this.createFilter();
+    let filter = this.createFilter(); 
+    console.log('[payload]', this.searchForm.value, '[filter]', filter);
 
     if(page === 0 || page){
       this.pageIndex = page;
@@ -103,6 +106,7 @@ export class MyMileageComponent implements OnInit {
       (count) => {
         this.myMileageCount = count;
         this.maxPageIndex = (count%this.MILEAGE_COUNT_IN_PAGE === 0) ? (count/this.MILEAGE_COUNT_IN_PAGE-1) : Math.floor(count/this.MILEAGE_COUNT_IN_PAGE);
+        this.pageIndexRange = [];
 
         for (var idx = this.pageIndex - this.pageIndex % this.PAGE_COUNT_IN_RANGE, i = 0; (i < this.PAGE_COUNT_IN_RANGE)&&(idx <= this.maxPageIndex); i++, idx++) {
           this.pageIndexRange.push(idx);
@@ -135,6 +139,33 @@ export class MyMileageComponent implements OnInit {
     );
   }
 
+  loadMileageCodes() {
+    this.majorMileageCodeOptions = parseJsonToOptions(majorCode, undefined, (json, key)=>{
+      return json[key].description;
+    });
+  }
+
+  onChangeMajorMileageCode(value) {
+    this.minorMileageCodeOptions = parseJsonToOptions(getMinorMileagesCodes(value), undefined, (json, key)=>{
+      return json[key].description;
+    });
+
+    this.minor_code.setValue(null);
+    this.mileage_code.setValue(null);
+
+    this.gotoPage(0);
+  }
+
+  onChangeMinorMileageCode(value) {
+    this.mileageCodeOptions = parseJsonToOptions(getMileagesCodes(this.major_code.value, value), undefined, (json, key)=>{
+      return json[key].detail;
+    });
+
+    this.mileage_code.setValue(null);
+
+    this.gotoPage(0);
+  }
+
   createFilter() {
     let filter = {};
 
@@ -145,9 +176,9 @@ export class MyMileageComponent implements OnInit {
     if(this.major_code.value) {
       filter['code'] = this.major_code.value;
       if(this.minor_code.value) {
-        filter['code'] += this.minor_code.value;
+        filter['code'] = this.minor_code.value;
         if(this.mileage_code.value) {
-          filter['code'] = "^"+this.mileage_code.value;
+          filter['code'] = this.mileage_code.value;
         }
       }
     }

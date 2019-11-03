@@ -15,6 +15,10 @@ const MileageCode = mongoose.Schema({
     return this.findOne({ code: code }).populate({path:"minor", populate:{path:'major'}});
   }
 
+  MileageCode.statics.findByCode = function(code) {
+    return this.find({ code: code }).populate({path:"minor", populate:{path:'major'}});
+  }
+
   MileageCode.statics.findAllCodes = function() {
     return this.find({}).populate({path:"minor", populate:{path:'major'}});
   }

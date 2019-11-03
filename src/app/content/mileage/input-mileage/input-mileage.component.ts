@@ -87,7 +87,8 @@ export class InputMileageComponent implements OnInit {
         return json[key].detail;
       });
 
-      this.code.setValue(null);
+      this.code.setValue(this.mileageCodeOptions[0].key);
+      this.onChangeMileageCode(this.mileageCodeOptions[0].key);
     }
 
     onChangeMileageCode(value) {

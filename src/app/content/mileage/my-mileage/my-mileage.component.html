@@ -52,8 +52,8 @@
 						<tr *ngFor="let mileage of myMileages">
 							<td>{{mileage.code}}</td>
 							<td>{{mileageCodes[mileage.code].detail}}</td>
+							<td>{{mileageCodes[mileage.code].score}}</td>
 							<td>{{mileage.score}}</td>
-							<td>{{(mileage.is_accepted)?mileage.score:0}}</td>
 							<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
 							<td>{{mileage.detail}}</td>
 							<td>
@@ -82,17 +82,17 @@
 					</div>
 					<div class="search-item multi-select">
 						<label class="control-label">마일리지 구분</label>
-						<select formControlName="major_code" class="form-control" (change)="gotoPage(0)">
+						<select formControlName="major_code" class="form-control" (change)="onChangeMajorMileageCode(major_code.value)">
 							<option [ngValue]="null">모두</option>
-							<option *ngFor="let option of majorCodeOptions" [ngValue]="option.key">{{option.value.description}}</option>
+							<option *ngFor="let option of majorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
 						</select>
-						<select *ngIf="major_code.value != null" formControlName="minor_code" class="form-control" (change)="gotoPage(0)">
+						<select *ngIf="major_code.value != null" formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
 							<option [ngValue]="null">모두</option>
-							<option *ngFor="let option of minorCodeOptions" [ngValue]="option.key">{{option.value.description}}</option>
+							<option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
 						</select>
 						<select *ngIf="major_code.value != null && minor_code.value != null" formControlName="mileage_code" class="form-control" (change)="gotoPage(0)">
 							<option [ngValue]="null">모두</option>
-							<option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value.detail}}</option>
+							<option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
 						</select>
 					</div>
 				</form>
