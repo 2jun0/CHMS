@@ -5,7 +5,7 @@ const MileageCode = require('./mileageCode');
 const { filterNullInObject } = require('../../utils/utils');
 
 const Mileage = mongoose.Schema({
-    user_num:       { type: Number, required: true, unique: true },
+    user_num:       { type: Number, required: true },
     user_name:      { type: String, required: true },
     department:     { type: String, required: true },
     input_date:     { type: Date, required: true, default: Date.now }, 
