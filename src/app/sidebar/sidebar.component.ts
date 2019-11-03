@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 // services
 import { AuthService } from '../services/auth.service';
+import { load } from 'src/util/util';
 
 @Component({
   selector: 'app-sidebar',
@@ -81,7 +82,7 @@ export class SidebarComponent implements OnInit {
   }
 
   gotoInputMileage(type: string) {
-    this.router.navigate(['mileage/input-mileage', type]);
+    load('mileage/input-mileage', type);
   }
 
   logout() {
