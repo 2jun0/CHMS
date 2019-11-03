@@ -6,10 +6,18 @@ import { Router } from '@angular/router';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 // jsons
 import majorMileageCode from "src/assets/json/majorMileageCode.json";
+import minorMileageCode from "src/assets/json/minorMileageCode.json";
+import mileageCode from "src/assets/json/mileageCode.json";
+// models
+import { StudentUser } from "src/app/model/user";
+import { MileageCode, Mileage } from 'src/app/model/mileage';
 // utils
-import { range, notifyError, notifyInfo } from 'src/util/util';
+import { notifyError, notifyInfo } from 'src/util/util';
+import { Option, parseJsonToOptions } from 'src/util/options';
 // services
 import { MileageService } from 'src/app/services/mileage.service';
+import { UserService } from 'src/app/services/user.service';
+import { getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
 @Component({
   selector: 'app-input-mileage',
   templateUrl: './input-mileage.component.html',
@@ -22,52 +30,114 @@ export class InputMileageComponent implements OnInit {
 
   newMileageForm: FormGroup;
 
+  majorMileageCodeOptions: Option[];
+  minorMileageCodeOptions: Option[];
+  mileageCodeOptions: Option[];
+
   today : Date =  new Date();
 
-  type: string;
+  major_code: string;
 
   constructor(
     private router : Router,
     private route: ActivatedRoute,
     private mileage: MileageService,
     private localeService: BsLocaleService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private userService: UserService
     ) { 
       this.localeService.use('ko');
     } 
 
     ngOnInit() {
-      this.type = this.route.snapshot.paramMap.get('type');
+      this.major_code = this.route.snapshot.paramMap.get('type');
 
       this.newMileageForm = this.formBuilder.group({
-        mileage_name: ['', [Validators.required]],
-        score: 0,
-        detail: ['', [Validators.required]],
+        minor_code: null,
+        code: null,
+        code_preview: null,
+        detail: '',
         act_date: this.formBuilder.group({
-          from: [null, [Validators.required]],
-          to: [null, [Validators.required]]
+          from: null,
+          to: null
         }),
-        code: ['' , [Validators.required]],
+        score: null,
       })
 
+      this.mileage.loadMileageCodes.subscribe(
+        () => {
+          this.loadMileageCodes();
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      )
+
+      this.loadMileageCodes();
+    }
+
+    loadMileageCodes() {
+      this.minorMileageCodeOptions = parseJsonToOptions(getMinorMileagesCodes(this.major_code), undefined, (json, key)=>{
+        return json[key].description;
+      });
+    }
+
+    onChangeMinorMileageCode(value) {
+      this.mileageCodeOptions = parseJsonToOptions(getMileagesCodes(this.major_code, value), undefined, (json, key)=>{
+        return json[key].detail;
+      });
+
+      this.code.setValue(null);
+    }
+
+    onChangeMileageCode(value) {
+      this.code_preview.setValue(value);
+      this.score.setValue(mileageCode[value]['score']);
+    }
+    
+    /*
+      새로운 마일리지를 node.js에 보낼 때, 포함해야 하는 것들
+      user_num : 유저 번호
+      user_name : 유저 이름
+      department : 유저 학과
+      code
+      act_date
+      detail
+    */
+
+    //새로운 마일리지 입력
+    addMileage() {
+      let payload = this.newMileageForm.value;
+      console.log('[payload]', payload);
+
+      // 유저 서비스에서 내 정보 가져오기
+      let user = this.userService.getMyUser() as StudentUser;
+
+      // 새 마일리지 객체에 user_num, user_name, department값 추가
+      let newMileage = {
+        department : user.department_type,
+        user_num : user.user_num,
+        user_name : user.name,
+        code: this.code.value,
+        act_date: this.act_date.value,
+        detail: this.detail.value,
+      };
+
+      this.mileage.addMileage(newMileage as Mileage)
+      .subscribe(
+        () => { 
+          notifyInfo('성공적으로 생성되었습니다.');
+          this.router.navigate(['/mileage/my-mileage', 1]);
+        },
+        ({ error }) => {
+          notifyError(error);
+        })
     }
 
     get act_date() { return this.newMileageForm.get('act_date');}
-
-    //새로운 마일리지 입력
-    addProject() {
-      console.log('[payload]', this.newMileageForm.value);
-  
-      let payload = this.newMileageForm.value;
-  
-      this.mileage.addMileage(payload)
-        .subscribe(
-          () => { 
-            notifyInfo('성공적으로 생성되었습니다.');
-            this.router.navigate(['/mileage/my-mileage', 1]);
-          },
-          ({ error }) => {
-            notifyError(error);
-        })
-    }
+    get detail() { return this.newMileageForm.get('detail');}
+    get minor_code() { return this.newMileageForm.get('minor_code');}
+    get code() { return this.newMileageForm.get('code');}
+    get code_preview() { return this.newMileageForm.get('code_preview');}
+    get score() { return this.newMileageForm.get('score');}
 }

@@ -18,7 +18,7 @@ export interface Mileage {
 	accept_date: Date;
 }
 
-export interface MileageCode {
+export interface MileageCode { 
 	id?: string;
 	code: string;
 	minor: string;	

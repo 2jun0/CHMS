@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const MileageCode = require('./mileageCode');
 
+const { filterNullInObject } = require('../../utils/utils');
+
 const Mileage = mongoose.Schema({
     user_num:       { type: Number, required: true, unique: true },
     user_name:      { type: String, required: true },
@@ -22,17 +24,15 @@ const Mileage = mongoose.Schema({
   });
 
     Mileage.statics.create = function(data) {
-        let mileage = new this(data);
-        mileage.code = 0;
 
-        return Promise.resolve(mileage);
-        // return MileageCode.findOneByCode(data.code)
-        //     .then(code => {
-        //         data.code = code;
+        return MileageCode.findOneByCode(data.code)
+            .then(code => {
+                data.code = code;
+                data.score = 0;
 
-        //         let mileage = new this(data);
-        //         return mileage;
-        //     });
+                let mileage = new this(data);
+                return mileage;
+            });
     }
 
     Mileage.methods.toCustomObject = function () {

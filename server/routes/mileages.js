@@ -20,13 +20,14 @@ router.get('/', (req, res) => {
   POST /mileage/add-mileage
   JWT Token student / mileage
 */
-router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesUserExist('user_num'),
+router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesUserExist('mileage.user_num'),
  checkMileageInputs('mileage'), forceByAdmin(isSelf), (req, res) => {
   console.log('[POST] /mileage/add-mileage');
   const { mileage } = req.body;
 
   Mileage.create(mileage)
     .then(doc => {
+      doc.save();
       res.send({ success: true});
     }).catch(err => {
       res.status(403).json({ success: false, message: err.message });

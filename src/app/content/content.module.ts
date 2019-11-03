@@ -122,7 +122,9 @@ const routes: Routes = [
   },
   {
     path: 'mileage/input-mileage/:type',
-    component: InputMileageComponent
+    component: InputMileageComponent,
+    canActivate: [AuthGuard],
+    data: {userTypes: ['student'], errorMsg: '마일리지 입력은 학생 사용자만 접근할 수 있습니다.'}
   },
   {
     path: 'print',

@@ -15,9 +15,14 @@
                     </div>
                     <div class="form-group">
                         <div class="item row">
-                            <label class="col-md-2 control-label">마일리지명</label>
+                            <label class="col-md-2 control-label">마일리지 선택</label>
                             <div class="col-sm-10 col-md-6">
-                                <input type="text" class="form-control">
+                                <select formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
+                                    <option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                </select>
+                                <select *ngIf="minor_code.value" formControlName="code" class="form-control" (change)="onChangeMileageCode(code.value)">
+                                    <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -25,15 +30,15 @@
                         <div class="item row">
                             <label class="col-md-2 control-label">마일리지 코드</label>
                             <div class="col-sm-10 col-md-6">
-                                <input formControlName="code" type="text" class="form-control">
+                                <input formControlName="code_preview" type="text" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="item row">
-                            <label class="col-md-2 control-label">마일리지 점수</label>
+                            <label class="col-md-2 control-label">마일리지 예상 점수</label>
                             <div class="col-sm-10 col-md-6">
-                                <input formControlName="score" type="text" class="form-control">
+                                <input formControlName="score" type="text" class="form-control" readonly>
                             </div>
                         </div>
                     </div>

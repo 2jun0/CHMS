@@ -68,7 +68,7 @@ exports.checkProjectInputs = function(inputs_key, containOutputs, containEvaluat
 		body(inputs_key+'.project_type').exists().withMessage('프로젝트 구분을 입력해야 합니다.')
 			.isString().trim().isIn(["class", "contest", "others"]).withMessage("프로젝트 구분이 유효하지 않습니다."),
 		oneOf([
-			body(inputs_key+'.project_type').isIn(["others"]),
+			body(inputs_key+'.project_type').isIn(["others"]).withMessage('절대 오루 아닌데!!'),
 			body(inputs_key+'.class_contest_name').exists().withMessage('교과목 이름이나 공모전 이름을 입력해주세요')
 				.isString().trim().isLength({ min: 1, max: 50 }).withMessage('교과목 이름이나 공모전 이름은 최소 1, 최대 100 글자여야 합니다')
 		]),

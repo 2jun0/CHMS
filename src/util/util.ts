@@ -25,7 +25,7 @@ export function notifyError(error: Error, isOnlyOne? : boolean) {
         console.log(error.message);
         Utils.showNotification('top', 'center', 'danger', error.message, isOnlyOne);
     }else{
-        console.log('error',error);
+        console.error('error',error);
     }
 }
 
