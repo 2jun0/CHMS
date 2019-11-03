@@ -8,7 +8,7 @@ const Mileage = mongoose.Schema({
     department:     { type: String, required: true },
     input_date:     { type: Date, required: true, default: Date.now }, 
     code:           { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Mileage', required: true },
-    score:          { type: Number, required: true },
+    score:          { type: Number },
     act_date: {
         from:       { type: Date, required: true},
         to:         { type: Date, required: true},
@@ -22,13 +22,17 @@ const Mileage = mongoose.Schema({
   });
 
     Mileage.statics.create = function(data) {
-        return MileageCode.findOneByCode(data.code)
-            .then(code => {
-                data.code = code;
+        let mileage = new this(data);
+        mileage.code = 0;
 
-                let mileage = new this(data);
-                return mileage;
-            });
+        return Promise.resolve(mileage);
+        // return MileageCode.findOneByCode(data.code)
+        //     .then(code => {
+        //         data.code = code;
+
+        //         let mileage = new this(data);
+        //         return mileage;
+        //     });
     }
 
     Mileage.methods.toCustomObject = function () {
