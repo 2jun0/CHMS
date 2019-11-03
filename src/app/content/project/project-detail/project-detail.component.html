@@ -425,41 +425,41 @@
             </ng-container>
         </div>
     </div>
-</div>
-<div class="card" *ngIf="isMyProject && !isUpdateMode && ['ready', 'recruiting', 'executing'].includes(project.project_state)">
-    <div class="card-header">
-        <h4 class="card-title">참여요청목록</h4>
-    </div>
-    <div class="card-body" *ngIf="isLoad">
-        <table class="table table-hover table-striped fill">
-            <colgroup>
-                <col width="20%" />
-                <col width="20%" />
-                <col width="60%" />
-                <col width="10px" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>학번</th>
-                    <th>이유</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let requestPart of requestParts">
-                    <ng-container *ngIf="requestPart.user && !requestPart.is_accepted">
-                        <td>{{requestPart.user.name}}</td>
-                        <td>{{requestPart.user.user_num}}</td>
-                        <td>{{requestPart.reason}}</td>
-                        <td class="table-middle"><button class="btn"
-                                (click)="acceptRequestPart(requestPart)">수락</button> <button class="btn"
-                                (click)="deleteRequestPart(requestPart)">거절</button></td>
-                    </ng-container>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <div class="card p70" *ngIf="isMyProject && !isUpdateMode && ['ready', 'recruiting', 'executing'].includes(project.project_state)">
+            <div class="card-header">
+                <h4 class="card-title">참여요청목록</h4>
+            </div>
+            <div class="card-body" *ngIf="isLoad">
+                <table class="table table-hover table-striped fill">
+                    <colgroup>
+                        <col width="20%" />
+                        <col width="20%" />
+                        <col width="60%" />
+                        <col width="10px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>학번</th>
+                            <th>이유</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let requestPart of requestParts">
+                            <ng-container *ngIf="requestPart.user && !requestPart.is_accepted">
+                                <td>{{requestPart.user.name}}</td>
+                                <td>{{requestPart.user.user_num}}</td>
+                                <td>{{requestPart.reason}}</td>
+                                <td class="table-middle"><button class="btn"
+                                        (click)="acceptRequestPart(requestPart)">수락</button> <button class="btn"
+                                        (click)="deleteRequestPart(requestPart)">거절</button></td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 </div>
 <ng-template #requestPartTemplate>
     <div class="modal-wapper">

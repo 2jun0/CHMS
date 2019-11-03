@@ -47,15 +47,15 @@
                             <label class="col-md-2 control-label">참여기간</label>
                             <div formGroupName="act_date" class="col-sm-10 col-md-6 edit-date-range">
                                 <div class="start">
-                                    <input formControlName="from" type="text" class="form-control" placeholder="시작 날짜" 
+                                    <input formControlName="from" type="text" readonly class="form-control" placeholder="시작 날짜" 
                                             bsDatepicker [minDate]="act_date.value.from" [maxDate]="today"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer">
                                 </div>
                                 <span>~</span>
                                 <div class="end">
-                                    <input formControlName="to" type="text" class="form-control" placeholder="종료 날짜" 
+                                    <input formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
                                             bsDatepicker [minDate]="act_date.value.from" [maxDate]="today"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer">
                                 </div>
                             </div>
                         </div>

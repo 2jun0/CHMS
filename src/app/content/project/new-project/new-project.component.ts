@@ -78,8 +78,7 @@ export class NewProjectComponent implements OnInit {
         end_date: ['', [Validators.required]]
       }),
       project_type: ['' , [Validators.required]],
-      class_name: '',
-      contest_name: '',
+      class_contest_name: '',
       project_area_type: ['', [Validators.required]],
       keywords: '',
       intro: this.formBuilder.group({
@@ -121,6 +120,7 @@ export class NewProjectComponent implements OnInit {
 
   setProjectType(projectType: string) {
     this.project_type.setValue(projectType);
+    this.class_contest_name.setValue('');
   }
   
   //language form
@@ -181,8 +181,7 @@ export class NewProjectComponent implements OnInit {
   get recruit_period() { return this.newProjectForm.get('recruit_period') as FormGroup; }
   get exec_period() { return this.newProjectForm.get('exec_period') as FormGroup; }
   get project_type() { return this.newProjectForm.get('project_type') as FormControl; }
-  get class_name() { return this.newProjectForm.get('class_name') as FormControl; }
-  get contest_name() { return this.newProjectForm.get('contest_name') as FormControl; }
+  get class_contest_name() { return this.newProjectForm.get('class_contest_name') as FormControl; }
   get project_area_type() { return this.newProjectForm.get('project_area_type') as FormControl; }
   get kr_description() { return this.newProjectForm.get('intro.kr_description') as FormControl; }
   get en_description() { return this.newProjectForm.get('intro.en_description') as FormControl; }
