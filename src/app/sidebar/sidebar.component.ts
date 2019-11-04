@@ -82,7 +82,7 @@ export class SidebarComponent implements OnInit {
   }
 
   gotoInputMileage(type: string) {
-    load('mileage/input-mileage/', type);
+    this.router.navigate(['mileage/input-mileage', type]);
   }
 
   logout() {

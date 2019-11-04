@@ -51,7 +51,11 @@ export class InputMileageComponent implements OnInit {
     } 
 
     ngOnInit() {
-      this.major_code = this.route.snapshot.paramMap.get('type');
+      this.route.params.subscribe(val => {
+        this.major_code = this.route.snapshot.paramMap.get('type');
+
+        this.loadMileageCodes();
+      });
 
       this.newMileageForm = this.formBuilder.group({
         minor_code: null,
