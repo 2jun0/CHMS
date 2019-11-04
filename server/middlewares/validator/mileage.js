@@ -13,7 +13,7 @@ exports.checkMileageInputs = function(inputs_key, showError = true) {
             .isString().withMessage('전공은 문자열이여야 합니다.'),
         body(inputs_key+'.input_date').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
         body(inputs_key+'.code').exists().exists().withMessage('마일리지 코드값을 입력해주세요!')
-            .isString().withMessage('마일리지 코드값은 문자열이여야 합니다.'),
+            .isString().withMessage('마일리지를 선택해 주세요!'),
         // body(inputs_key+'.score').exists().withMessage('마일리지 점수를 입력해주세요')
         //     .isInt().withMessage('마일리지 점수는 정수여야 합니다.'),
         body(inputs_key+'.act_date').exists().withMessage('발생일자를 입력해주세요'),
@@ -23,14 +23,14 @@ exports.checkMileageInputs = function(inputs_key, showError = true) {
                 else{
                     req.body[inputs_key].act_date.from = new Date(value);
                     return true;
-            }}).withMessage('발생시작일자의 입력형식이 잘못되었습니다.'),
+            }}).withMessage('참여(발생) 시작일을 입력해주세요!'),//.withMessage('발생시작일자의 입력형식이 잘못되었습니다.'),
         body(inputs_key+'.act_date.to').exists().withMessage('발생종료일자를 입력해야 합니다.')
             .custom((value, { req }) => {
                 if (isNaN(Date.parse(value))) { return false; }
                 else{
                     req.body[inputs_key].act_date.to = new Date(value);
                     return true;
-            }}).withMessage('발생종료일자의 입력형식이 잘못되었습니다.')
+            }}).withMessage('참여(발생) 종료일을 입력해주세요!')//.withMessage('발생종료일자의 입력형식이 잘못되었습니다.')
             .custom((value, { req }) => (req.body[inputs_key].act_date.from.getTime() <= req.body[inputs_key].act_date.to.getTime())).withMessage('발생종료일자는 발생시작일자보다 같거나 늦어야합니다.'),
         body(inputs_key+'.detail').exists().withMessage('활동상세내역을 입력해주세요!')
             .isString().trim().isLength({ min: 1, max: 100 }).withMessage('활동상세내역은 은 최소 1, 최대 100글자여야 합니다.'),
