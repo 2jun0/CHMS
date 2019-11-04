@@ -50,7 +50,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngFor="let mileage of myMileages">
+						<tr *ngFor="let mileage of myMileages" [routerLink]="['/mileage/detail', mileage.id]" style="cursor:pointer;">
 							<td>{{mileage.code}}</td>
 							<td>{{mileageCodes[mileage.code].detail}}</td>
 							<td>{{mileageCodes[mileage.code].score}}</td>

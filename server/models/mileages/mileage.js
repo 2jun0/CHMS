@@ -54,6 +54,7 @@ const Mileage = mongoose.Schema({
 
     Mileage.methods.toCustomObject = function () {
         let result = filterNullInObject({
+            id: this._id,
             user_num: this.user_num,
             user_name: this.user_name,
             department: this.department,

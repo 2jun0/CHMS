@@ -131,6 +131,10 @@ const routes: Routes = [
     data: {userTypes: ['student'], errorMsg: '마일리지 입력은 학생 사용자만 접근할 수 있습니다.'}
   },
   {
+    path: 'mileage/detail/:id',
+    component: MileageDetailComponent
+  },
+  {
     path: 'print',
     outlet: 'print',
     component: PrintLayoutComponent,
@@ -172,6 +176,7 @@ const routes: Routes = [
     PrintLayoutComponent,
     PrintProjectComponent,
     InputMileageComponent,
+    MileageDetailComponent
   ],
   
   exports: [
