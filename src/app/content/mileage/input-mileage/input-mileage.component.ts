@@ -37,7 +37,9 @@ export class InputMileageComponent implements OnInit {
   today : Date =  new Date();
 
   major_code: string;
-  majorDescription : string
+  majorDescription : string;
+  accept_method: string;
+  remark: string;
 
   constructor(
     private router : Router,
@@ -100,6 +102,8 @@ export class InputMileageComponent implements OnInit {
     onChangeMileageCode(value) {
       this.code_preview.setValue(value);
       this.score.setValue(mileageCode[value]['score']);
+      this.accept_method = mileageCode[value]['accept_method'];
+      this.remark = mileageCode[value]['remark'];
     }
     
     /*
