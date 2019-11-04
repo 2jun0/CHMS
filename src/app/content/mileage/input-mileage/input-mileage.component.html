@@ -20,10 +20,12 @@
                                 <select formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
                                     <option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
-                                <br>
+                                <br *ngIf="minor_code.value">
                                 <select *ngIf="minor_code.value" formControlName="code" class="form-control" (change)="onChangeMileageCode(code.value)">
                                     <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
+                                <h6 *ngIf="minor_code.value" class="extra">*증빙서류 : {{accept_method}}</h6>
+                                <h6 *ngIf="minor_code.value" class="extra"> 비고     : {{remark}}</h6>
                             </div>
                         </div>
                     </div>
