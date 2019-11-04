@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 // services
 import { AuthService } from '../services/auth.service';
-import { load } from 'src/util/util';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,19 +22,24 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuMode = this.getMenuMode();
-    
     let onChange = () => {
       this.menuMode = this.getMenuMode();
+      this.loadUserName();
+    };
+
+    this.auth.onLogout.subscribe(onChange);
+    this.auth.onLogin.subscribe(onChange);
+    
+    this.menuMode = this.getMenuMode();
+    this.loadUserName();
+  }
+
+  loadUserName() {
       if(this.auth.isAuthenticated()) {
         this.user_name = this.auth.getUserName();
       }else{
         this.user_name = '';
       }
-    };
-
-    this.auth.onLogout.subscribe(onChange);
-    this.auth.onLogin.subscribe(onChange);
   }
 
   getMenuMode() {

@@ -19,25 +19,24 @@ export class TopnaviComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuMode = this.getMenuMode();
-
-    if(this.auth.isAuthenticated()) {
-      this.user_name = this.auth.getUserName();
-    }else{
-      this.user_name = '';
-    }
-
     let onChange = () => {
       this.menuMode = this.getMenuMode();
+      this.loadUserName();
+    };
+
+    this.auth.onLogout.subscribe(onChange);
+    this.auth.onLogin.subscribe(onChange);
+
+    this.menuMode = this.getMenuMode();
+    this.loadUserName();
+  }
+  
+  loadUserName() {
       if(this.auth.isAuthenticated()) {
         this.user_name = this.auth.getUserName();
       }else{
         this.user_name = '';
       }
-    };
-
-    this.auth.onLogout.subscribe(onChange);
-    this.auth.onLogin.subscribe(onChange);
   }
 
   logout() {
