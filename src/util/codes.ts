@@ -6,10 +6,24 @@ import collegeTypes from "src/assets/json/collegeTypes.json";
 import departmentTypes from "src/assets/json/departmentTypes.json";
 import { MinorMileage, MajorMileage, MileageCode } from 'src/app/model/mileage';
 
+export function getMajorMileagesCodes(Code: string) {
+	let majorDescription = "";
+
+	for(var key in majorMileageCode[Code]){
+
+		if(key == "description"){
+			majorDescription = majorMileageCode[Code][key];
+		}
+
+	}
+
+	return majorDescription;
+}
+
 export function getMinorMileagesCodes(majorCode: string) {
 	let minorCodes = {};
-
 	for(var key in minorMileageCode) {
+
 		let minorCode = minorMileageCode[key];
 		if(minorCode['major'] && minorCode['major'] == majorCode) {
 			minorCodes[key] = minorCode;

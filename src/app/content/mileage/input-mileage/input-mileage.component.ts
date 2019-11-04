@@ -17,7 +17,7 @@ import { Option, parseJsonToOptions } from 'src/util/options';
 // services
 import { MileageService } from 'src/app/services/mileage.service';
 import { UserService } from 'src/app/services/user.service';
-import { getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
+import { getMajorMileagesCodes,getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
 @Component({
   selector: 'app-input-mileage',
   templateUrl: './input-mileage.component.html',
@@ -37,6 +37,7 @@ export class InputMileageComponent implements OnInit {
   today : Date =  new Date();
 
   major_code: string;
+  majorDescription : string
 
   constructor(
     private router : Router,
@@ -77,6 +78,7 @@ export class InputMileageComponent implements OnInit {
     }
 
     loadMileageCodes() {
+      this.majorDescription = getMajorMileagesCodes(this.major_code);
       this.minorMileageCodeOptions = parseJsonToOptions(getMinorMileagesCodes(this.major_code), undefined, (json, key)=>{
         return json[key].description;
       });
