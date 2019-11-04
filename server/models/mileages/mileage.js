@@ -76,5 +76,33 @@ const Mileage = mongoose.Schema({
         return this.count(filter);
     };
 
+    // find sum of scores
+    Mileage.statics.findSumOfScoreWithFilter = function(filter) {
+        // select sum(score) from Mileage select filter 
+        return this.aggregate([
+            { $match: filter },
+            { $group: {
+                _id: 'null',
+                sum_of_score: {$sum: '$score'}
+            } }
+        ]).then(result => {
+            return result[0].sum_of_score;
+        });
+    };
+
+    // find sum of score of codes
+    Mileage.statics.findSumOfPredictedScoreWithFilter = function(filter) {
+        return this.find(filter).populate({path:'code', populate:{path:"minor", populate:{path:'major'}}})
+            .then(doc_mileages => {
+                let sum = 0;
+
+                for(var doc of doc_mileages) {
+                    sum += doc.code.score;
+                }
+
+                return sum;
+            });
+    };
+
 
 module.exports = mongoose.model('Mileage', Mileage);

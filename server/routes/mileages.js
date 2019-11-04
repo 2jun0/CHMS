@@ -154,6 +154,60 @@ router.post('/get-mileage-count', isAuthenticated, verifyUserTypes(['admin']), (
 });
 
 /*
+  마일리지 점수 합계 구하기
+  POST /mileage/get-score-sum
+  JWT Token admin, student / _filter
+*/
+router.post('/get-score-sum', isAuthenticated, verifyUserTypes(['admin', 'student']), (req, res) => {
+  console.log('[POST] /mileage/get-score-sum');
+  const token = req.decodedToken;
+
+  const { _filter } = req.body;
+
+  // 학생인 경우, 자신 마일리지 점수 구함.
+  if(token.user_type == 'student') {
+    _filter.user_num = token.user_num;
+  }
+
+  getFilterOfMileage(_filter).then(filter => {
+    Mileage.findSumOfScoreWithFilter(filter)
+      .then(count => {
+        return res.send(count+'');
+      }).catch(err => {
+        res.status(403).json({ success: false, message: err.message });
+        console.log(err);
+      });
+  });
+});
+
+/*
+  마일리지 예상 점수 합계 구하기
+  POST /mileage/get-predicted-score-sum
+  JWT Token admin, student / _filter
+*/
+router.post('/get-predicted-score-sum', isAuthenticated, verifyUserTypes(['admin', 'student']), (req, res) => {
+  console.log('[POST] /mileage/get-predicted-score-sum');
+  const token = req.decodedToken;
+
+  const { _filter } = req.body;
+
+  // 학생인 경우, 자신 마일리지 점수 구함.
+  if(token.user_type == 'student') {
+    _filter.user_num = token.user_num;
+  }
+
+  getFilterOfMileage(_filter).then(filter => {
+    Mileage.findSumOfPredictedScoreWithFilter(filter)
+      .then(count => {
+        return res.send(count+'');
+      }).catch(err => {
+        res.status(403).json({ success: false, message: err.message });
+        console.log(err);
+      });
+  });
+});
+
+/*
   마일리지 코드 다운로드
   GET /mileage/get-mileage-codes
   nothing

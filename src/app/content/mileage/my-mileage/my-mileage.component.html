@@ -4,7 +4,7 @@
 			<h4 class="card-title">내 마일리지 조회</h4>
 		</div>
 		<div class="card-body">
-				<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
+			<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
 			<ul class="pagination pagination-sm">
 				<li *ngIf="!isFirstPageRange" class="page-item">
 					<a class="page-link" (click)="gotoFirstPage()">
@@ -36,6 +36,7 @@
 				</li>
 			</ul>
 			<div>
+				<p class="score-sum">총 예상 점수 합계 : {{sumOfPredictedScore}}, 총 점수 합계 : {{sumOfScore}}</p>
 				<table class="table table-hover table-striped">
 					<thead>
 						<tr>

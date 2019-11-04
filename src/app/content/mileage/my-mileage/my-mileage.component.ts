@@ -47,6 +47,10 @@ export class MyMileageComponent implements OnInit {
 
   myMileages: Mileage[];
   myMileageCount: Number;
+
+  sumOfScore: Number;
+  sumOfPredictedScore: Number;
+
   pageIndex: number;
   maxPageIndex: number;
   pageIndexRange: number[];
@@ -137,6 +141,24 @@ export class MyMileageComponent implements OnInit {
         notifyError(error);
       }
     );
+
+    this.mileageService.getSumOfScoreInMileage(filter).subscribe(
+      (sumOfScore) => {
+        this.sumOfScore = sumOfScore;
+      },
+      ({ error }) => {
+        notifyError(error);
+      }
+    )
+
+    this.mileageService.getSumOfPredictedScoreInMileage(filter).subscribe(
+      (sumOfPredictedScore) => {
+        this.sumOfPredictedScore = sumOfPredictedScore;
+      },
+      ({ error }) => {
+        notifyError(error);
+      }
+    )
   }
 
   loadMileageCodes() {

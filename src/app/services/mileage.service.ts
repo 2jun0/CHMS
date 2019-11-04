@@ -68,6 +68,15 @@ export class MileageService {
       .pipe(map(res => { MileageService.adjustMileagesType(res); return res; }));
   }
 
+  // 마일리지 점수 총합 구하기
+  getSumOfScoreInMileage(filter): Observable<Number> {
+    return this.http.post<Number>(`${this.appUrl}/mileage/get-score-sum`, {_filter:filter}, {headers : this.headers});
+  }
+  // 마일리지 예상 점수 총합 구하기
+  getSumOfPredictedScoreInMileage(filter): Observable<Number> {
+    return this.http.post<Number>(`${this.appUrl}/mileage/get-predicted-score-sum`, {_filter:filter}, {headers : this.headers});
+  }
+
   // Get mileage codes
   getAllMileageCodes(): Observable<MileageCode[]> {
     return this.http.get<MileageCode[]>(`${this.appUrl}/mileage/get-mileage-codes`);
