@@ -104,7 +104,10 @@ const Mileage = mongoose.Schema({
                 sum_of_score: {$sum: '$score'}
             } }
         ]).then(result => {
-            return result[0].sum_of_score;
+            if(result && result.length > 0)
+                return result[0].sum_of_score;
+            else
+                return 0;
         });
     };
 
