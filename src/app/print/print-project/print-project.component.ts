@@ -11,7 +11,7 @@ import projectStates from 'src/assets/json/projectStates.json';
 import projectTypes from 'src/assets/json/projectTypes.json';
 import projectAreaTypes from 'src/assets/json/projectAreaTypes.json';
 import languages from 'src/assets/json/languages.json';
-// tuils
+// utils
 import { notifyError, formatDate } from 'src/util/util';
 
 @Component({
@@ -39,7 +39,7 @@ export class PrintProjectComponent implements OnInit {
     private printService: PrintService,
     private projectService: ProjectService
     ) {
-    this.id = route.snapshot.params['id'];
+    this.id = this.route.snapshot.params['id'];
   }
 
   ngOnInit() {

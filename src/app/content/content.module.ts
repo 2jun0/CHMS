@@ -43,6 +43,7 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { PrintLayoutComponent } from '../print/print-layout/print-layout.component';
 import { PrintProjectComponent } from '../print/print-project/print-project.component';
 import { InputMileageComponent } from './mileage/input-mileage/input-mileage.component';
+import { PrintMileageComponent } from '../print/print-mileage/print-mileage.component';
 
 
 defineLocale('ko', koLocale);
@@ -139,7 +140,8 @@ const routes: Routes = [
     outlet: 'print',
     component: PrintLayoutComponent,
     children: [
-      { path: 'project/:id', component: PrintProjectComponent }
+      { path: 'project/:id', component: PrintProjectComponent },
+      { path: 'mileage/:id', component: PrintMileageComponent }
     ]
   }
 ]
@@ -175,6 +177,7 @@ const routes: Routes = [
     ResetPasswordComponent,
     PrintLayoutComponent,
     PrintProjectComponent,
+    PrintMileageComponent,
     InputMileageComponent,
     MileageDetailComponent
   ],
