@@ -17,7 +17,9 @@ export class PrintService {
       { outlets: {
         'print': ['print', documentName, documentData]
       }}]);
-    this.print.emit();
+    setTimeout(() => {
+      this.print.emit();
+    });
   }
 
   onDataReady() {
