@@ -75,7 +75,7 @@ const Mileage = mongoose.Schema({
     }
 
     // customObject -> originObject
-    Project.statics.customObjectToOriginObject = function(customObj) {
+    Mileage.statics.customObjectToOriginObject = function(customObj) {
         let doc = cloneObject(customObj);
         doc._id = doc.id;
 

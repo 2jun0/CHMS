@@ -45,8 +45,8 @@ export class PrintProjectComponent implements OnInit {
   ngOnInit() {
     this.projectService.getProject(this.id).subscribe(
       (project) => {
-        this.project = project;
         this.printService.onDataReady();
+        this.project = project;
       },({error}) => {
         notifyError(error);
       }
