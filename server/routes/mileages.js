@@ -241,10 +241,7 @@ router.post('/get-mileage', isAuthenticated, verifyUserTypes(['admin', 'student'
 
   const { mileage } = req;
 
-  mileage.toCustomObject()
-    .then(obj => {
-      return res.send(obj);
-    });
+  return res.send(mileage.toCustomObject());
 });
 
 /*
