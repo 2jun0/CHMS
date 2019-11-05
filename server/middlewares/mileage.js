@@ -18,3 +18,15 @@ exports.doesMileageExist = function(mileage_id_key) {
 			.catch(err => res.status(403).json({ success: false, message: err.message }));
 	}
 }
+
+exports.isMileageMine = (req, res, next) => {
+	const token = req.decodedToken;
+	const { mileage } = req;
+
+	// 마일리지가 내것이 아니면
+	if(mileage.user_num != token.user_num) {
+		return res.status(403).json({ success: false, message: '해당 마일리지를 열람할 권한이 없습니다.' });
+	}else{
+		next();
+	}
+};

@@ -2,7 +2,7 @@ const router = require('express').Router();
 // middlewares
 const { isAuthenticated, verifyUserTypes, isSelf, forceByAdmin } = require('../middlewares/auth');
 const { doesUserExist } = require('../middlewares/user');
-const { doesMileageExist } = require('../middlewares/mileage');
+const { doesMileageExist, isMileageMine } = require('../middlewares/mileage');
 // validators
 const { checkMileageInputs } = require('../middlewares/validator/mileage');
 // models
@@ -59,7 +59,7 @@ router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']
   POST /mileage/update-mileage
   JWT Token student, admin / mileage_id, mileage
 */
-router.post('update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesMileageExist('mileage_id'), (req, res) => {
+router.post('update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/update-mileage');
 
   const { mileage } = req;
@@ -234,9 +234,9 @@ router.post('/get-predicted-score-sum', isAuthenticated, verifyUserTypes(['admin
 /*
   아이디로 마일리지 정보 얻기
   POST /mileage/get-mileage
-  JWT Token admin / mileage_id
+  JWT Token admin, student / mileage_id
 */
-router.post('/get-mileage', isAuthenticated, verifyUserTypes(['admin', 'student']), doesMileageExist('mileage_id'), (req, res) => {
+router.post('/get-mileage', isAuthenticated, verifyUserTypes(['admin', 'student']), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/get-mileage');
 
   const { mileage } = req;
