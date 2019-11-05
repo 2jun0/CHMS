@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const MileageCode = require('./mileageCode');
 
-const { filterNullInObject } = require('../../utils/utils');
+const { filterNullInObject, cloneObject } = require('../../utils/utils');
 
 const Mileage = mongoose.Schema({
     user_num:       { type: Number, required: true },
@@ -74,6 +74,27 @@ const Mileage = mongoose.Schema({
         return result;
     }
 
+    // customObject -> originObject
+    Project.statics.customObjectToOriginObject = function(customObj) {
+        let doc = cloneObject(customObj);
+        doc._id = doc.id;
+
+        let promiseArray = [];
+
+        if(customObj.code) { 
+            promiseArray.push(MileageCode.findOneByCode(customObj.code)
+                .then(code => { doc.code = code; }));
+        }
+
+        if(doc.info_photos) {
+            for(var i = 0; i < doc.info_photos.length; i++) {
+                doc.info_photos[i]._id = customObj.info_photos[i].id;
+            }
+        }
+
+        return Promise.all(promiseArray).then(() => {return doc;});
+    }
+
     // find mileages & count by user num
     Mileage.statics.findByUserNum = function(user_num, dataIndex) {
         return this.find({user_num}).sort({ "input_date" : -1 }).skip(dataIndex.start).limit(dataIndex.count)
@@ -123,6 +144,10 @@ const Mileage = mongoose.Schema({
 
                 return sum;
             });
+    };
+
+    Mileage.statics.findOneById = function(id) {
+        return this.findOne({_id: id}).populate({path:'code', populate:{path:"minor", populate:{path:'major'}}});
     };
 
 

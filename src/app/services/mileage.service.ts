@@ -50,6 +50,22 @@ export class MileageService {
     return this.http.post<any>(`${this.appUrl}/mileage/upload-file`, formData, {headers : this.headers});
   }
 
+  // get mileage detail
+  getMileage(mileage_id:string): Observable<Mileage> {
+    return this.http.post<Mileage>(`${this.appUrl}/mileage/get-mileage`, {mileage_id}, {headers : this.headers})
+      .pipe(map(res => { MileageService.adjustMileageType(res); return res; }));
+  }
+  
+  // update Mileage
+  updateMileage(mileage_id:string, mileage: Mileage, info_photos?: File[]): Observable<any> {
+    return this.http.post<any>(`${this.appUrl}/mileage/update-mileage`, {mileage_id}, {headers : this.headers})
+      .pipe(map(res => { 
+        if(info_photos) this.uploadFile(info_photos, "info_photo", mileage_id);
+
+          return res;
+      }));
+  }
+
   // get my mileages & count
   getMyMileageCount(filter?): Observable<number> {
     return this.http.post<number>(`${this.appUrl}/mileage/get-my-mileage-count`, {_filter: filter}, {headers : this.headers})
