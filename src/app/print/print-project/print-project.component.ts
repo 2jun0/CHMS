@@ -46,9 +46,7 @@ export class PrintProjectComponent implements OnInit {
     this.projectService.getProject(this.id).subscribe(
       (project) => {
         this.project = project;
-        setTimeout(() => {
-          this.printService.onDataReady();
-        });
+        this.printService.onDataReady();
       },({error}) => {
         notifyError(error);
       }

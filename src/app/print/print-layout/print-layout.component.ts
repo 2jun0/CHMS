@@ -10,7 +10,7 @@ export class PrintLayoutComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('dd');
+    
   }
 
 }
