@@ -53,12 +53,6 @@ export class InputMileageComponent implements OnInit {
     } 
 
     ngOnInit() {
-      this.route.params.subscribe(val => {
-        this.major_code = this.route.snapshot.paramMap.get('type');
-
-        this.loadMileageCodes();
-      });
-
       this.newMileageForm = this.formBuilder.group({
         minor_code: null,
         code: null,
@@ -70,6 +64,15 @@ export class InputMileageComponent implements OnInit {
         }),
         score: null,
       })
+
+      //입력메뉴 선택시 토글 ON상태 유지
+      this.route.params.subscribe(val => {
+        this.major_code = this.route.snapshot.paramMap.get('type');
+
+        this.loadMileageCodes();
+        
+      });
+
 
       this.mileage.loadMileageCodes.subscribe(
         () => {
@@ -88,6 +91,7 @@ export class InputMileageComponent implements OnInit {
       this.minorMileageCodeOptions = parseJsonToOptions(getMinorMileagesCodes(this.major_code), undefined, (json, key)=>{
         return json[key].description;
       });
+      this.clearMileage();
     }
 
     onChangeMinorMileageCode(value) {
@@ -104,6 +108,13 @@ export class InputMileageComponent implements OnInit {
       this.score.setValue(mileageCode[value]['score']);
       this.accept_method = mileageCode[value]['accept_method'];
       this.remark = mileageCode[value]['remark'];
+    }
+    
+    //메뉴 선택시 이전 값들 제거
+    clearMileage(){
+      this.minor_code.setValue(null);
+      this.code_preview.setValue(null);
+      this.score.setValue(null);
     }
     
     /*
