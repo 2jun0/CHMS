@@ -1,0 +1,102 @@
+<div class="card-wapper flex">
+	<div class="card left">
+		<div class="card-header">
+			<h4 class="card-title">내 마일리지 조회</h4>
+		</div>
+		<div class="card-body">
+			<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
+			<ul class="pagination pagination-sm">
+				<li *ngIf="!isFirstPageRange" class="page-item">
+					<a class="page-link" (click)="gotoFirstPage()">
+						<i class="material-icons">first_page</i>
+					</a>
+				</li>
+				<li *ngIf="!isFirstPageRange" class="page-item">
+					<a class="page-link" (click)="gotoPreviousPageRange()">
+						<i class="material-icons">chevron_left</i>
+					</a>
+				</li>
+				<ng-container *ngFor="let i of pageIndexRange">
+					<li *ngIf="i === pageIndex" class="page-item active">
+						<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+					</li>
+					<li *ngIf="i !== pageIndex" class="page-item">
+						<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+					</li>
+				</ng-container>
+				<li *ngIf="!isLastPageRange" class="page-item">
+					<a class="page-link" (click)="gotoNextPageRange()">
+						<i class="material-icons">chevron_right</i>
+					</a>
+				</li>
+				<li *ngIf="!isLastPageRange" class="page-item">
+					<a class="page-link" (click)="gotoLastPage()">
+						<i class="material-icons">last_page</i>
+					</a>
+				</li>
+			</ul>
+			<div>
+				<p class="score-sum">총 예상 점수 합계 : {{sumOfPredictedScore}}, 총 점수 합계 : {{sumOfScore}}</p>
+				<table class="table table-hover table-striped">
+					<thead>
+						<tr>
+							<th>코드</th>
+							<th>마일리지 명</th>
+							<th>추정 점수</th>
+							<th>점수</th>
+							<th>발생일자</th>
+							<th>활동상세내역</th>
+							<th>사업단확인</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let mileage of myMileages" [routerLink]="['/mileage/detail', mileage.id]" style="cursor:pointer;">
+							<td>{{mileage.code}}</td>
+							<td>{{mileageCodes[mileage.code].detail}}</td>
+							<td>{{mileageCodes[mileage.code].score}}</td>
+							<td>{{mileage.score}}</td>
+							<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
+							<td>{{mileage.detail}}</td>
+							<td>
+								<input type="checkbox" [checked]="mileage.is_accepted">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div *ngIf="myMileages.length === 0">
+					검색 결과 없음!
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="isSearchActivated" class="card right search">
+			<div class="card-body">
+				<form [formGroup]='searchForm' class="form-inline form-search" role="form">
+					<div class="search-item">
+						<label class="control-label">입력날짜 검색</label>
+						<div class="date-wapper">
+							<input formControlName="input_date" type="text" class="form-control date" placeholder="입력날짜"
+								bsDaterangepicker [maxDate]="today" (bsValueChange)="onInputDateChange($event)"
+								[bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+							<a class="reset-btn" (click)="clearInputDate()"><i class="material-icons">clear</i></a>
+						</div>
+					</div>
+					<div class="search-item multi-select">
+						<label class="control-label">마일리지 구분</label>
+						<select formControlName="major_code" class="form-control" (change)="onChangeMajorMileageCode(major_code.value)">
+							<option [ngValue]="null">모두</option>
+							<option *ngFor="let option of majorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
+						<select *ngIf="major_code.value != null" formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
+							<option [ngValue]="null">모두</option>
+							<option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
+						<select *ngIf="major_code.value != null && minor_code.value != null" formControlName="mileage_code" class="form-control" (change)="gotoPage(0)">
+							<option [ngValue]="null">모두</option>
+							<option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
+</div>

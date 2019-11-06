@@ -44,6 +44,7 @@ import { PrintLayoutComponent } from '../print/print-layout/print-layout.compone
 import { PrintProjectComponent } from '../print/print-project/print-project.component';
 import { InputMileageComponent } from './mileage/input-mileage/input-mileage.component';
 import { PrintMileageComponent } from '../print/print-mileage/print-mileage.component';
+import { AllMileageListComponent } from './mileage/all-mileage-list/all-mileage-list.component';
 
 
 defineLocale('ko', koLocale);
@@ -179,7 +180,8 @@ const routes: Routes = [
     PrintProjectComponent,
     PrintMileageComponent,
     InputMileageComponent,
-    MileageDetailComponent
+    MileageDetailComponent,
+    AllMileageListComponent
   ],
   
   exports: [
