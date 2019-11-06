@@ -38,9 +38,9 @@ const Mileage = mongoose.Schema({
                 })
                 .then(doc => {
                     // 같은 날에 같은 코드가 있음.
-                    if(doc && doc.length>0) {
-                        throw new Error('해당 마일리지는 오늘 이미 생성하셨습니다!');
-                    }
+                    // if(doc && doc.length>0) {
+                    //     throw new Error('해당 마일리지는 오늘 이미 생성하셨습니다!');
+                    // }
 
                     // 같은 날에 같은 코드 안올림 => 추가
                     data.code = code;
