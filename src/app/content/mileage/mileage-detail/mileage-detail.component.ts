@@ -6,7 +6,8 @@ import { Mileage } from 'src/app/model/mileage';
 // services
 import { AuthService } from 'src/app/services/auth.service';
 import { MileageService } from 'src/app/services/mileage.service';
-import { getMajorMileagesCodes,getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
+import { PrintService } from 'src/app/services/print.service';
+import { getMajorMileagesCodes, getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
 // utils
 import { Option, parseJsonToOptions } from 'src/util/options';
 // jsons
@@ -49,6 +50,7 @@ mileageCodeOptions: Option[];
     private authService: AuthService,
     private route: ActivatedRoute,
     private mileageService: MileageService,
+    private printService: PrintService,
     private formBuilder: FormBuilder,
   ) {
     this.isLoad = false;
@@ -141,6 +143,11 @@ mileageCodeOptions: Option[];
   complete(){
     this.modify = false;
   }
+
+  print() {
+    this.printService.printDocument('mileage', this.mileageId);
+  }
+
   get input_date() : FormControl { return this.MileageForm.get('input_date') as FormControl; }
   get code() : FormControl { return this.MileageForm.get('codeId') as FormControl; }
   get score() : FormControl { return this.MileageForm.get('score') as FormControl; }

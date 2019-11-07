@@ -1,1 +1,50 @@
-<p>print-mileage works!</p>
+<table *ngIf="mileage">
+        <colgroup>
+            <col width="20%" />
+            <col width="20%" />
+            <col width="60%" />
+        </colgroup>
+        <tbody>
+            <tr>
+                <th colspan="3" class="center">마일리지 상세 정보</th>
+            </tr>
+            <tr>
+                <th rowspan="3" class="center">학생 정보</th>
+                <th>학생 이름</th>
+                <td>{{mileage.user_name}}</td>
+            </tr>
+            <tr>
+                <th>학번</th>
+                <td>{{mileage.user_num}}</td>
+            </tr>
+            <tr>
+                <th>학과</th>
+                <td>{{mileage.department}}</td>
+            </tr>
+            <tr>
+                <th rowspan="6" class="center">마일리지 정보</th>
+                <th>마일리지 이름</th>
+                <td>{{mileageCode[mileage.code].detail}}</td>
+            </tr>
+            <tr>
+                <th>마일리지 코드</th>
+                <td>{{mileage.code}}</td>
+            </tr>
+            <tr>
+                <th>마일리지 점수</th>
+                <td>{{mileage.score}}</td>
+            </tr>
+            <tr>
+                <th>입력 날짜</th>
+                <td>{{formatDate(mileage.input_date)}}</td>
+            </tr>
+            <tr>
+                <th>참여기간</th>
+                <td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
+            </tr>
+            <tr>
+                <th>활동 상세내역</th>
+                <td>{{mileage.detail}}</td>
+            </tr>
+        </tbody>
+    </table>

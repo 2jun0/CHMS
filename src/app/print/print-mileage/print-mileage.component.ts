@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+// jsons
+import mileageCode from "src/assets/json/mileageCode.json";
 // services
 import { PrintService } from 'src/app/services/print.service';
 import { MileageService } from 'src/app/services/mileage.service';
 // models
 import { Mileage } from 'src/app/model/mileage';
 // utils
-import { notifyError } from 'src/util/util';
+import { notifyError, formatDate } from 'src/util/util';
 
 @Component({
   selector: 'app-print-mileage',
@@ -17,6 +19,10 @@ export class PrintMileageComponent implements OnInit {
 
   mileage: Mileage;
   id: string;
+
+  formatDate = formatDate;
+
+  mileageCode = mileageCode;
 
   constructor(
     private route: ActivatedRoute,
