@@ -15,6 +15,7 @@ import majorMileageCode from "src/assets/json/majorMileageCode.json";
 import mileageCode from "src/assets/json/mileageCode.json";
 // others
 import { formatDate, notifyError, refresh, notifyInfo } from 'src/util/util';
+import { conditionallyCreateMapObjectLiteral } from '@angular/compiler/src/render3/view/util';
 
 @Component({
   selector: 'app-mileage-detail',
@@ -43,6 +44,11 @@ mileageCodeOptions: Option[];
   mileage: Mileage;
   MileageForm: FormGroup;
   major_code: string;
+  
+
+  //화면에 보여지기 위한 변수
+  viewMinor: string;
+  viewCode: string;
   accept_method: string;
   remark: string;
 
@@ -93,15 +99,17 @@ mileageCodeOptions: Option[];
         this.mileage = mileage;
         this.major_code = this.mileage.code[0];
         this.initForm();
-        console.log();
+        this.setMileageCodes(this.MileageForm.value.code[0]+this.MileageForm.value.code[1],this.MileageForm.value.code);
         this.isLoad = true;
-
       }
     )
-  }
+  } //end ngOnInit()
+
+ //초기 조회를 위한 함수
   initForm(){
     this.MileageForm = this.formBuilder.group({
       input_date: this.mileage.input_date,
+      minor_code: this.mileage.code[0]+this.mileage.code[1],
       code: this.mileage.code,
       score: this.mileage.score,
       act_date: this.formBuilder.group({
@@ -113,26 +121,37 @@ mileageCodeOptions: Option[];
     })
     
   }
-
-
-  loadMileageCodes() {
+  setMileageCodes(value,thisCode){
     this.minorMileageCodeOptions = parseJsonToOptions(getMinorMileagesCodes(this.major_code), undefined, (json, key)=>{
       return json[key].description;
     });
-  }
-
-  onChangeMinorMileageCode(value) {
     this.mileageCodeOptions = parseJsonToOptions(getMileagesCodes(this.major_code, value), undefined, (json, key)=>{
       return json[key].detail;
     });
 
-    this.code.setValue(this.mileageCodeOptions[0].key);
-    this.onChangeMileageCode(this.mileageCodeOptions[0].key);
+    for (let minor of this.minorMileageCodeOptions){
+      if (minor.key == value)
+        this.viewMinor = minor.value;
+    }
+    this.MileageForm.value.minor_code = value;
+    this.viewCode = this.mileageCodeOptions[0].value;
+    this.accept_method = mileageCode[thisCode]['accept_method'];
+    this.remark = mileageCode[thisCode]['remark'];
+  }//end 초기 조회를 위한 함수
+
+  onChangeMinorMileageCode(value) {
+    this.mileageCodeOptions = parseJsonToOptions(getMileagesCodes(this.MileageForm.value.major_code, value), undefined, (json, key)=>{
+      return json[key].detail;
+    });
+    console.log(this.MileageForm.value.code);
+    this.MileageForm.value.code = this.mileageCodeOptions[0].key;
+    // this.MileageForm.value.score = mileageCode[0]['score'];
   }
 
   onChangeMileageCode(value) {
-    this.code_preview.setValue(value);
-    this.score.setValue(mileageCode[value]['score']);
+    // this.MileageForm.value.code = value;
+    // this.MileageForm.value.score = mileageCode[value]['score'];
+
     this.accept_method = mileageCode[value]['accept_method'];
     this.remark = mileageCode[value]['remark'];
   }
@@ -147,13 +166,11 @@ mileageCodeOptions: Option[];
   print() {
     this.printService.printDocument('mileage', this.mileageId);
   }
-
   get input_date() : FormControl { return this.MileageForm.get('input_date') as FormControl; }
-  get code() : FormControl { return this.MileageForm.get('codeId') as FormControl; }
+  get code() : FormControl { return this.MileageForm.get('code') as FormControl; }
   get score() : FormControl { return this.MileageForm.get('score') as FormControl; }
   get act_date() : FormControl { return this.MileageForm.get('act_date') as FormControl; }
   get detail() : FormControl { return this.MileageForm.get('detail') as FormControl; }
-  get code_preview() { return this.newMileageForm.get('code_preview');}
-  get minor_code() { return this.newMileageForm.get('minor_code');}
-
+  get code_preview() : FormControl { return this.MileageForm.get('code_preview') as FormControl;}
+  get minor_code(): FormControl { return this.MileageForm.get('minor_code') as FormControl;}
 }

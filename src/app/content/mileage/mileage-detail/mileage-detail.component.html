@@ -21,19 +21,23 @@
                             <label class="col-md-2 control-label">마일리지 선택</label>
                             <!-- 조회폼 -->
                             <div *ngIf="!modify" class="col-sm-10 col-md-6">
-                                <input type="text" class="form-control" value="{{mileage.code}}" readonly>
+                                <input type="text" class="form-control" value="{{viewMinor}}" readonly>
+                                <br>
+                                <input type="text" class="form-control" value="{{viewCode}}" readonly>
+                                <h6 *ngIf="viewMinor" class="extra">*증빙서류 : {{accept_method}}</h6>
+                                <h6 *ngIf="viewMinor" class="extra"> 비고     : {{remark}}</h6>
                             </div>  
                             <!-- 수정폼                             -->
                             <div *ngIf="modify" class="col-sm-10 col-md-6">
-                                <select class="form-control" (change)="onChangeMinorMileageCode(code)">
+                                <select formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
                                     <option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
-                                <br *ngIf="code">
-                                <select *ngIf="code" formControlName="code" class="form-control" (change)="onChangeMileageCode(code)">
+                                <br *ngIf="minor_code.value">
+                                <select *ngIf="minor_code.value" formControlName="code" class="form-control" (change)="onChangeMileageCode(code.value)">
                                     <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
-                                <h6 *ngIf="code" class="extra">*증빙서류 : {{accept_method}}</h6>
-                                <h6 *ngIf="code" class="extra"> 비고     : {{remark}}</h6>
+                                <h6 *ngIf="minor_code.value" class="extra">*증빙서류 : {{accept_method}}</h6>
+                                <h6 *ngIf="minor_code.value" class="extra"> 비고     : {{remark}}</h6>
                             </div>
                         </div>
                     </div>
@@ -49,7 +53,7 @@
                         <div class="item row">
                             <label class="col-md-2 control-label">마일리지 점수</label>
                             <div class="col-sm-10 col-md-6">
-                                <input  class="form-control" type="text" value="{{mileage.score}}" class="form-control" readonly>
+                                <input formControlName="score" class="form-control" type="text" value="{{mileage.score}}" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
