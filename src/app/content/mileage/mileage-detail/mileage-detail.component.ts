@@ -16,6 +16,7 @@ import mileageCode from "src/assets/json/mileageCode.json";
 // others
 import { formatDate, notifyError, refresh, notifyInfo } from 'src/util/util';
 import { conditionallyCreateMapObjectLiteral } from '@angular/compiler/src/render3/view/util';
+import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-mileage-detail',
@@ -143,14 +144,14 @@ mileageCodeOptions: Option[];
     this.mileageCodeOptions = parseJsonToOptions(getMileagesCodes(this.MileageForm.value.major_code, value), undefined, (json, key)=>{
       return json[key].detail;
     });
-    console.log(this.MileageForm.value.code);
-    this.MileageForm.value.code = this.mileageCodeOptions[0].key;
-    // this.MileageForm.value.score = mileageCode[0]['score'];
+    this.code.setValue(this.mileageCodeOptions[0].key);
+    this.onChangeMileageCode(this.mileageCodeOptions[0].key);
   }
 
   onChangeMileageCode(value) {
-    // this.MileageForm.value.code = value;
-    // this.MileageForm.value.score = mileageCode[value]['score'];
+    console.log(value);
+    this.code.setValue(value);
+    this.score.setValue(mileageCode[value]['score']);
 
     this.accept_method = mileageCode[value]['accept_method'];
     this.remark = mileageCode[value]['remark'];

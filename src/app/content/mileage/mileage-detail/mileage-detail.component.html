@@ -24,8 +24,8 @@
                                 <input type="text" class="form-control" value="{{viewMinor}}" readonly>
                                 <br>
                                 <input type="text" class="form-control" value="{{viewCode}}" readonly>
-                                <h6 *ngIf="viewMinor" class="extra">*증빙서류 : {{accept_method}}</h6>
-                                <h6 *ngIf="viewMinor" class="extra"> 비고     : {{remark}}</h6>
+                                <h6 *ngIf="viewMinor" class="sub">*증빙서류 : {{accept_method}}</h6>
+                                <h6 *ngIf="remark" class="sub">*비고     : {{remark}}</h6>
                             </div>  
                             <!-- 수정폼                             -->
                             <div *ngIf="modify" class="col-sm-10 col-md-6">
@@ -36,8 +36,8 @@
                                 <select *ngIf="minor_code.value" formControlName="code" class="form-control" (change)="onChangeMileageCode(code.value)">
                                     <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
-                                <h6 *ngIf="minor_code.value" class="extra">*증빙서류 : {{accept_method}}</h6>
-                                <h6 *ngIf="minor_code.value" class="extra"> 비고     : {{remark}}</h6>
+                                <h6 *ngIf="minor_code.value" class="sub">*증빙서류 : {{accept_method}}</h6>
+                                <h6 *ngIf="remark" class="sub">*비고     : {{remark}}</h6>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                         <div class="item row">
                             <label class="col-md-2 control-label">마일리지 코드</label>
                             <div class="col-sm-10 col-md-6">
-                                <input formControlName="code" type="text" value="{{mileage.code}}" class="form-control" readonly>
+                                <input formControlName="code" type="text" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
