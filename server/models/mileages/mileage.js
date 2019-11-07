@@ -17,8 +17,8 @@ const Mileage = mongoose.Schema({
     },
     detail:         { type: String, required: true},
     info_photos:    [{ type: mongoose.SchemaTypes.ObjectId, ref: 'File'}],
-    is_accepted:    { type: Boolean, default: false},
-    accept_date:    { type: Date, default: null}
+    is_accepted:    { type: Boolean, default: true},
+    accept_date:    { type: Date, default: Date.now}
 }, {
     collection: 'Mileage'
   });

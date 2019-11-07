@@ -123,6 +123,12 @@ Tip 2: you can also add an image using data-image tag
                                 <p>My 마일리지 조회</p>
                             </a>
                         </li>
+                        <li *ngIf="menuMode=='admin'">
+                            <a class="nav-link" (click)="gotoAllMileageList()" aria-expanded="true">
+                                <i class="nc-icon nc-single-copy-04"></i>
+                                <p>마일리지 조회(관리자)</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

@@ -140,7 +140,7 @@ router.post('/get-mileages', isAuthenticated, verifyUserTypes(['admin']), (req, 
   const { _dataIndex, _filter } = req.body;
 
   getFilterOfMileage(_filter).then(filter => {
-    Mileage.findWithFilter(_dataIndex, filter)
+    Mileage.findWithFilter(filter, _dataIndex)
       .then(docs => {
         let objs = [];
 

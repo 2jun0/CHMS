@@ -134,7 +134,15 @@ const routes: Routes = [
   },
   {
     path: 'mileage/detail/:id',
-    component: MileageDetailComponent
+    component: MileageDetailComponent,
+    canActivate: [AuthGuard],
+    data: {userTypes: ['student', 'admin'], errorMsg: '마일리지 상세보기는 학생 사용자와 관리자만 접근할 수 있습니다.'}
+  },
+  {
+    path: 'mileage/all-mileage-list/:page',
+    component: AllMileageListComponent,
+    canActivate: [AuthGuard],
+    data: {userTypes: ['admin'], errorMsg: '마일리지 조회(관리자)는 관리자만 접근할 수 있습니다.'}
   },
   {
     path: 'print',

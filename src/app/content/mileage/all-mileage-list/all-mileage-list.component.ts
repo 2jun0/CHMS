@@ -7,6 +7,9 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import mileageCode from "src/assets/json/mileageCode.json";
 import majorCode from "src/assets/json/majorMileageCode.json";
 import minorCode from "src/assets/json/minorMileageCode.json";
+
+import collegeTypes from "src/assets/json/collegeTypes.json";
+import departmentTypes from "src/assets/json/departmentTypes.json";
 // services
 import { MileageService } from 'src/app/services/mileage.service';
 // models
@@ -14,7 +17,9 @@ import { Mileage, MajorMileage } from 'src/app/model/mileage';
 // utils
 import { notifyError, formatDate, notifyInfo } from 'src/util/util';
 import { parseJsonToOptions, Option } from 'src/util/options';
-import { getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
+import { getMinorMileagesCodes, getMileagesCodes, getDepartmentTypes } from 'src/util/codes';
+import { UserService } from 'src/app/services/user.service';
+import { ExcelService } from 'src/app/services/excel.service';
 @Component({
   selector: 'app-all-mileage-list',
   templateUrl: './all-mileage-list.component.html',
@@ -42,11 +47,14 @@ export class AllMileageListComponent implements OnInit {
   majorMileageCodeOptions: Option[];
   minorMileageCodeOptions: Option[];
   mileageCodeOptions: Option[];
+
+  collegeTypeOptions: Option[];
+  departmentTypeOptions: Option[];
   
   searchForm: FormGroup;
 
-  myMileages: Mileage[];
-  myMileageCount: Number;
+  allMileages: Mileage[];
+  allMileageCount: Number;
 
   sumOfScore: Number;
   sumOfPredictedScore: Number;
@@ -65,11 +73,13 @@ export class AllMileageListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private mileageService: MileageService,
+    private excelService: ExcelService, 
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
   ) { 
     this.localeService.use('ko');
-    this.myMileages = [];
+    this.allMileages = [];
     this.isSearchActivated = false;
     this.pageIndexRange = [];
   }
@@ -79,7 +89,12 @@ export class AllMileageListComponent implements OnInit {
       input_date: null,
       major_code: null,
       minor_code: null,
-      mileage_code: null
+      mileage_code: null,
+      user_name: null,
+      user_num: null,
+      department: null,
+      accepted: true,
+      not_accepted: true
     });
 
     this.mileageService.loadMileageCodes.subscribe(
@@ -91,7 +106,14 @@ export class AllMileageListComponent implements OnInit {
       }
     )
 
+    this.userService.loadCodes.subscribe(
+      () => {
+        this.loadDepartmentTypes();
+      }
+    );
+
     this.loadMileageCodes();
+    this.loadDepartmentTypes();
 
     this.reloadMileages();
   }
@@ -106,9 +128,9 @@ export class AllMileageListComponent implements OnInit {
       this.pageIndex = Number(this.route.snapshot.paramMap.get('page')) - 1;
     }
 
-    this.mileageService.getMyMileageCount(filter).subscribe(
+    this.mileageService.getMileageCount(filter).subscribe(
       (count) => {
-        this.myMileageCount = count;
+        this.allMileageCount = count;
         this.maxPageIndex = (count%this.MILEAGE_COUNT_IN_PAGE === 0) ? (count/this.MILEAGE_COUNT_IN_PAGE-1) : Math.floor(count/this.MILEAGE_COUNT_IN_PAGE);
         this.pageIndexRange = [];
 
@@ -133,9 +155,9 @@ export class AllMileageListComponent implements OnInit {
       }
     )
 
-    this.mileageService.getMyMileages(this.pageIndex * this.MILEAGE_COUNT_IN_PAGE, this.MILEAGE_COUNT_IN_PAGE, filter).subscribe(
+    this.mileageService.getMileages(this.pageIndex * this.MILEAGE_COUNT_IN_PAGE, this.MILEAGE_COUNT_IN_PAGE, filter).subscribe(
       (mileages) => {
-        this.myMileages = mileages;
+        this.allMileages = mileages;
       },
       ({ error }) => {
         notifyError(error);
@@ -167,6 +189,12 @@ export class AllMileageListComponent implements OnInit {
     });
   }
 
+  loadDepartmentTypes() {
+    this.collegeTypeOptions = parseJsonToOptions(collegeTypes, undefined, (json, key) => {
+      return json[key].description
+    });
+  }
+
   onChangeMajorMileageCode(value) {
     this.minorMileageCodeOptions = parseJsonToOptions(getMinorMileagesCodes(value), undefined, (json, key)=>{
       return json[key].description;
@@ -188,6 +216,19 @@ export class AllMileageListComponent implements OnInit {
     this.gotoPage(0);
   }
 
+  onChangeCollegeType(value) {
+    this.departmentTypeOptions = parseJsonToOptions(getDepartmentTypes(value), undefined, (json, key)=>{
+      return json[key].description;
+    });
+    if(value == '모두' || value == null) {
+      this.department.setValue(null);
+    }else{
+      this.department.setValue(this.departmentTypeOptions[0].key);
+    }
+
+    this.gotoPage(0);
+  }
+
   createFilter() {
     let filter = {};
 
@@ -204,6 +245,30 @@ export class AllMileageListComponent implements OnInit {
         }
       }
     }
+
+    if(this.user_name.value) {
+      filter['user_name'] = this.user_name.value;
+    }
+
+    if(this.user_num.value) {
+      filter['user_num'] = this.user_num.value;
+    }
+
+    if(this.department.value) {
+      filter['department'] = this.department.value;
+    }
+
+    let is_acceptedFilter = [];
+    if(this.accepted.value) {
+      is_acceptedFilter.push(true)
+    }
+    if(this.not_accepted.value) {
+      is_acceptedFilter.push(false)
+    }
+    if(is_acceptedFilter.length > 0) {
+      filter['is_accepted'] = {$in : is_acceptedFilter};
+    }
+
     return filter;
   }
 
@@ -249,7 +314,7 @@ export class AllMileageListComponent implements OnInit {
   }
 
   gotoPage(page: number) {
-    this.router.navigate(['/mileage/my-mileage', page+1]);
+    this.router.navigate(['/mileage/all-mileage-list', page+1]);
     this.reloadMileages(page);
   }
 
@@ -268,8 +333,64 @@ export class AllMileageListComponent implements OnInit {
     notifyInfo('검색 모드 비활성화', true);
   }
 
+  downloadExcel() {
+    let filter = this.createFilter();
+    this.mileageService.getMileages(0, 1000000, filter)
+      .subscribe(
+        (mileages) => {
+          for(var mileage of mileages) {
+            // id, photo 삭제
+            delete mileage.id;
+            delete mileage.info_photos;
+
+            mileage['마일리지 코드'] = mileage.code;
+            mileage['마일리지 이름'] = (mileageCode[mileage.code])?mileageCode[mileage.code].detail:'알수 없음';
+            delete mileage.code;
+
+            mileage['학생 이름'] = mileage.user_name;
+            delete mileage.user_name;
+
+            mileage['학번'] = mileage.user_num;
+            delete mileage.user_num;
+
+            mileage['학과'] = mileage.department;
+            delete mileage.department;
+
+            mileage['입력날짜'] = mileage.input_date;
+            delete mileage.input_date;
+
+            mileage['수행 일자(from)'] = mileage.act_date.from;
+            mileage['수행 일자(to)'] = mileage.act_date.to;
+            delete mileage.act_date;
+
+            mileage['마일리지 점수'] = mileage.score;
+            delete mileage.score;
+           
+            mileage['마일리지 활동상세내역'] = mileage.detail;
+            delete mileage.detail;
+
+            mileage['인증 여부'] = mileage.is_accepted;
+            delete mileage.is_accepted;
+
+          }
+
+          this.excelService.exportAsExcelFile(mileages, '마일리지 리스트');
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      )
+  }
+
+
+
   get input_date() {return this.searchForm.get('input_date');}
   get major_code() {return this.searchForm.get('major_code');}
   get minor_code() {return this.searchForm.get('minor_code');}
   get mileage_code() {return this.searchForm.get('mileage_code');}
+  get user_name() {return this.searchForm.get('user_name');}
+  get user_num() {return this.searchForm.get('user_num');}
+  get department() {return this.searchForm.get('department');}
+  get accepted() {return this.searchForm.get('accepted');}
+  get not_accepted() {return this.searchForm.get('not_accepted');}
 }

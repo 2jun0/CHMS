@@ -1,12 +1,15 @@
 <div class="card-wapper flex">
 	<div class="card left">
 		<div class="card-header">
-			<h4 class="card-title">내 마일리지 조회</h4>
+			<h4 class="card-title">마일리지 조회(관리자)</h4>
+			<div class="extra">
+				<button class="extra-btn" (click)="downloadExcel()"><img src="/assets/img/excel-icon.png"> </button>
+			</div>
 		</div>
 		<div class="card-body">
 			<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
 			<ul class="pagination pagination-sm">
-				<li *ngIf="!isFirstPageRange" class="page-item">
+				<li *ngIf="!isFirstPageRange" class="page-item">	
 					<a class="page-link" (click)="gotoFirstPage()">
 						<i class="material-icons">first_page</i>
 					</a>
@@ -40,6 +43,7 @@
 				<table class="table table-hover table-striped">
 					<thead>
 						<tr>
+							<th>학생</th>
 							<th>코드</th>
 							<th>마일리지 명</th>
 							<th>추정 점수</th>
@@ -50,7 +54,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr *ngFor="let mileage of myMileages" [routerLink]="['/mileage/detail', mileage.id]" style="cursor:pointer;">
+						<tr *ngFor="let mileage of allMileages" [routerLink]="['/mileage/detail', mileage.id]" style="cursor:pointer;">
+							<td>{{mileage.user_name}}<br>#{{mileage.user_num}}</td>
 							<td>{{mileage.code}}</td>
 							<td>{{mileageCodes[mileage.code].detail}}</td>
 							<td>{{mileageCodes[mileage.code].score}}</td>
@@ -63,7 +68,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div *ngIf="myMileages.length === 0">
+				<div *ngIf="allMileages.length === 0">
 					검색 결과 없음!
 				</div>
 			</div>
@@ -95,6 +100,47 @@
 							<option [ngValue]="null">모두</option>
 							<option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
 						</select>
+					</div>
+					<div class="search-item">
+						<label class="control-label">학생 이름으로 검색</label>
+						<div>
+							<input formControlName="user_name" class="form-control search-input" type="text"
+								(keyup.enter)="gotoPage(0)" placeholder="학생 이름">
+							<button class="btn" (click)="gotoPage(0)">검색</button>
+						</div>
+					</div>
+					<div class="search-item">
+						<label class="control-label">학번으로 검색</label>
+						<div>
+							<input formControlName="user_num" class="form-control search-input" type="text"
+								(keyup.enter)="gotoPage(0)" placeholder="학번">
+							<button class="btn" (click)="gotoPage(0)">검색</button>
+						</div>
+					</div>
+					<div class="search-item multi-select">
+						<label class="control-label">학과로 검색</label>
+						<select #college class="form-control" (change)="onChangeCollegeType(college.value)">
+							<option [ngValue]="null" selected>모두</option>
+							<option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
+						<select *ngIf="department.value != null" formControlName="department" class="form-control" (change)="this.gotoPage(0)">
+							<option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
+					</div>
+					<div class="search-item">
+						<label class="control-label">사업단 확인 여부</label>
+						<div class="check-wapper">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" id="accepted" formControlName="accepted"
+									class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+								<label class="custom-control-label" for="accepted">확인</label>
+							</div>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" id="not_accepted" formControlName="not_accepted"
+									class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
+								<label class="custom-control-label" for="not_accepted">미확인</label>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>
