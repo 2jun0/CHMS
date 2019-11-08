@@ -4,7 +4,7 @@ const { isAuthenticated, verifyUserTypes, isSelf, forceByAdmin } = require('../m
 const { doesUserExist } = require('../middlewares/user');
 const { doesMileageExist, isMileageMine } = require('../middlewares/mileage');
 // validators
-const { checkMileageInputs } = require('../middlewares/validator/mileage');
+const { checkMileageInputs, checkMileageUpdate } = require('../middlewares/validator/mileage');
 // models
 const Mileage = require('../models/mileages/mileage');
 const MileageCode = require('../models/mileages/mileageCode');
@@ -59,7 +59,7 @@ router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']
   POST /mileage/update-mileage
   JWT Token student, admin / mileage_id, mileage
 */
-router.post('update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
+router.post('update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), checkMileageUpdate('mileage'), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/update-mileage');
 
   const { mileage } = req;
