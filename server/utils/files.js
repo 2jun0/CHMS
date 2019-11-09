@@ -14,6 +14,19 @@ exports.createFile = function (file, filetype) {
 		});
 };
 
+exports.deleteFile = function (file_id) {
+	return File.findOneById(file_id)
+		.then(doc_file => {
+			if(doc_file.)
+			img_predicted_file
+			doc_ppt_file
+			doc_zip_file
+			ucc_file
+			info_photo
+			doc_file.
+		});
+}
+
 exports.uploadFileInProject = function (req, res, next) {
 	exports.upload(req, res, (err, next2) => {
 		if (err) {

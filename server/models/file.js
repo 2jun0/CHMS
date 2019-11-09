@@ -21,6 +21,14 @@ const File = mongoose.Schema({
             });
     }
 
+    File.statics.deleteById = function(file_id) {
+        return this.deleteOne({_id: file_id});
+    }
+    File.statics.findOneById = function(file_id) {
+        return this.findOne({_id: file_id})
+            .populate({path:'filetype', select:'description'});
+    }
+
     File.methods.toCustomObject = function() { 
         let result = {
             id: this._id,
