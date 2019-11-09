@@ -7,10 +7,7 @@ function getCheckMileageBase(inputs_key) {
     let checkArray;
 
     checkArray = [
-        body(inputs_key+'.user_num').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
-        body(inputs_key+'.user_name').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
-        body(inputs_key+'.department').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
-        body(inputs_key+'.input_date').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
+       body(inputs_key+'.input_date').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
         body(inputs_key+'.code').exists().withMessage('마일리지 코드값을 입력해주세요!')
             .isString().withMessage('마일리지를 선택해 주세요!'),
         // body(inputs_key+'.score').exists().withMessage('마일리지 점수를 입력해주세요')
@@ -44,6 +41,12 @@ function getCheckMileageBase(inputs_key) {
 
 exports.checkMileageInputs = function(inputs_key, showError = true) {
     let checkArray = getCheckMileageBase(inputs_key, showError).concat([
+        body(inputs_key+'.user_num').exists().withMessage('사용자 번호를 입력해주세요!')
+            .isInt().withMessage('사용자 번호는 정수여야 합니다.'),
+        body(inputs_key+'.user_name').exists().withMessage('사용자 성명을 입력해주세요!')
+            .isString().withMessage('사용자 성명은 문자열이여야 합니다.'),
+        body(inputs_key+'.department').exists().withMessage('전공을 입력해주세요!')
+            .isString().withMessage('전공은 문자열이여야 합니다.'),
         body(inputs_key+'.is_accepted').not().exists().withMessage(STR_NOT_ALLOW_ACCESS)
     ])
     
@@ -56,6 +59,12 @@ exports.checkMileageUpdate = function(inputs_key, showError = true) {
         const token = req.decodedToken;
 
         let checkArray = getCheckMileageBase(inputs_key, showError);
+
+        checkArray.concat([
+            body(inputs_key+'.user_num').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
+            body(inputs_key+'.user_name').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
+            body(inputs_key+'.department').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),    
+        ])
 
         if(token.user_type == 'admin') {
             checkArray.concat([
