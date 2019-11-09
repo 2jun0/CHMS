@@ -95,6 +95,10 @@ const Mileage = mongoose.Schema({
         return Promise.all(promiseArray).then(() => {return doc;});
     }
 
+    Mileage.statics.deleteById = function(mileage_id) {
+        return this.deleteOne({_id: mileage_id});
+    }
+
     // find mileages & count by user num
     Mileage.statics.findByUserNum = function(user_num, dataIndex) {
         return this.find({user_num}).sort({ "input_date" : -1 }).skip(dataIndex.start).limit(dataIndex.count)

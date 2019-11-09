@@ -78,6 +78,25 @@ router.post('update-mileage', isAuthenticated, verifyUserTypes(['student','admin
 });
 
 /*
+  마일리지 삭제
+  POST /mileage/delete-mileage
+  JWT Token student, admin / mileage_id
+*/
+router.post('delete-mileage', isAuthenticated, verifyUserTypes(['student','admin']), checkMileageUpdate('mileage'), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
+  console.log('[POST] /mileage/delete-mileage');
+
+  const { mileage_id } = req.body;
+
+  Mileage.deleteById(mileage_id)
+    .then(() => {
+      return res.json({ success: true })
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
+});
+
+/*
   내 마일리지 얻기
   POST /mileage/get-my-mileages
   JWT Token student / _dataIndex{start, count}, _filter?
