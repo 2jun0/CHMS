@@ -402,6 +402,11 @@ const Project = mongoose.Schema({
             })
     }
 
+    Project.methods.updateIsPublic = function(is_public){
+        this.is_public = is_public;
+        this.save();
+    }
+
 // Project.Member
 Project.statics.Member = ProjectMember;
 // Project.RequestPart

@@ -57,6 +57,10 @@ export class ProjectService {
   deleteProject(project_id:string): Observable<any> {
     return this.http.post<any>(`${this.appUrl}/project/delete-project`, {project_id}, {headers: this.headers})
   }
+  // 프로젝트 공개 여부 설정
+  updateIsPublic(project_id:string, is_public): Observable<any> {
+    return this.http.post<any>(`${this.appUrl}/project/update-is-public`, {project_id, is_public}, {headers: this.headers})
+  }
   // 산출물 제출
   submitOutputs(project_id: string, outputs: Outputs, doc_ppt_file?: File, doc_zip_file?: File): Observable<any> {
     return this.http.post<any>(`${this.appUrl}/project/submit-outputs`, {project_id, outputs}, {headers: this.headers})

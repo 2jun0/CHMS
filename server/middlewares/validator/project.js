@@ -43,6 +43,7 @@ exports.checkProjectUpdate = function(inputs_key, showError = true) {
 
 exports.checkProjectInputs = function(inputs_key, containOutputs, containEvaluation, showError = true) {
 	let checkArray = [
+		body(inputs_key+'.is_public').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
 		body(inputs_key+'.kr_title').exists().withMessage('한글 제목을 입력해야 합니다.')
     		.isString().trim().isLength({ min:1, max:100 }).withMessage('한글 제목은 최소 1, 최대 100글자여야 합니다.'),
 		body(inputs_key+'.en_title').exists().withMessage('영어 제목을 입력해야 합니다.')

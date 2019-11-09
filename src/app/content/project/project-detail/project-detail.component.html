@@ -10,6 +10,12 @@
             <button *ngIf="(isManageProject && ['submitting outputs', 'peer reviewing', 'evaluating', 'finished'].includes(project.project_state))" class="btn pull-right" (click)="showPeerReview.openModal(project)">동료평가 보기</button>
         </div>
         <div class="card-body" [formGroup]="updateForm">
+            <div *ngIf="myUserType=='admin'" class="item row">
+                <label class="label">공개 여부 설정</label>
+                <div class="content-value">
+                    <input type="checkbox" formControlName="is_public" (change)="onChangeIsPublic(is_public.value)">
+                </div>
+            </div>
             <div class="item row">
                 <label class="label">프로젝트 제목(한글)</label>
                 <div class="content-value">
@@ -288,7 +294,7 @@
                 </div>
             </ng-container>
             <div class="item row">
-                <label class="label">키워드</label>
+                <label class="label">키워드(,로 구분)</label>
                 <div class="content-value">
                     <span *ngIf="!isUpdateMode">{{keywords.value}}</span>
                     <input *ngIf="isUpdateMode" formControlName="keywords" type="text" class="form-control">

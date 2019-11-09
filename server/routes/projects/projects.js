@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { check, validationResult } = require('express-validator');
 const fs = require('fs');
 // middlewares
-const { isAuthenticated, isProjectManager, isProjectLeader, forceByAdmin } = require('../../middlewares/auth');
+const { isAuthenticated, isProjectManager, isProjectLeader, forceByAdmin, verifyUserTypes } = require('../../middlewares/auth');
 const { doesProjectExist, isProjectStates } = require('../../middlewares/project');
 const { checks, checkProjectUpdate, checkProjectInputs, checkOutputs, checkEvaluation } = require('../../middlewares/validator/project');
 // models
@@ -97,6 +97,21 @@ router.post('/update-project', isAuthenticated, doesProjectExist('project_id'), 
       res.status(403).json({ success: false, message: err.message });
       console.log(err);
     });
+});
+
+/*
+  프로젝트 공개 여부 설정
+  /project/update-is-public
+  JWT Token admin / project_id, is_public
+*/
+router.post('/update-is-public', isAuthenticated, doesProjectExist('project_id'), verifyUserTypes(['admin']), (req, res, next) => {
+  console.log('[POST] project/update-is-public');
+
+  const project = req.project;
+  const { is_public } = req.body;
+  project.updateIsPublic(is_public);
+
+  return res.json({ success: true });
 });
 
 /*

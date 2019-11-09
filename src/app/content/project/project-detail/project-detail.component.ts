@@ -254,6 +254,7 @@ export class ProjectDetailComponent implements OnInit {
   // Init update reative form
   initUpdateForm() {
     this.updateForm = this.formBuilder.group({
+      is_public: this.project.is_public,
       kr_title: this.project.kr_title,
       en_title: this.project.en_title,
       member_count: this.project.member_count,
@@ -354,6 +355,7 @@ export class ProjectDetailComponent implements OnInit {
     this.updateSelectedLanguageOptions();
   }
 
+  get is_public() : FormControl { return this.updateForm.get('is_public') as FormControl; }
   get kr_title() : FormControl { return this.updateForm.get('kr_title') as FormControl; }
   get en_title() : FormControl { return this.updateForm.get('en_title') as FormControl; }
   get member_count() : FormControl { return this.updateForm.get('member_count') as FormControl; }
@@ -468,6 +470,8 @@ export class ProjectDetailComponent implements OnInit {
 
     payload.keywords = this.keywords.value.split(',');
 
+    delete payload.is_public;
+
     if(payload.intro) {
       // 마지막 language 입력 안하면 삭제
       if(payload.intro.languages.length > 0 && !payload.intro.languages[payload.intro.languages.length-1]) {
@@ -511,6 +515,17 @@ export class ProjectDetailComponent implements OnInit {
           notifyError(error);
         }
       )
+  }
+
+  onChangeIsPublic(value) {
+    this.projectService.updateIsPublic(this.projectId, value).subscribe(
+      () => {
+        this.loadProject(this.projectId);
+      },
+      ({ error }) => {
+        notifyError(error);
+      }
+    );
   }
 
   // ===============================================
