@@ -77,17 +77,17 @@ exports.checkMileageUpdate = function(inputs_key, showError = true) {
         body(inputs_key+'.score').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
     ];
 
-    const token = req.decodedToken;
+    //const token = req.decodedToken;
 
-    if(token.user_num == 'admin') {
-        checks.concat([
-            body(inputs_key+'.is_accepted').isBoolean().withMessage('확인 여부 값은 Boolean형 이여야 합니다')
-        ])
-    }else{
-        checks.concat([
-            body(inputs_key+'.is_accepted').not().exists().withMessage(STR_NOT_ALLOW_ACCESS)
-        ])
-    }
+    // if(token.user_num == 'admin') {
+    //     checks.concat([
+    //         body(inputs_key+'.is_accepted').isBoolean().withMessage('확인 여부 값은 Boolean형 이여야 합니다')
+    //     ])
+    // }else{
+    //     checks.concat([
+    //         body(inputs_key+'.is_accepted').not().exists().withMessage(STR_NOT_ALLOW_ACCESS)
+    //     ])
+    // }
 
     if(showError) { return checks(checkArray); }
 	else{ return checkArray; }
