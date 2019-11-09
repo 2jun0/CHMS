@@ -14,6 +14,11 @@ exports.createFile = function (file, filetype) {
 		});
 };
 
+exports.deleteFile = function (file, basePath) {
+	fs.unlinkSync(`../files/${basePath}/${file.filename}`);
+	return file.deleteOne();
+}
+
 exports.uploadFileInProject = function (req, res, next) {
 	exports.upload(req, res, (err, next2) => {
 		if (err) {

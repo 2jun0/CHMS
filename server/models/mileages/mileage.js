@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const MileageCode = require('./mileageCode');
 
 const { filterNullInObject, cloneObject } = require('../../utils/utils');
+const { deleteFile } = require('../../utils/files');
 
 const Mileage = mongoose.Schema({
     user_num:       { type: Number, required: true },
@@ -102,8 +103,14 @@ const Mileage = mongoose.Schema({
         return Promise.all(promiseArray).then(() => {return doc;});
     }
 
-    Mileage.statics.deleteById = function(mileage_id) {
-        return this.deleteOne({_id: mileage_id});
+    Mileage.statics.deleteById = async function(mileage_id) {
+        this.findOneById(mileage_id)
+            .then(doc => {
+                for(var info_photo of doc.info_photos) {
+                    await deleteFile(info_photo, `mileage/${mileage_id}`);
+                }
+                return this.doc.deleteOne();
+            })
     }
 
     // find mileages & count by user num

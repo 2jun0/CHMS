@@ -4,7 +4,7 @@ const { checks } = require('./validator.js');
 const STR_NOT_ALLOW_ACCESS = '비정상적인 접근입니다.';
 
 // You must call doesProjectExist() before call exports
-exports.checkProjectUpdate = function(inputs_key) {
+exports.checkProjectUpdate = function(inputs_key, showError = true) {
 	return async (req, res, next) => {
 		let containOutputs = false;
 		let containEvaluation = false;
@@ -27,7 +27,7 @@ exports.checkProjectUpdate = function(inputs_key) {
 				break;
 		}
 
-		let checkArray = exports.checkProjectInputs(inputs_key, containOutputs, containEvaluation);
+		let checkArray = exports.checkProjectInputs(inputs_key, containOutputs, containEvaluation, showError);
 
 		for(let check of checkArray) {
 			if(typeof(check) == 'function'){
