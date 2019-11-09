@@ -35,40 +35,40 @@
             <div class="item row">
                 <label class="label">팀원 모집기간</label>
                 <div *ngIf="!isUpdateMode" class="content-value">
-                    <span>{{formatDate(recruit_period.value.start_date)}} ~
-                        {{formatDate(recruit_period.value.end_date)}}</span>
+                    <span>{{recruit_period.value.start_date|date:'yyyy-MM-dd'}} ~
+                        {{recruit_period.value.end_date|date:'yyyy-MM-dd'}}</span>
                 </div>
                 <div *ngIf="isUpdateMode" formGroupName="recruit_period" class="edit-date-range">
                     <div class="start">
                         <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
                             bsDatepicker [isDisabled]="true"
-                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" disabled>
+                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}" disabled>
                     </div>
                     <span>~</span>
                     <div class="end">
                         <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
                             bsDatepicker [minDate]="recruit_period.value.start_date" [maxDate]="exec_period.value.start_date"
-                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                     </div>
                 </div>
             </div>
             <div class="item row">
                 <label class="label">수행 기간</label>
                 <div *ngIf="!isUpdateMode" class="content-value">
-                    <span>{{formatDate(exec_period.value.start_date)}} ~
-                        {{formatDate(exec_period.value.end_date)}}</span>
+                    <span>{{exec_period.value.start_date|date:'yyyy-MM-dd'}} ~
+                        {{exec_period.value.end_date|date:'yyyy-MM-dd'}}</span>
                 </div>
                 <div *ngIf="isUpdateMode" formGroupName="exec_period" class="edit-date-range">
                     <div class="start">
                         <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
                             bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
-                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                     </div>
                     <span>~</span>
                     <div class="end">
                         <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
                             bsDatepicker [minDate]="exec_period.value.start_date"
-                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                     </div>
                 </div>
             </div>

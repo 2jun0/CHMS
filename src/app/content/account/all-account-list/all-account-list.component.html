@@ -123,7 +123,7 @@
                     <div class="date-wapper">
                         <input formControlName="join_date" type="text" class="form-control date" placeholder="기간 선택"
                             bsDaterangepicker [maxDate]="today" (bsValueChange)="onJoinDateChange($event)"
-                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                            [bsConfig]="{ adaptivePosition: true, rangeInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                         <a class="reset-btn" (click)="clearJoinDate()"><i class="material-icons">clear</i></a>
                     </div>
                 </div>

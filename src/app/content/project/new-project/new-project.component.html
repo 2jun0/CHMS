@@ -65,13 +65,13 @@
                                     <div class="start">
                                         <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
                                             bsDatepicker [minDate]="today" [maxDate]="recruit_period.value.end_date"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                                     </div>
                                     <span>~</span>
                                     <div class="end">
                                         <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
                                             bsDatepicker [minDate]="recruit_period.value.start_date" [maxDate]="exec_period.value.start_date"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                                     </div>
                                 </div>
                             </div>
@@ -83,13 +83,13 @@
                                     <div class="start">
                                         <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
                                             bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                                     </div>
                                     <span>~</span>
                                     <div class="end">
                                         <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
                                             bsDatepicker [minDate]="exec_period.value.start_date"
-                                            [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                                     </div>
                                 </div>
                             </div>
