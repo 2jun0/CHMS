@@ -166,5 +166,18 @@ const Mileage = mongoose.Schema({
         return this.findOne({_id: id}).populate({path:'code', populate:{path:"minor", populate:{path:'major'}}});
     };
 
+    Mileage.methods.updateIsAccepted = function(is_accepted) {
+        this.is_accepted = is_accepted;
+        this.accept_date = new Date();
+        // 만약 사업단이 확인하면 점수를 부여하고 아니면 0으로..
+        if(is_accepted) {
+            this.score = this.code.score;
+        }else{
+            this.score = 0;
+        }
+
+        this.save();
+    }
+
 
 module.exports = mongoose.model('Mileage', Mileage);

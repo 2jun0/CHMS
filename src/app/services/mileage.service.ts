@@ -66,6 +66,11 @@ export class MileageService {
       }));
   }
 
+  // update is_accepted
+  updateIsAccepted(mileage_id:string, is_accepted:boolean): Observable<any> {
+    return this.http.post<any>(`${this.appUrl}/mileage/update-is-accepted`, {mileage_id, is_accepted}, {headers : this.headers});
+  }
+
   // delete mileage
   deleteMileage(mileage_id: string): Observable<any> {
     return this.http.post<any>(`${this.appUrl}/mileage/delete-mileage`, {mileage_id}, {headers : this.headers});

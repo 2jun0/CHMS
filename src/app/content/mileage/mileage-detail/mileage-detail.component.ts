@@ -15,8 +15,6 @@ import majorMileageCode from "src/assets/json/majorMileageCode.json";
 import mileageCode from "src/assets/json/mileageCode.json";
 // others
 import { formatDate, notifyError, refresh, notifyInfo } from 'src/util/util';
-import { conditionallyCreateMapObjectLiteral } from '@angular/compiler/src/render3/view/util';
-import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-mileage-detail',
@@ -25,16 +23,18 @@ import { TouchSequence } from 'selenium-webdriver';
 })
 export class MileageDetailComponent implements OnInit {
 
-// jsons for html
-majorMileageCode = majorMileageCode;
+  // jsons for html
+  majorMileageCode = majorMileageCode;
 
-newMileageForm: FormGroup;
-
-majorMileageCodeOptions: Option[];
-minorMileageCodeOptions: Option[];
-mileageCodeOptions: Option[];
-
+  // function for html
   formatDate = formatDate;
+
+  newMileageForm: FormGroup;
+
+  majorMileageCodeOptions: Option[];
+  minorMileageCodeOptions: Option[];
+  mileageCodeOptions: Option[];
+
   today : Date =  new Date();
 
   isLoad: Boolean;
@@ -46,6 +46,8 @@ mileageCodeOptions: Option[];
   mileage: Mileage;
   MileageForm: FormGroup;
   major_code: string;
+
+  isAdmin: boolean;
   
 
   //화면에 보여지기 위한 변수
@@ -64,6 +66,7 @@ mileageCodeOptions: Option[];
   ) {
     this.isLoad = false;
     this.modify = false;
+    this.isAdmin = false;
    }
 
   ngOnInit() {
@@ -81,22 +84,28 @@ mileageCodeOptions: Option[];
       score: null,
     })
 
-    // // 로그인 한 경우만
-    // if(this.authService.isAuthenticated()){ 
-    //   // check admin
-    //   this.myUserType = this.authService.getUserType();
-    //   this.myUserNum = this.authService.getUserNum();
-
-    // // 로그인 안한 경우
-    // }else{
-    //   // 외부 사용자
-    //   this.myUserType = 'external';
-    //   this.myUserNum = null;
-    // }
+    // 로그인 한 경우만
+    if(this.authService.isAuthenticated()){ 
+      // check admin
+      if(this.authService.getUserType() == 'admin') {
+        this.isAdmin = true;
+      }else{
+        this.isAdmin = false;
+      }
+    // 로그인 안한 경우
+    }else{
+      // 외부 사용자
+      this.isAdmin = false;
+    }
 
 
     //load mileage detail
-    this.mileageService.getMileage(this.mileageId)
+    this.loadMileage(this.mileageId);
+    
+  } //end ngOnInit()
+
+  loadMileage(mileageId) {
+    this.mileageService.getMileage(mileageId)
     .subscribe(
       (mileage) => {
         this.mileage = mileage;
@@ -106,7 +115,7 @@ mileageCodeOptions: Option[];
         this.isLoad = true;
       }
     )
-  } //end ngOnInit()
+  }
 
  //초기 조회를 위한 함수
   initForm(){
@@ -121,7 +130,8 @@ mileageCodeOptions: Option[];
         to: [this.mileage.act_date.to]
       }),
 
-      detail: this.mileage.detail
+      detail: this.mileage.detail,
+      is_accepted: this.mileage.is_accepted,
     })
     
   }
@@ -154,13 +164,14 @@ mileageCodeOptions: Option[];
     delete payload.minor_code;
     delete payload.score;
     delete payload.code;
+    delete payload.is_accepted;
 
     this.mileageService.updateMileage(this.mileageId, payload)
       .subscribe(
         () => {
           notifyInfo('정상적으로 수정되었습니다.')
-          this.router.navigate(['/mileage/detail', this.mileageId]);
-          refresh();
+          this.modify = false;
+          this.loadMileage(this.mileageId);
         },
         ({ error }) => {
           notifyError(error);
@@ -175,6 +186,22 @@ mileageCodeOptions: Option[];
     this.modify = false;
   }
 
+  onChangeIsAccepted(value) {
+    this.mileageService.updateIsAccepted(this.mileageId, value).subscribe(
+      () => {
+        if(value) {
+          notifyInfo("사업단 확인이 승인 되었습니다.");
+        }else{
+          notifyInfo("사업단 확인이 취소 되었습니다.");
+        }
+        this.loadMileage(this.mileageId);
+      },
+      ({ error }) => {
+        notifyError(error);
+      }
+    )
+  }
+
   print() {
     this.printService.printDocument('mileage', this.mileageId);
   }
@@ -185,4 +212,5 @@ mileageCodeOptions: Option[];
   get detail() : FormControl { return this.MileageForm.get('detail') as FormControl; }
   get code_preview() : FormControl { return this.MileageForm.get('code_preview') as FormControl;}
   get minor_code(): FormControl { return this.MileageForm.get('minor_code') as FormControl;}
+  get is_accepted(): FormControl { return this.MileageForm.get('is_accepted') as FormControl;}
 }

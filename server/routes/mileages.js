@@ -4,7 +4,7 @@ const { isAuthenticated, verifyUserTypes, isSelf, forceByAdmin } = require('../m
 const { doesUserExist } = require('../middlewares/user');
 const { doesMileageExist, isMileageMine } = require('../middlewares/mileage');
 // validators
-const { checkMileageInputs, checkMileageUpdate } = require('../middlewares/validator/mileage');
+const { checkMileageInputs, checkMileageUpdate, checkMileageIsAccepted } = require('../middlewares/validator/mileage');
 // models
 const Mileage = require('../models/mileages/mileage');
 const MileageCode = require('../models/mileages/mileageCode');
@@ -59,7 +59,6 @@ router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']
   POST /mileage/update-mileage
   JWT Token student, admin / mileage_id, mileage
 */
-
 router.post('/update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), checkMileageUpdate('mileage'), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/update-mileage');
 
@@ -79,11 +78,27 @@ router.post('/update-mileage', isAuthenticated, verifyUserTypes(['student','admi
 });
 
 /*
+  마일리지 사업단 확인 체크
+  POST /mileage/update-is-accepted
+  JWT Token admin / mileage_id, is_accepted
+*/
+router.post('/update-is-accepted', isAuthenticated, verifyUserTypes(['admin']), checkMileageIsAccepted(''), doesMileageExist('mileage_id'), (req, res) => {
+  console.log('[POST] /mileage/update-is-accepted');
+
+  const { mileage } = req;
+  const { is_accepted } = req.body;
+
+  mileage.updateIsAccepted(is_accepted);
+
+  return res.json({ success: true })
+});
+
+/*
   마일리지 삭제
   POST /mileage/delete-mileage
   JWT Token student, admin / mileage_id
 */
-router.post('delete-mileage', isAuthenticated, verifyUserTypes(['student','admin']), checkMileageUpdate('mileage'), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
+router.post('/delete-mileage', isAuthenticated, verifyUserTypes(['student','admin']), checkMileageUpdate('mileage'), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/delete-mileage');
 
   const { mileage_id } = req.body;

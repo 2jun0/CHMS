@@ -50,7 +50,7 @@
                                 <div formGroupName="act_date" class="col-sm-10 col-md-6 edit-date-range">
                                     <div class="start">
                                         <!-- 조회폼  -->
-                                        <input *ngIf="!modify" formControlName="from" type="text" readonly class="form-control" placeholder="시작 날짜" 
+                                        <input *ngIf="!modify" type="text" readonly class="form-control" placeholder="시작 날짜" 
                                             value="{{mileage.act_date.from|date:'yyyy-MM-dd'}}">
                                         <!-- 수정폼 -->
                                         <input *ngIf="modify" formControlName="from" type="text" readonly class="form-control" placeholder="시작 날짜" 
@@ -60,7 +60,7 @@
                                     <span>~</span>
                                     <div class="end">
                                         <!-- 조회폼 -->
-                                        <input *ngIf="!modify" formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
+                                        <input *ngIf="!modify" type="text" readonly class="form-control" placeholder="종료 날짜" 
                                             value="{{mileage.act_date.to|date:'yyyy-MM-dd'}}">
                                         <!-- 수정폼 -->
                                         <input *ngIf="modify" formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
@@ -71,14 +71,22 @@
                         </div>
                     </div>
                     <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">활동상세내역</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <input *ngIf="!modify" formControlName="detail" type="text" value="{{mileage.detail}}" class="form-control" readonly>
-                                    <input *ngIf="modify" formControlName="detail" type="text" value="{{mileage.detail}}" class="form-control">
-                                </div>
+                        <div class="item row">
+                            <label class="col-md-2 control-label">활동상세내역</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input *ngIf="!modify" formControlName="detail" type="text" value="{{mileage.detail}}" class="form-control" readonly>
+                                <input *ngIf="modify" formControlName="detail" type="text" value="{{mileage.detail}}" class="form-control">
                             </div>
                         </div>
+                    </div>
+                    <div *ngIf="isAdmin" class="form-group">
+                        <div class="item row">
+                            <label class="col-md-2 control-label">사업단 확인</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input type="checkbox" formControlName="is_accepted" (change)="onChangeIsAccepted(is_accepted.value)">
+                            </div>
+                        </div>
+                    </div>
                     <button *ngIf="!modify" class="btn btn-fill pull-right" (click)="detailModify()">수정</button>
                     <button *ngIf="modify" class="btn btn-fill pull-right" (click)="onSubmit()">완료</button>
                     <button *ngIf="modify" class="btn btn-fill pull-right" (click)="cancel()">취소</button>
