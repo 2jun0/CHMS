@@ -35,6 +35,7 @@ minorMileageCodeOptions: Option[];
 mileageCodeOptions: Option[];
 
   formatDate = formatDate;
+  today : Date =  new Date();
 
   isLoad: Boolean;
   modify: Boolean;
@@ -54,6 +55,7 @@ mileageCodeOptions: Option[];
   remark: string;
 
   constructor(
+    private router : Router,
     private authService: AuthService,
     private route: ActivatedRoute,
     private mileageService: MileageService,
@@ -109,6 +111,7 @@ mileageCodeOptions: Option[];
  //초기 조회를 위한 함수
   initForm(){
     this.MileageForm = this.formBuilder.group({
+      id: this.mileageId,
       input_date: this.mileage.input_date,
       minor_code: this.mileage.code[0]+this.mileage.code[1],
       code: this.mileage.code,
@@ -140,27 +143,35 @@ mileageCodeOptions: Option[];
     this.remark = mileageCode[thisCode]['remark'];
   }//end 초기 조회를 위한 함수
 
-  onChangeMinorMileageCode(value) {
-    this.mileageCodeOptions = parseJsonToOptions(getMileagesCodes(this.MileageForm.value.major_code, value), undefined, (json, key)=>{
-      return json[key].detail;
-    });
-    this.code.setValue(this.mileageCodeOptions[0].key);
-    this.onChangeMileageCode(this.mileageCodeOptions[0].key);
-  }
+  onSubmit(){
+    if(!confirm('정말 수정하시겠습니까?')) return;
 
-  onChangeMileageCode(value) {
-    console.log(value);
-    this.code.setValue(value);
-    this.score.setValue(mileageCode[value]['score']);
+    let payload = this.MileageForm.value;
+    let code = this.MileageForm.value.code;
+    let minorcode = this.MileageForm.value.code[0]+this.MileageForm.value.code[1];
 
-    this.accept_method = mileageCode[value]['accept_method'];
-    this.remark = mileageCode[value]['remark'];
+    delete payload.input_date;
+    delete payload.minor_code;
+    delete payload.score;
+    delete payload.code;
+
+    this.mileageService.updateMileage(this.mileageId, payload)
+      .subscribe(
+        () => {
+          notifyInfo('정상적으로 수정되었습니다.')
+          this.router.navigate(['/mileage/detail', this.mileageId]);
+          refresh();
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      );
   }
 
   detailModify(){
     this.modify = true;
   }
-  complete(){
+  cancel(){
     this.modify = false;
   }
 

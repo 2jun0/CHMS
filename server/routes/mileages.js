@@ -59,7 +59,7 @@ router.post('/upload-file', isAuthenticated, verifyUserTypes(['student','admin']
   POST /mileage/update-mileage
   JWT Token student, admin / mileage_id, mileage
 */
-router.post('update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
+router.post('/update-mileage', isAuthenticated, verifyUserTypes(['student','admin']), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/update-mileage');
 
   const { mileage } = req;

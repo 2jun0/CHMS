@@ -19,26 +19,13 @@
                     <div class="form-group">
                         <div class="item row">
                             <label class="col-md-2 control-label">마일리지 선택</label>
-                            <!-- 조회폼 -->
-                            <div *ngIf="!modify" class="col-sm-10 col-md-6">
+                            <div *ngIf="viewMinor" class="col-sm-10 col-md-6">
                                 <input type="text" class="form-control" value="{{viewMinor}}" readonly>
                                 <br>
                                 <input type="text" class="form-control" value="{{viewCode}}" readonly>
                                 <h6 *ngIf="viewMinor" class="sub">*증빙서류 : {{accept_method}}</h6>
                                 <h6 *ngIf="remark" class="sub">*비고     : {{remark}}</h6>
                             </div>  
-                            <!-- 수정폼                             -->
-                            <div *ngIf="modify" class="col-sm-10 col-md-6">
-                                <select formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
-                                    <option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
-                                </select>
-                                <br *ngIf="minor_code.value">
-                                <select *ngIf="minor_code.value" formControlName="code" class="form-control" (change)="onChangeMileageCode(code.value)">
-                                    <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
-                                </select>
-                                <h6 *ngIf="minor_code.value" class="sub">*증빙서류 : {{accept_method}}</h6>
-                                <h6 *ngIf="remark" class="sub">*비고     : {{remark}}</h6>
-                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -62,18 +49,22 @@
                             <label class="col-md-2 control-label">참여기간</label>
                                 <div formGroupName="act_date" class="col-sm-10 col-md-6 edit-date-range">
                                     <div class="start">
+                                        <!-- 조회폼  -->
                                         <input *ngIf="!modify" formControlName="from" type="text" readonly class="form-control" placeholder="시작 날짜" 
-                                            value="{{formatDate(mileage.act_date.from)}}">
+                                            value="{{mileage.act_date.from|date:'yyyy-MM-dd'}}">
+                                        <!-- 수정폼 -->
                                         <input *ngIf="modify" formControlName="from" type="text" readonly class="form-control" placeholder="시작 날짜" 
-                                            bsDatepicker [minDate]="act_date.value.from" [maxDate]="today" value="{{formatDate(mileage.act_date.from)}}"
+                                            bsDatepicker [minDate]="" [maxDate]="today" value="{{mileage.act_date.from|date:'yyyy-MM-dd'}}"
                                             [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer; background-color: white;">
                                     </div>
                                     <span>~</span>
                                     <div class="end">
-                                            <input *ngIf="!modify" formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
-                                            value="{{formatDate(mileage.act_date.to)}}">
+                                        <!-- 조회폼 -->
+                                        <input *ngIf="!modify" formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
+                                            value="{{mileage.act_date.to|date:'yyyy-MM-dd'}}">
+                                        <!-- 수정폼 -->
                                         <input *ngIf="modify" formControlName="to" type="text" readonly class="form-control" placeholder="종료 날짜" 
-                                            bsDatepicker [minDate]="act_date.value.to" [maxDate]="today" value="{{formatDate(mileage.act_date.to)}}"
+                                            bsDatepicker [minDate]="act_date.value.to" [maxDate]="today" value="{{mileage.act_date.to|date:'yyyy-MM-dd'}}"
                                             [bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}" style="cursor:pointer; background-color: white;">
                                     </div>
                                 </div>
@@ -89,7 +80,8 @@
                             </div>
                         </div>
                     <button *ngIf="!modify" class="btn btn-fill pull-right" (click)="detailModify()">수정</button>
-                    <button *ngIf="modify" class="btn btn-fill pull-right" (click)="complete()">완료</button>
+                    <button *ngIf="modify" class="btn btn-fill pull-right" (click)="onSubmit()">완료</button>
+                    <button *ngIf="modify" class="btn btn-fill pull-right" (click)="cancel()">취소</button>
                 </form>
             </div>
         </div>

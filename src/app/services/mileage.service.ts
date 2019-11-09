@@ -58,7 +58,7 @@ export class MileageService {
   
   // update Mileage
   updateMileage(mileage_id:string, mileage: Mileage, info_photos?: File[]): Observable<any> {
-    return this.http.post<any>(`${this.appUrl}/mileage/update-mileage`, {mileage_id}, {headers : this.headers})
+    return this.http.post<any>(`${this.appUrl}/mileage/update-mileage`, {mileage_id, mileage}, {headers : this.headers})
       .pipe(map(res => { 
         if(info_photos) this.uploadFile(info_photos, "info_photo", mileage_id);
 
