@@ -66,6 +66,11 @@ export class MileageService {
       }));
   }
 
+  // delete mileage
+  deleteMileage(mileage_id: string): Observable<any> {
+    return this.http.post<any>(`${this.appUrl}/mileage/delete-mileage`, {mileage_id}, {headers : this.headers});
+  }
+
   // get my mileages & count
   getMyMileageCount(filter?): Observable<number> {
     return this.http.post<number>(`${this.appUrl}/mileage/get-my-mileage-count`, {_filter: filter}, {headers : this.headers})

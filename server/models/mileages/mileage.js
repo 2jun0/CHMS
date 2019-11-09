@@ -26,29 +26,36 @@ const Mileage = mongoose.Schema({
     Mileage.statics.create = function(data) {
         return MileageCode.findOneByCode(data.code)
             .then(code => {
+
+                data.code = code;
+                data.score = code.score;
+                data.is_accepted = true;
+
+                let mileage = new this(data);
+                return mileage;
+
                 // 같은 날에 같은 코드를 올리면 안됨.
-                let date = new Date();
-                let today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                let tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
+                // let date = new Date();
+                // let today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                // let tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
+                // return this.find({
+                //     user_num: data.user_num,
+                //     input_date: {$gte: today, $lte: tomorrow},
+                //     code: code
+                // })
+                // .then(doc => {
+                //     // 같은 날에 같은 코드가 있음.
+                //     // if(doc && doc.length>0) {
+                //     //     throw new Error('해당 마일리지는 오늘 이미 생성하셨습니다!');
+                //     // }
 
-                return this.find({
-                    user_num: data.user_num,
-                    input_date: {$gte: today, $lte: tomorrow},
-                    code: code
-                })
-                .then(doc => {
-                    // 같은 날에 같은 코드가 있음.
-                    // if(doc && doc.length>0) {
-                    //     throw new Error('해당 마일리지는 오늘 이미 생성하셨습니다!');
-                    // }
+                //     // 같은 날에 같은 코드 안올림 => 추가
+                //     data.code = code;
+                //     data.score = 0;
 
-                    // 같은 날에 같은 코드 안올림 => 추가
-                    data.code = code;
-                    data.score = 0;
-
-                    let mileage = new this(data);
-                    return mileage;
-                })
+                //     let mileage = new this(data);
+                //     return mileage;
+                // })
             })
     }
 
@@ -93,6 +100,10 @@ const Mileage = mongoose.Schema({
         }
 
         return Promise.all(promiseArray).then(() => {return doc;});
+    }
+
+    Mileage.statics.deleteById = function(mileage_id) {
+        return this.deleteOne({_id: mileage_id});
     }
 
     // find mileages & count by user num
