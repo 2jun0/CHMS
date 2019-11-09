@@ -2,6 +2,9 @@
 	<div class="card left">
 		<div class="card-header">
 			<h4 class="card-title">내 마일리지 조회</h4>
+			<div class="extra">
+				<button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button>
+			</div>
 		</div>
 		<div class="card-body">
 			<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
@@ -77,7 +80,7 @@
 						<div class="date-wapper">
 							<input formControlName="input_date" type="text" class="form-control date" placeholder="입력날짜"
 								bsDaterangepicker [maxDate]="today" (bsValueChange)="onInputDateChange($event)"
-								[bsConfig]="{ isAnimated: true,  containerClass: 'theme-green'}">
+								[bsConfig]="{ adaptivePosition: true, rangeInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
 							<a class="reset-btn" (click)="clearInputDate()"><i class="material-icons">clear</i></a>
 						</div>
 					</div>
