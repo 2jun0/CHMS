@@ -1,6 +1,7 @@
 let alertHolder = [];
 
 Utils = {
+    // 알람바 보여주기!
     showNotification: function(from, align, type, message, isOnlyOne) {
         if(isOnlyOne) {
             while(alertHolder.length > 0) {
@@ -30,5 +31,12 @@ Utils = {
             }
         });
         alertHolder.push(alert);
+    },
+
+    // 위의 알람바 전부 닫음.
+    closeAllNotifications: function() {
+        while(alertHolder.length > 0) {
+            alertHolder.shift().close();
+        }
     }
 };

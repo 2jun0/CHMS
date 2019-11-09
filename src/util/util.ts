@@ -1,5 +1,3 @@
-import { async } from 'q';
-
 // js (src/assets/js/utils.js)
 declare const Utils: any;
 
@@ -32,6 +30,10 @@ export function notifyError(error: Error, isOnlyOne? : boolean) {
 export function notifyInfo(message: string, isOnlyOne? : boolean) {
     isOnlyOne = true;
     Utils.showNotification('top', 'center', 'success', message, isOnlyOne);
+}
+
+export function closeAllNotifications() {
+    Utils.closeAllNotifications();
 }
 
 export function refresh(): void {

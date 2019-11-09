@@ -1,5 +1,6 @@
 import { Injectable, Output, EventEmitter } from '@angular/core';
 import {Router} from '@angular/router';
+import { closeAllNotifications } from 'src/util/util';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +24,11 @@ export class PrintService {
   }
 
   onDataReady() {
+    closeAllNotifications();
     setTimeout(() => {
       window.print();
       this.isPrinting = false;
       this.router.navigate([{ outlets: { print: null }}]);
-    });
+    }, 500);
   }
 }
