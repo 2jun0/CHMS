@@ -194,17 +194,32 @@ export class NewProjectComponent implements OnInit {
   get keywords() { return this.newProjectForm.get('keywords') as FormControl; }
   
   addProject() {
-    console.log('[payload]', this.newProjectForm.value, { img_predicted : this.predictedImgFile});
-
     let payload = this.newProjectForm.value;
 
     payload.keywords = this.keywords.value.split(',');
 
+    if(payload.intro) {
+      // 마지막 language 입력 안하면 삭제
+      if(payload.intro.languages.length > 0 && !payload.intro.languages[payload.intro.languages.length-1]) {
+        payload.intro.languages.pop();
+      }
+      
+      // 마지막 오픈소스 전부 입력 안하면 삭제
+      if(payload.intro.opensources.length > 0) {
+        var lastOpensource = payload.intro.opensources[payload.intro.opensources.length-1];
+        if(!lastOpensource.name && !lastOpensource.license && !lastOpensource.application_field) {
+          payload.intro.opensources.pop();
+        }
+      }
+    }
+    
+    console.log('[payload]', this.newProjectForm.value, { img_predicted : this.predictedImgFile});
+    
     this.project.addProject(payload, this.predictedImgFile)
       .subscribe(
-        () => { 
+        (project) => { 
           notifyInfo('성공적으로 생성되었습니다.');
-          this.router.navigate(['/']);
+          this.router.navigate(['project/detail', project.id]);
         },
         ({ error }) => {
           console.log(error.message);

@@ -66,7 +66,7 @@ export class SidebarComponent implements OnInit {
   }
 
   gotoManageProjectList() {
-    this.router.navigate(['/project/manage-list', 1]);
+    this.router.navigate(['project/manage-list', 1]);
   }
 
   gotoMyProjectList() {
@@ -74,7 +74,7 @@ export class SidebarComponent implements OnInit {
   }
   
   gotoMyAccount() {
-    this.router.navigate(['/account/my']);
+    this.router.navigate(['account/my']);
   }
 
   gotoAllAccountList() {

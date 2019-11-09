@@ -128,7 +128,11 @@ export class ProjectDetailComponent implements OnInit {
     }
 
     // load project
-    this.projectService.getProject(this.projectId)
+    this.loadProject(this.projectId);
+  }
+
+  loadProject(projectId) {
+    this.projectService.getProject(projectId)
       .subscribe(
         (project) => {
           this.project = project;
@@ -242,6 +246,7 @@ export class ProjectDetailComponent implements OnInit {
       notifyError(error);
     })
   }
+
   // ===============================================
   // Form functions
   // ===============================================
@@ -463,13 +468,29 @@ export class ProjectDetailComponent implements OnInit {
 
     payload.keywords = this.keywords.value.split(',');
 
+    if(payload.intro) {
+      // 마지막 language 입력 안하면 삭제
+      if(payload.intro.languages.length > 0 && !payload.intro.languages[payload.intro.languages.length-1]) {
+        payload.intro.languages.pop();
+      }
+
+      // 마지막 오픈소스 전부 입력 안하면 삭제
+      if(payload.intro.opensources.length > 0) {
+        var lastOpensource = payload.intro.opensources[payload.intro.opensources.length-1];
+        if(!lastOpensource.name && !lastOpensource.license && !lastOpensource.application_field) {
+          payload.intro.opensources.pop();
+        }
+      }
+    }
+
     console.log('[payload]', payload);
 
     this.projectService.updateProject(this.project.id, payload, this.updatePredictedImgFile)
       .subscribe(
         () => {
           notifyInfo('정상적으로 수정되었습니다.')
-          refresh();
+          this.loadProject(this.projectId);
+          this.isUpdateMode = false;
         },
         ({ error }) => {
           notifyError(error);
