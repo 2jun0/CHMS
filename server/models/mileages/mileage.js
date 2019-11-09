@@ -104,13 +104,11 @@ const Mileage = mongoose.Schema({
     }
 
     Mileage.statics.deleteById = async function(mileage_id) {
-        this.findOneById(mileage_id)
-            .then(doc => {
-                for(var info_photo of doc.info_photos) {
-                    await deleteFile(info_photo, `mileage/${mileage_id}`);
-                }
-                return this.doc.deleteOne();
-            })
+        var doc = await this.findOneById(mileage_id)
+        for(var info_photo of doc.info_photos) {
+            await deleteFile(info_photo, `mileage/${mileage_id}`);
+        }
+        return this.doc.deleteOne();
     }
 
     // find mileages & count by user num
