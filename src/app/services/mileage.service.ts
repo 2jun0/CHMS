@@ -95,12 +95,12 @@ export class MileageService {
   }
 
   // 마일리지 점수 총합 구하기
-  getSumOfScoreInMileage(filter): Observable<Number> {
-    return this.http.post<Number>(`${this.appUrl}/mileage/get-score-sum`, {_filter:filter}, {headers : this.headers});
+  getSumOfScoreInMileage(filter): Observable<number> {
+    return this.http.post<number>(`${this.appUrl}/mileage/get-score-sum`, {_filter:filter}, {headers : this.headers});
   }
   // 마일리지 예상 점수 총합 구하기
-  getSumOfPredictedScoreInMileage(filter): Observable<Number> {
-    return this.http.post<Number>(`${this.appUrl}/mileage/get-predicted-score-sum`, {_filter:filter}, {headers : this.headers});
+  getSumOfPredictedScoreInMileage(filter): Observable<number> {
+    return this.http.post<number>(`${this.appUrl}/mileage/get-predicted-score-sum`, {_filter:filter}, {headers : this.headers});
   }
 
   // Get mileage codes

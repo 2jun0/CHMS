@@ -1,0 +1,36 @@
+<table *ngIf="mileages">
+	<colgroup>
+			<col/>
+			<col/>
+			<col/>
+			<col/>
+			<col/>
+			<col/>
+			<col/>
+			<col/>
+	</colgroup>
+	<thead>
+		<tr>
+			<th>학생</th>
+			<th>코드</th>
+			<th>마일리지 명</th>
+			<th>추정 점수</th>
+			<th>점수</th>
+			<th>발생일자</th>
+			<th>활동상세내역</th>
+			<th>사업단확인</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let mileage of mileages">
+			<td>{{mileage.user_name}}<br>#{{mileage.user_num}}</td>
+			<td>{{mileage.code}}</td>
+			<td>{{mileageCodes[mileage.code].detail}}</td>
+			<td>{{mileageCodes[mileage.code].score}}</td>
+			<td>{{mileage.score}}</td>
+			<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
+			<td>{{mileage.detail}}</td>
+			<td>{{mileage.is_accepted}}</td>
+		</tr>
+	</tbody>
+</table>

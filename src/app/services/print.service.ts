@@ -26,9 +26,11 @@ export class PrintService {
   onDataReady() {
     closeAllNotifications();
     setTimeout(() => {
-      window.print();
-      this.isPrinting = false;
-      this.router.navigate([{ outlets: { print: null }}]);
+      window.print(); 
+      setTimeout(() => {
+        this.isPrinting = false;
+        this.router.navigate([{ outlets: { print: null }}]);
+      }, 500);
     }, 500);
   }
 }

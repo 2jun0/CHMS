@@ -17,6 +17,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // env
 import { environment } from 'src/environments/environment';
+// services
 import { UserService } from './services/user.service';
 import { AuthService } from './services/auth.service';
 import { ProjectService } from './services/project.service';

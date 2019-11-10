@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 // models
@@ -19,7 +19,7 @@ import { notifyError, formatDate } from 'src/util/util';
   templateUrl: './print-project.component.html',
   styleUrls: ['./print-project.component.scss']
 })
-export class PrintProjectComponent implements OnInit {
+export class PrintProjectComponent implements OnInit, AfterViewInit {
 
   appUrl = environment.apiUrl;
 
@@ -45,11 +45,14 @@ export class PrintProjectComponent implements OnInit {
   ngOnInit() {
     this.projectService.getProject(this.id).subscribe(
       (project) => {
-        this.printService.onDataReady();
         this.project = project;
       },({error}) => {
         notifyError(error);
       }
     )
+  }
+
+  ngAfterViewInit() {
+    this.printService.onDataReady();
   }
 }

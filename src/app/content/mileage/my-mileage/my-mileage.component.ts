@@ -9,12 +9,14 @@ import majorCode from "src/assets/json/majorMileageCode.json";
 import minorCode from "src/assets/json/minorMileageCode.json";
 // services
 import { MileageService } from 'src/app/services/mileage.service';
+import { PrintService } from 'src/app/services/print.service';
 // models
 import { Mileage, MajorMileage } from 'src/app/model/mileage';
 // utils
 import { notifyError, formatDate, notifyInfo } from 'src/util/util';
 import { parseJsonToOptions, Option } from 'src/util/options';
 import { getMinorMileagesCodes, getMileagesCodes } from 'src/util/codes';
+import { ExcelService } from 'src/app/services/excel.service';
 @Component({
   selector: 'app-my-mileage',
   templateUrl: './my-mileage.component.html',
@@ -46,10 +48,10 @@ export class MyMileageComponent implements OnInit {
   searchForm: FormGroup;
 
   myMileages: Mileage[];
-  myMileageCount: Number;
+  myMileageCount: number;
 
-  sumOfScore: Number;
-  sumOfPredictedScore: Number;
+  sumOfScore: number;
+  sumOfPredictedScore: number;
 
   pageIndex: number;
   maxPageIndex: number;
@@ -65,8 +67,10 @@ export class MyMileageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private mileageService: MileageService,
+    private excelService: ExcelService,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
+    private printService: PrintService,
   ) { 
     this.localeService.use('ko');
     this.myMileages = [];
@@ -266,6 +270,60 @@ export class MyMileageComponent implements OnInit {
   deActivateSearch() {
     this.isSearchActivated = false;
     notifyInfo('검색 모드 비활성화', true);
+  }
+
+  downloadExcel() {
+    let filter = this.createFilter();
+    this.mileageService.getMyMileages(0, this.myMileageCount, filter)
+      .subscribe(
+        (mileages) => {
+          for(var mileage of mileages) {
+            // id, photo 삭제
+            delete mileage.id;
+            delete mileage.info_photos;
+
+            mileage['마일리지 코드'] = mileage.code;
+            mileage['마일리지 이름'] = (mileageCode[mileage.code])?mileageCode[mileage.code].detail:'알수 없음';
+            delete mileage.code;
+
+            mileage['학생 이름'] = mileage.user_name;
+            delete mileage.user_name;
+
+            mileage['학번'] = mileage.user_num;
+            delete mileage.user_num;
+
+            mileage['학과'] = mileage.department;
+            delete mileage.department;
+
+            mileage['입력날짜'] = mileage.input_date;
+            delete mileage.input_date;
+
+            mileage['수행 일자(from)'] = mileage.act_date.from;
+            mileage['수행 일자(to)'] = mileage.act_date.to;
+            delete mileage.act_date;
+
+            mileage['마일리지 점수'] = mileage.score;
+            delete mileage.score;
+           
+            mileage['마일리지 활동상세내역'] = mileage.detail;
+            delete mileage.detail;
+
+            mileage['인증 여부'] = mileage.is_accepted;
+            delete mileage.is_accepted;
+
+          }
+
+          this.excelService.exportAsExcelFile(mileages, '마일리지 리스트');
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      )
+  }
+
+  print() {
+    let filter = this.createFilter();
+    this.printService.printDocument('mileage-list', JSON.stringify(filter));
   }
 
   get input_date() {return this.searchForm.get('input_date');}

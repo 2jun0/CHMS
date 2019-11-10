@@ -12,14 +12,15 @@ import collegeTypes from "src/assets/json/collegeTypes.json";
 import departmentTypes from "src/assets/json/departmentTypes.json";
 // services
 import { MileageService } from 'src/app/services/mileage.service';
+import { UserService } from 'src/app/services/user.service';
+import { ExcelService } from 'src/app/services/excel.service';
+import { PrintService } from 'src/app/services/print.service';
 // models
 import { Mileage, MajorMileage } from 'src/app/model/mileage';
 // utils
 import { notifyError, formatDate, notifyInfo } from 'src/util/util';
 import { parseJsonToOptions, Option } from 'src/util/options';
 import { getMinorMileagesCodes, getMileagesCodes, getDepartmentTypes } from 'src/util/codes';
-import { UserService } from 'src/app/services/user.service';
-import { ExcelService } from 'src/app/services/excel.service';
 @Component({
   selector: 'app-all-mileage-list',
   templateUrl: './all-mileage-list.component.html',
@@ -54,10 +55,10 @@ export class AllMileageListComponent implements OnInit {
   searchForm: FormGroup;
 
   allMileages: Mileage[];
-  allMileageCount: Number;
+  allMileageCount: number;
 
-  sumOfScore: Number;
-  sumOfPredictedScore: Number;
+  sumOfScore: number;
+  sumOfPredictedScore: number;
 
   pageIndex: number;
   maxPageIndex: number;
@@ -77,6 +78,7 @@ export class AllMileageListComponent implements OnInit {
     private userService: UserService,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
+    private printService: PrintService,
   ) { 
     this.localeService.use('ko');
     this.allMileages = [];
@@ -335,7 +337,7 @@ export class AllMileageListComponent implements OnInit {
 
   downloadExcel() {
     let filter = this.createFilter();
-    this.mileageService.getMileages(0, 1000000, filter)
+    this.mileageService.getMileages(0, this.allMileageCount, filter)
       .subscribe(
         (mileages) => {
           for(var mileage of mileages) {
@@ -382,7 +384,10 @@ export class AllMileageListComponent implements OnInit {
       )
   }
 
-
+  print() {
+    let filter = this.createFilter();
+    this.printService.printDocument('mileage-list', JSON.stringify(filter));
+  }
 
   get input_date() {return this.searchForm.get('input_date');}
   get major_code() {return this.searchForm.get('major_code');}
