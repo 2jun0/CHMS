@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 // jsons
 import mileageCode from "src/assets/json/mileageCode.json";
@@ -14,7 +14,7 @@ import { notifyError, formatDate } from 'src/util/util';
   templateUrl: './print-mileage-list.component.html',
   styleUrls: ['./print-mileage-list.component.scss']
 })
-export class PrintMileageListComponent implements OnInit {
+export class PrintMileageListComponent implements OnInit, AfterViewInit {
 
   filter;
 
@@ -43,7 +43,6 @@ export class PrintMileageListComponent implements OnInit {
             this.mileageService.getMileages(0, this.mileageCount, this.filter).subscribe(
               (mileages) => {
                 this.mileages = mileages;
-                this.printService.onDataReady();
               },
               ({ error }) => {
                 notifyError(error);
@@ -63,7 +62,6 @@ export class PrintMileageListComponent implements OnInit {
             this.mileageService.getMyMileages(0, this.mileageCount, this.filter).subscribe(
               (mileages) => {
                 this.mileages = mileages;
-                this.printService.onDataReady();
               },
               ({ error }) => {
                 notifyError(error);
@@ -76,5 +74,9 @@ export class PrintMileageListComponent implements OnInit {
         )
         break;
     }
+  }
+
+  ngAfterViewInit() {
+    this.printService.onDataReady();
   }
 }
