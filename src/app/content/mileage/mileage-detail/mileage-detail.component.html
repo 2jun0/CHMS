@@ -87,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+                    <button *ngIf="!modify" class="btn btn-fill pull-right" (click)="delete()">삭제</button>
                     <button *ngIf="!modify" class="btn btn-fill pull-right" (click)="detailModify()">수정</button>
                     <button *ngIf="modify" class="btn btn-fill pull-right" (click)="onSubmit()">완료</button>
                     <button *ngIf="modify" class="btn btn-fill pull-right" (click)="cancel()">취소</button>

@@ -169,7 +169,7 @@ export class MileageDetailComponent implements OnInit {
     this.mileageService.updateMileage(this.mileageId, payload)
       .subscribe(
         () => {
-          notifyInfo('정상적으로 수정되었습니다.')
+          notifyInfo('정상적으로 수정되었습니다.');
           this.modify = false;
           this.loadMileage(this.mileageId);
         },
@@ -184,6 +184,22 @@ export class MileageDetailComponent implements OnInit {
   }
   cancel(){
     this.modify = false;
+  }
+  delete(){
+    if(!confirm('정말 삭제하시겠습니까?')) return;
+
+    this.mileageService.deleteMileage(this.mileageId)
+    .subscribe(
+      () => {
+        this.modify = false;
+        this.router.navigate(['mileage/my-mileage',1]);
+        notifyInfo('정상적으로 삭제되었습니다.');
+      },
+      ({ error }) => {
+        notifyError(error);
+      }
+    );
+    
   }
 
   onChangeIsAccepted(value) {
