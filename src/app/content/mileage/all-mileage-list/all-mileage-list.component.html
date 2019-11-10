@@ -50,7 +50,7 @@
 							<th>추정 점수</th>
 							<th>점수</th>
 							<th>발생일자</th>
-							<th>활동상세내역</th>
+							<th>입력일자</th>
 							<th>사업단확인</th>
 						</tr>
 					</thead>
@@ -62,7 +62,7 @@
 							<td>{{mileageCodes[mileage.code].score}}</td>
 							<td>{{mileage.score}}</td>
 							<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
-							<td>{{mileage.detail}}</td>
+							<td>{{formatDate(mileage.input_date)}}</td>
 							<td>
 								<input type="checkbox" [checked]="mileage.is_accepted" disabled>
 							</td>
