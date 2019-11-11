@@ -98,7 +98,7 @@ router.post('/update-is-accepted', isAuthenticated, verifyUserTypes(['admin']), 
   POST /mileage/delete-mileage
   JWT Token student, admin / mileage_id
 */
-router.post('/delete-mileage', isAuthenticated, verifyUserTypes(['student','admin']), checkMileageUpdate('mileage'), doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
+router.post('/delete-mileage', isAuthenticated, verifyUserTypes(['student','admin']),  doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/delete-mileage');
 
   const { mileage_id } = req.body;
