@@ -12,8 +12,10 @@
         <div class="card-body" [formGroup]="updateForm">
             <div *ngIf="myUserType=='admin'" class="item row">
                 <label class="label">공개 여부 설정</label>
-                <div class="content-value">
-                    <input type="checkbox" formControlName="is_public" (change)="onChangeIsPublic(is_public.value)">
+                <div class="content-value custom-control custom-checkbox">
+                    <input type="checkbox" id="is_public" formControlName="is_public"
+                        class="custom-control-input" (change)="onChangeIsPublic(is_public.value)">
+                    <label class="custom-control-label" for="is_public">승인</label>
                 </div>
             </div>
             <div class="item row">

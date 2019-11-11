@@ -208,7 +208,7 @@ export class MileageDetailComponent implements OnInit {
         if(value) {
           notifyInfo("사업단 확인이 승인 되었습니다.");
         }else{
-          notifyInfo("사업단 확인이 취소 되었습니다.");
+          notifyInfo("사업단 승인이 취소 되었습니다.");
         }
         this.loadMileage(this.mileageId);
       },

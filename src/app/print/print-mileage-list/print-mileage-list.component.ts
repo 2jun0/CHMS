@@ -5,7 +5,9 @@ import mileageCode from "src/assets/json/mileageCode.json";
 // services
 import { PrintService } from 'src/app/services/print.service';
 import { MileageService } from 'src/app/services/mileage.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
+// models
+import { User } from 'src/app/model/user';
 // utils
 import { notifyError, formatDate } from 'src/util/util';
 
@@ -24,17 +26,24 @@ export class PrintMileageListComponent implements OnInit, AfterViewInit {
   formatDate = formatDate;
   mileageCodes = mileageCode;
 
+  user: User;
+  today: Date;
+
   constructor(
     private route: ActivatedRoute,
     private printService: PrintService,
     private mileageService: MileageService,
-    private authService: AuthService
+    private userService: UserService,
   ) {
     this.filter = JSON.parse(this.route.snapshot.params['filter']);
+    this.today = new Date();
+    this.today.getFullYear();
   }
 
   ngOnInit() {
-    switch(this.authService.getUserType()) {
+    this.user = this.userService.getMyUser();
+
+    switch(this.user.user_type) {
       case 'admin':
         this.mileageService.getMileageCount(this.filter).subscribe(
           (count) => {
@@ -77,6 +86,8 @@ export class PrintMileageListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.printService.onDataReady();
+      this.printService.onDataReady();
   }
+
+  get printDate() {return `${this.today.getFullYear()}년 ${this.today.getMonth()+1}월 ${this.today.getDate()}일`}
 }

@@ -1,4 +1,20 @@
-<table>
+<ng-container *ngIf="user && user.user_type == 'student'">
+	<p class="title center bold">마일리지 제출 보고서</p>
+	<br>
+	<p class="size1">학과: {{user.department_type}}</p>
+	<p class="size1">학번: {{user.user_num}}</p>
+	<p class="size1">이름: {{user.name}}</p>
+	<br>
+	<p class="size2 center">상기 본인은 마일리지 입력을 완료하였으므로<br>보고서를 제출합니다.</p>
+	<br>
+	<p class="size1 center">{{printDate}}</p>
+	<p class="size1 center">제출자:
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(인)</p>
+</ng-container>
+<table *ngIf="mileages">
 	<colgroup>
 		<col width="15%"/>
 		<col width="8%"/>

@@ -520,6 +520,11 @@ export class ProjectDetailComponent implements OnInit {
   onChangeIsPublic(value) {
     this.projectService.updateIsPublic(this.projectId, value).subscribe(
       () => {
+        if(value) {
+          notifyInfo("사업단 확인이 승인 되었습니다.");
+        }else{
+          notifyInfo("사업단 승인이 취소 되었습니다.");
+        }
         this.loadProject(this.projectId);
       },
       ({ error }) => {

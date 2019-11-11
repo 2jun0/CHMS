@@ -25,3 +25,11 @@
 .sub{
     color: red;
 }
+
+.item > .custom-checkbox{
+    padding-left: 35px;
+
+    @media screen and (max-width: 991px){
+        padding-left: 40px;
+    }
+}
