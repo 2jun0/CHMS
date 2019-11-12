@@ -48,9 +48,9 @@ export class LoginComponent implements OnInit {
     let password = this.password;
     if (user_num.errors) {
       if (user_num.errors.required) {
-        notifyError(new Error('학번을 입력하세요!'));
+        notifyError(new Error('사용자 번호를 입력하세요!'));
       } else if (user_num.errors.pattern && user_num.touched) {
-        notifyError(new Error('학번은 숫자로만 입력해야 합니다!'));
+        notifyError(new Error('사용자 번호를 숫자로만 입력해야 합니다!'));
       }
     } else if(password.errors) {
       if (password.errors.required) {
