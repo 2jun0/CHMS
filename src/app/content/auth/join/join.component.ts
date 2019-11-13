@@ -74,13 +74,18 @@ export class JoinComponent implements OnInit {
 
     this.userService.loadCodes.subscribe(
       () => {
-        this.collegeTypeOptions = parseJsonToOptions(collegeTypes, undefined, (json, key)=>{
-          return json[key].description
-        });
+        this.loadDepartmentCodes();
       }
     )
 
+    this.loadDepartmentCodes();
     this.departmentTypeOptions = [];
+  }
+
+  loadDepartmentCodes() {
+    this.collegeTypeOptions = parseJsonToOptions(collegeTypes, undefined, (json, key)=>{
+      return json[key].description
+    });
   }
 
   onChangeCollegeType(value) {

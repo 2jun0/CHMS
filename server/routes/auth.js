@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 
 const { createToken } = require('../lib/token');
 // middlewares
-const { isAuthenticated } = require('../middlewares/auth');
+const { isAuthenticated, verifyUserTypes } = require('../middlewares/auth');
 const { checkStudentUser, checkProfessorUser, checkMentoUser } = require('../middlewares/validator/user');
 // model
 const User = require('../models/users/user');
@@ -25,6 +25,10 @@ router.post('/join/student', checkStudentUser('user', true), (req, res) => {
   User.findOneByUserNum(user.user_num)
     .then(doc => {
       if (doc) {
+        if(doc.auth_state.description == 'disabled') {
+          throw new Error(`사용자 번호 ${user.user_num}으로 가입할 수 없습니다.`);
+        }
+
         throw new Error(`사용자번호 ${user.user_num}는 이미 가입되어 있습니다.`);
       } else {
         User.Student.create(user)
@@ -46,14 +50,18 @@ router.post('/join/student', checkStudentUser('user', true), (req, res) => {
 /*
   join mento
   POST /auth/join/mento
-  everyone / user
+  JWT token admin / user
 */
-router.post('/join/mento', checkMentoUser('user', true), (req, res) => {
+router.post('/join/mento', isAuthenticated, verifyUserTypes(['admin']), checkMentoUser('user', true), (req, res) => {
   const { user } = req.body;
 
   User.findOneByUserNum(user.user_num)
     .then(doc => {
       if (doc) {
+        if(doc.auth_state.description == 'disabled') {
+          throw new Error(`사용자 번호 ${user.user_num}으로 가입할 수 없습니다.`);
+        }
+
         throw new Error(`사용자번호 ${user.user_num}는 이미 가입되어 있습니다.`);
       } else {
         User.Mento.create(user)
@@ -61,8 +69,7 @@ router.post('/join/mento', checkMentoUser('user', true), (req, res) => {
             sendAuthEmail(doc.email, doc.name, doc.auth_key);
             return doc.save();
           }).catch(err => {
-            res.status(409).json({ success: false, message: err.message });
-            console.log(err);
+            throw err;
           });
       }
     })
@@ -76,9 +83,9 @@ router.post('/join/mento', checkMentoUser('user', true), (req, res) => {
 /*
   join professor
   POST /auth/join/professor
-  everyone / user
+  JWT token admin / user
 */
-router.post('/join/professor', checkProfessorUser('user', true), (req, res) => {
+router.post('/join/professor', isAuthenticated, verifyUserTypes(['admin']), checkProfessorUser('user', true), (req, res) => {
   const { user } = req.body;
 
   User.findOneByUserNum(user.user_num)
@@ -95,8 +102,7 @@ router.post('/join/professor', checkProfessorUser('user', true), (req, res) => {
             sendAuthEmail(doc.email, doc.name, doc.auth_key);
             return doc.save();
           }).catch(err => {
-            res.status(409).json({ success: false, message: err.message });
-            console.log(err);
+            throw err;
           });
       }
     })

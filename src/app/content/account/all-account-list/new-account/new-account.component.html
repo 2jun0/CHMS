@@ -59,7 +59,20 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">학과</th>
+                            <th scope="row">소속학과</th>
+                            <td>
+                                <div class="college_department row">
+                                    <select formControlName="college_type" class="form-control" (change)="onChangeCollegeType(college_type.value)">
+                                        <option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                    <select formControlName="department_type" class="form-control">
+                                        <option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">전공</th>
                             <td>
                                 <select formControlName="major_type">
                                     <option *ngFor="let option of majorOptions" class="form-control"
@@ -96,13 +109,16 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">소속 학과</th>
+                            <th scope="row">소속학과</th>
                             <td>
-                                <select formControlName="department_type">
-                                    <option [selected]="true" class="form-control">없음</option>
-                                    <option *ngFor="let option of majorOptions" class="form-control"
-                                        [ngValue]="option.key">{{option.value}}</option>
-                                </select>
+                                <div class="college_department row">
+                                    <select formControlName="college_type" class="form-control" (change)="onChangeCollegeType(college_type.value)">
+                                        <option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                    <select formControlName="department_type" class="form-control">
+                                        <option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                </div>
                             </td>
                         </tr>
                     </ng-container>

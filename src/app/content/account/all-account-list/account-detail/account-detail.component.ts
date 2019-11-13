@@ -16,6 +16,7 @@ import { UserService } from 'src/app/services/user.service';
 import { formatDate, notifyError } from 'src/util/util';
 import { Option, parseJsonToOptions } from 'src/util/options';
 import { getDepartmentTypes } from 'src/util/codes';
+import { AllAccountListComponent } from '../all-account-list.component';
 
 declare const Utils: any;
 
@@ -28,6 +29,8 @@ export class AccountDetailComponent implements OnInit {
   @ViewChild("accountDetailTemplate", {static: false}) mainTemplate: ElementRef;
   @ViewChild("passwordUpdateTemplate", {static: false}) passwordTemplate: ElementRef;
   @ViewChild("confirmDeleteUserTemplate", {static: false}) confirmDeleteUserTemplate: ElementRef;
+
+  parent: AllAccountListComponent;
 
   accountDetailModal: BsModalRef;
   passwordUpdateModal: BsModalRef;
@@ -68,9 +71,31 @@ export class AccountDetailComponent implements OnInit {
   ngOnInit() {
   }
 
-  openModal(user: User) {
+  openModal(user: User, parent: AllAccountListComponent) {
     this.user = user;
+    this.parent = parent;
 
+    this.initForm();
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      if(this.passwordUpdateModal) {
+        this.closePasswordUpdateModal();
+      }else if(this.contirmDeleteUserModal) {
+        this.closeConfirmDeleteUserModal();  
+      }else{
+        this.deactivateUpdateMode();
+      }
+    });
+
+    this.accountDetailModal = this.modalService.show(
+      this.mainTemplate,
+      Object.assign({}, { class: 'gray modal-lg' })
+    );
+
+    this.isShown = true;
+  }
+
+  initForm() {
     switch(this.user.user_type) {
       case 'student':
         let studentUser = this.user as StudentUser;
@@ -85,7 +110,7 @@ export class AccountDetailComponent implements OnInit {
           auth_state: [(studentUser.auth_state)?studentUser.auth_state:'', Validators.required],
           year_of_study: [(studentUser.year_of_study)?studentUser.year_of_study:'', Validators.required],
           major_type: [(studentUser.major_type)?studentUser.major_type:'', Validators.required],
-          college_type: [studentUser.department_type, Validators.required],
+          college_type: '',
           department_type: [studentUser.department_type, Validators.required],
         });
         break;
@@ -117,6 +142,7 @@ export class AccountDetailComponent implements OnInit {
           ]],
           auth_state: [(professorUser.auth_state)?professorUser.auth_state:'', Validators.required],
           major: [(professorUser.major)?professorUser.major:'', Validators.required],
+          college_type: '',
           department_type: [(professorUser.department_type)?professorUser.department_type:'', Validators.required],
         });
         break;
@@ -128,23 +154,6 @@ export class AccountDetailComponent implements OnInit {
       }
     )
     this.loadCollegeAndDepartmentType();
-
-    this.modalService.onHide.subscribe((reason: string) => {
-      if(this.passwordUpdateModal) {
-        this.closePasswordUpdateModal();
-      }else if(this.contirmDeleteUserModal) {
-        this.closeConfirmDeleteUserModal();  
-      }else{
-        this.deactivateUpdateMode();
-      }
-    });
-
-    this.accountDetailModal = this.modalService.show(
-      this.mainTemplate,
-      Object.assign({}, { class: 'gray modal-lg' })
-    );
-
-    this.isShown = true;
   }
 
   loadCollegeAndDepartmentType() {
@@ -152,7 +161,7 @@ export class AccountDetailComponent implements OnInit {
       return json[key].description
     });
 
-    if(['student', 'professor'].includes(this.user.user_type)) {
+    if(['student', 'professor'].includes(this.user.user_type) && this.user['department_type']) {
       this.college_type.setValue(departmentTypes[this.user['department_type']].college_type);
       this.onChangeCollegeType(this.college_type.value);
 
@@ -242,13 +251,14 @@ export class AccountDetailComponent implements OnInit {
     this.userService.update(this.user.user_num, payload)
       .subscribe(
         () => {
-          this.deactivateUpdateMode()
+          this.deactivateUpdateMode();
           for(var key of Object.keys(payload)) {
             this.user[key] = payload[key];
           }
+          this.initForm();
+          this.parent.reloadUsers(this.parent.pageIndex);
         },
         ({ error }) => {
-          console.log(error.message);
           Utils.showNotification('top', 'center', 'danger', error.message);
           return;
         }

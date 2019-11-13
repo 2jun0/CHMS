@@ -27,7 +27,7 @@ const ProfessorUser = mongoose.Schema({
     return Promise.all([
       Codetype.Usertype.findOneByDescription('professor'),
       Codetype.Authstate.findOneByDescription('unauthenticated'),
-      Codetype.Departmenttype.findOneByDescription(department_type)
+      Codetype.Departmenttype.findOneByDescription(user.department_type)
     ]).then(([user_type, auth_state, department_type]) => {
       let auth_key = User.getAuthKey(user.user_num);
 

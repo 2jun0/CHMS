@@ -34,7 +34,7 @@ const MentoUser = mongoose.Schema({
       return new this(filterNullInObject({
         user_num: user.user_num, 
         user_type: user_type,
-        password: user.User.encrypt(user.password),
+        password: User.encrypt(user.password),
         name: user.name,
         workplace: user.workplace,
         department: user.department,

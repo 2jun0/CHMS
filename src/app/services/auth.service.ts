@@ -9,6 +9,7 @@ import { tap, shareReplay } from 'rxjs/operators';
 // models
 import { User, StudentUser, MentoUser, ProfessorUser } from '../model/user';
 import { Token } from '../model/token';
+import { notifyError } from 'src/util/util';
 
 @Injectable({
   providedIn: 'root'
@@ -69,27 +70,15 @@ export class AuthService {
   }
 
   joinStudentUser(user: StudentUser): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/join/student`, {user})
-      .pipe(
-        tap(res => { this.setToken(res.token);}),
-        shareReplay()
-      )
+    return this.http.post<Token>(`${this.appUrl}/auth/join/student`, {user});
   }
   
   joinMentoUser(user: MentoUser): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/join/mento`, {user})
-      .pipe(
-        tap(res => { this.setToken(res.token);}),
-        shareReplay()
-      )
+    return this.http.post<Token>(`${this.appUrl}/auth/join/mento`, {user}, { headers: this.headers });
   }
 
   joinProfessorUser(user: ProfessorUser): Observable<Token> {
-    return this.http.post<Token>(`${this.appUrl}/auth/join/professor`, {user})
-      .pipe(
-        tap(res => { this.setToken(res.token);}),
-        shareReplay()
-      )
+    return this.http.post<Token>(`${this.appUrl}/auth/join/professor`, {user}, { headers: this.headers });
   }
 
   authenticateEmail(auth_key: string): Observable<Token> {
@@ -107,7 +96,7 @@ export class AuthService {
     try{
       return token && token != 'undefined' ? !this.isTokenExpired(token) : false;
     }catch(error) {
-      console.log(error);
+      notifyError(error);
       this.logout();
       return false;
     }
@@ -162,5 +151,10 @@ export class AuthService {
     }else{
       return null;
     }
+  }
+
+  get headers(): HttpHeaders{
+    if(this.isAuthenticated()) return new HttpHeaders({'Authorization' : this.getToken()});
+    else return null;
   }
 }

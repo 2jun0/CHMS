@@ -141,12 +141,16 @@
                         </tr>
                         <tr>
                             <th scope="row">소속 학과</th>
-                            <td *ngIf="!isUpdateMode">{{majorTypes[user.department_type]}}</td>
+                            <td *ngIf="!isUpdateMode">{{user.department_type}}</td>
                             <td *ngIf="isUpdateMode">
-                                <select formControlName="department_type" class="form-control">
-                                    <option *ngFor="let option of majorOptions"
-                                        [ngValue]="option.key">{{option.value}}</option>
-                                </select>
+                                <div class="college_department row">
+                                    <select formControlName="college_type" class="form-control" (change)="onChangeCollegeType(college_type.value)">
+                                        <option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                    <select formControlName="department_type" class="form-control">
+                                        <option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+                                    </select>
+                                </div>
                             </td>
                         </tr>
                     </ng-container>

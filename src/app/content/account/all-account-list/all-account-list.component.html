@@ -9,7 +9,7 @@
                 <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                     role="menu" aria-labelledby="button-basic">
                     <ng-container *ngFor="let option of userTypeOptions">
-                        <li *ngIf="option.key !== 'admin'" role="menuitem"><a class="dropdown-item" (click)="newAccount.openModal(option.key)">{{option.value}}</a></li>
+                        <li *ngIf="option.key !== 'admin'" role="menuitem"><a class="dropdown-item" (click)="newAccount.openModal(option.key, this)">{{option.value}}</a></li>
                     </ng-container>
                 </ul>
             </div>
@@ -58,14 +58,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let user of allUsers" (click)="accountDetail.openModal(user)">
+                        <tr *ngFor="let user of allUsers" (click)="accountDetail.openModal(user, this)">
                             <td>{{userTypes[user.user_type]}}</td>
                             <td>{{user.name}}</td>
                             <td>{{user.user_num}}</td>
                             <td>{{formatDate(user.join_date)}}</td>
-                            <td *ngIf="user.user_type === 'student'">{{majorTypes[user.major_type]}}</td>
+                            <td *ngIf="user.user_type === 'student'">{{user.department_type}}</td>
                             <td *ngIf="user.user_type === 'mento'">{{user.workplace}}/{{user.department}}</td>
-                            <td *ngIf="user.user_type === 'professor'">{{majorTypes[user.department_type]}}</td>
+                            <td *ngIf="user.user_type === 'professor'">{{user.department_type}}</td>
                         </tr>
                     </tbody>
                 </table>

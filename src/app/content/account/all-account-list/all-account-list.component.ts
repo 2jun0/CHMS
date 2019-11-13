@@ -7,6 +7,8 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import majorTypes from "src/assets/json/majorTypes.json";
 import userTypes from "src/assets/json/userTypes.json";
 import authStates from "src/assets/json/authStates.json";
+import collegeTypes from "src/assets/json/collegeTypes.json";
+import departmentTypes from "src/assets/json/departmentTypes.json";
 // models
 import { User } from 'src/app/model/user';
 // services
@@ -31,7 +33,7 @@ export class AllAccountListComponent implements OnInit {
       }
     }
 
-  USER_COUNT_IN_PAGE: number = 10;
+  USER_COUNT_IN_PAGE: number = 20;
   PAGE_COUNT_IN_RANGE: number = 5;
   
   // external functions
@@ -41,6 +43,8 @@ export class AllAccountListComponent implements OnInit {
   majorTypes = majorTypes;
   userTypes = userTypes;
   authStates = authStates;
+  collegeTypes = collegeTypes;
+  departmentTypes = departmentTypes;
 
   searchForm: FormGroup;
 
@@ -138,14 +142,14 @@ export class AllAccountListComponent implements OnInit {
       );
     
     this.userService.getAllUsers(this.pageIndex * this.USER_COUNT_IN_PAGE, this.USER_COUNT_IN_PAGE, filter)
-        .subscribe(
-          (users) => {
-            this.allUsers = users;
-          },
-          ({ error }) => {
-            notifyError(error);
-          }
-        )
+      .subscribe(
+        (users) => {
+          this.allUsers = users;
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      )
   }
 
   createFilter() {

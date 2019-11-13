@@ -6,13 +6,18 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import majorTypes from "src/assets/json/majorTypes.json";
 import userTypes from "src/assets/json/userTypes.json";
 import authStates from "src/assets/json/authStates.json";
+import collegeTypes from "src/assets/json/collegeTypes.json";
+import departmentTypes from "src/assets/json/departmentTypes.json";
 // models
 import { User, StudentUser, MentoUser, ProfessorUser } from 'src/app/model/user';
 // services
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 // utils
-import { formatDate, notifyError } from 'src/util/util';
+import { formatDate, notifyError, notifyInfo } from 'src/util/util';
 import { Option, parseJsonToOptions } from 'src/util/options';
+import { getDepartmentTypes } from 'src/util/codes';
+import { AllAccountListComponent } from '../all-account-list.component';
 
 @Component({
   selector: 'app-new-account',
@@ -23,6 +28,7 @@ export class NewAccountComponent implements OnInit {
   @ViewChild("newAccountTemplate", {static: false}) mainTemplate: ElementRef;
 
   newAccountModal: BsModalRef;
+  parent: AllAccountListComponent;
 
   user_type: string;
   userForm: FormGroup;
@@ -40,20 +46,30 @@ export class NewAccountComponent implements OnInit {
   userTypeOptions: Array<Option> = parseJsonToOptions(userTypes);
   majorOptions: Array<Option> = parseJsonToOptions(majorTypes);
 
+  collegeTypeOptions: Option[] = parseJsonToOptions(collegeTypes, undefined, (json, key)=>{
+    return json[key].description
+  });;
+  departmentTypeOptions: Option[] = parseJsonToOptions(departmentTypes, undefined, (json, key)=>{
+    return json[key].description
+  });;
+
   constructor(
     private formBuilder: FormBuilder,
     private modalService: BsModalService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService,
   ) {
     this.today = new Date();
   }
 
   ngOnInit() {
-
+ 
   }
 
-  openModal(user_type: string) {
+  openModal(user_type: string, parent: AllAccountListComponent) {
     this.user_type = user_type;
+    this.parent = parent;
+
     switch(user_type) {
       case 'student':
         this.userForm = this.formBuilder.group({
@@ -77,7 +93,9 @@ export class NewAccountComponent implements OnInit {
             Validators.required,  Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
           year_of_study: ['', Validators.required],
-          major_type: ['', Validators.required]
+          major_type: ['', Validators.required],
+          college_type: '',
+          department_type: '',
         });
         break;
       case 'mento':
@@ -128,10 +146,19 @@ export class NewAccountComponent implements OnInit {
             Validators.required,  Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
           major: '',
+          college_type: '',
           department_type: '',
         });
         break;
     }
+
+    this.userService.loadCodes.subscribe(
+      () => {
+        this.loadDepartmentCodes();
+      }
+    )
+
+    this.loadDepartmentCodes();
 
     this.modalService.onHide.subscribe((reason: string) => {
       this.closeNewAccountModal();
@@ -143,6 +170,12 @@ export class NewAccountComponent implements OnInit {
     );
   }
 
+  loadDepartmentCodes() {
+    this.collegeTypeOptions = parseJsonToOptions(collegeTypes, undefined, (json, key)=>{
+      return json[key].description
+    });
+  }
+
   closeNewAccountModal() {
     if(this.newAccountModal){
       this.newAccountModal.hide();
@@ -150,106 +183,29 @@ export class NewAccountComponent implements OnInit {
     }
   }
 
+  onChangeCollegeType(value) {
+    this.departmentTypeOptions = parseJsonToOptions(getDepartmentTypes(value), undefined, (json, key)=>{
+      return json[key].description;
+    });
+    this.department_type.setValue(this.departmentTypeOptions[0].key);
+  }
+
   newUser() {
     console.log('[payload]', this.userForm.value);
 
-    let newUser;
-
-    let emailVal = this.email.value.trim();
-    let user_numVal = this.user_num.value.trim() as number;
-    let nameVal = this.name.value.trim();
-    let passwordVal = this.password.value;
-    let repeat_passwordVal = this.repeat_password.value;
-
-    if (this.user_num.errors) {
-      if (this.user_num.errors.required) {
-        notifyError(new Error('학번을 입력하세요!'));
-      } else if (this.user_num.errors.pattern) {
-        notifyError(new Error('학번은 숫자로만 입력해야 합니다!'));
-      }
-    }else if (this.name.errors) {
-      if (this.name.errors.required) {
-        notifyError(new Error('이름을 입력해주세요!'));
-      }else if (this.name.errors.pattern) {
-        notifyError(new Error('이름은 알파벳이나 한글로만 이루어져야합니다.'));
-      }
-    }else if(this.password.errors) {
-      if (this.password.errors.required) {
-        notifyError(new Error('비밀번호를 입력하세요!'));
-      } else if (this.password.errors.pattern) {
-        notifyError(new Error('비밀번호는 영문또는 숫자로 입력해야 합니다!'));
-      } else if (this.password.errors.minlength || this.password.errors.maxlength) {
-        notifyError(new Error('비밀번호는 최소 6자, 최대16자로 입력해야 합니다!'));
-      }
-    }else if(passwordVal != repeat_passwordVal) {
-      notifyError(new Error('비밀번호가 일치하지 않습니다.'));
-    }if (this.email.errors) {
-      if (this.email.errors.required) { 
-        notifyError(new Error('이메일을 입력하세요!')); 
-      } else if (this.email.errors.pattern) { 
-        notifyError(new Error('이메일 형식을 확인해주세요!'));
-      }
-    }else{
-      switch(this.user_type) {
-        case 'student':
-          let year_of_studyVal = this.year_of_study.value;
-          let major_typeVal = this.major_type.value.replace('_', ' ');
-  
-          if(this.year_of_study.errors && this.year_of_study.errors.required) {
-            notifyError(new Error('학년을 선택해주세요!')); 
-          }else if(this.major_type.errors && this.major_type.errors.required) {
-              notifyError(new Error('전공을 선택해주세요!')); 
-          }
-          newUser = {
-            user_num: user_numVal,
-            name: nameVal,
-            password: passwordVal,
-            repeat_password: repeat_passwordVal,
-            email: emailVal,
-            year_of_study: year_of_studyVal,
-            major_type: major_typeVal
-          };
-
-          break;
-        case 'mento':
-          newUser = {
-            user_num: user_numVal,
-            name: nameVal,
-            password: passwordVal,
-            repeat_password: repeat_passwordVal,
-            email: emailVal
-          };
-
-          if(this.workplace.value) newUser.workplace = this.workplace.value.trim();
-          if(this.department.value) newUser.department = this.department.value.trim();
-          if(this.job_position.value) newUser.job_position = this.job_position.value.trim();
-
-          break;
-        case 'professor':
-          newUser = {
-            user_num: user_numVal,
-            name: nameVal,
-            password: passwordVal,
-            repeat_password: repeat_passwordVal,
-            email: emailVal
-          };
-
-          if(this.major.value) newUser.major = this.major.value.trim();
-          if(this.department_type.value) newUser.department_type = this.department_type.value.trim().replace('_',' ');
-
-          break;
-      }
-
-      this.authService.joinUser(newUser, this.user_type)
-        .subscribe(
-          () => { this.closeNewAccountModal(); },
-          ({ error }) => {
-            console.log(error.message);
-            notifyError(new Error(error.message));
-            return;
-          }
-        )
-    }
+    let payload = this.userForm.value;
+    this.authService.joinUser(payload, this.user_type)
+      .subscribe(
+        () => {
+          this.closeNewAccountModal(); 
+          notifyInfo('사용자가 생성되었습니다.');
+          this.parent.reloadUsers(this.parent.pageIndex);
+        },
+        ({ error }) => {
+          notifyError(error);
+          return;
+        }
+      )
   }
 
   get user_num() { return this.userForm.get('user_num'); }
@@ -265,4 +221,5 @@ export class NewAccountComponent implements OnInit {
   get job_position() { return this.userForm.get('job_position'); }
   get major() { return this.userForm.get('major'); }
   get department_type() { return this.userForm.get('department_type'); }
+  get college_type() { return this.userForm.get('college_type'); }
 }
