@@ -31,7 +31,7 @@ export class MyMileageComponent implements OnInit {
       }
     }
 
-  MILEAGE_COUNT_IN_PAGE: number = 10;
+  MILEAGE_COUNT_IN_PAGE: number = 20;
   PAGE_COUNT_IN_RANGE: number = 5;
   
   // external functions

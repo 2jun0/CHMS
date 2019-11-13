@@ -134,18 +134,29 @@ const Mileage = mongoose.Schema({
     // find sum of scores
     Mileage.statics.findSumOfScoreWithFilter = function(filter) {
         // select sum(score) from Mileage select filter 
-        return this.aggregate([
-            { $match: filter },
-            { $group: {
-                _id: 'null',
-                sum_of_score: {$sum: '$score'}
-            } }
-        ]).then(result => {
-            if(result && result.length > 0)
-                return result[0].sum_of_score;
-            else
-                return 0;
-        });
+        // return this.aggregate([
+        //     { $match: filter },
+        //     { $group: {
+        //         _id: 'null',
+        //         sum_of_score: {$sum: '$score'}
+        //     } }
+        // ]).then(result => {
+        //     if(result && result.length > 0)
+        //         return result[0].sum_of_score;
+        //     else
+        //         return 0;
+        // });
+
+        return this.find(filter)
+            .then(doc_mileages => {
+                let sum = 0;
+
+                for(var doc of doc_mileages) {
+                    sum += doc.score;
+                }
+
+                return sum;
+            });
     };
 
     // find sum of score of codes
