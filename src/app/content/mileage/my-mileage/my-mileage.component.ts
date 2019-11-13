@@ -169,6 +169,8 @@ export class MyMileageComponent implements OnInit {
     this.majorMileageCodeOptions = parseJsonToOptions(majorCode, undefined, (json, key)=>{
       return json[key].description;
     });
+    delete this.majorMileageCodeOptions[3];
+    this.majorMileageCodeOptions.length = 3;
   }
 
   onChangeMajorMileageCode(value) {
