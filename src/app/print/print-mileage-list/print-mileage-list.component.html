@@ -18,7 +18,7 @@
 <table *ngIf="mileages">
 	<colgroup>
 		<col witdh="10%"/>
-		<col *ngIf="user && user.user_type == 'student'" width="15%"/>
+		<col *ngIf="user && user.user_type == 'admin'" width="15%"/>
 		<col width="8%"/>
 		<col width="22%"/>
 		<col witdh="10%"/>
@@ -28,7 +28,7 @@
 	<thead>
 		<tr>
 			<th>입력 일자</th>
-			<th *ngIf="user && user.user_type == 'student'">학생</th>
+			<th *ngIf="user && user.user_type == 'admin'">학생</th>
 			<th>코드</th>
 			<th>마일리지 명</th>
 			<th>예상 점수</th>
@@ -39,7 +39,7 @@
 	<tbody>
 		<tr *ngFor="let mileage of mileages">
 			<td>{{formatDate(mileage.input_date)}}</td>
-			<td *ngIf="user && user.user_type == 'student'">{{mileage.user_name}}<br>#{{mileage.user_num}}</td>
+			<td *ngIf="user && user.user_type == 'admin'">{{mileage.user_name}}<br>#{{mileage.user_num}}</td>
 			<td>{{mileage.code}}</td>
 			<td>{{mileageCodes[mileage.code].detail}}</td>
 			<td>{{mileageCodes[mileage.code].score}}</td>
