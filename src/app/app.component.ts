@@ -14,19 +14,14 @@ export class AppComponent {
 
   title = 'CHMS';
   isGoScrollShow: boolean = false;
-  isPrinting: boolean = false;
   
   constructor(
-    private printService: PrintService,
+    public printService: PrintService,
     private mileageService: MileageService,
     private userService: UserService
   ){
     this.mileageService.updateMileageCodes();
     this.userService.updateCodes();
-
-    this.printService.print.subscribe(() => {
-      this.isPrinting = true;
-    });
   }
 
   goScrollTop() {

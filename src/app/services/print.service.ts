@@ -1,4 +1,4 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {Router} from '@angular/router';
 import { closeAllNotifications } from 'src/util/util';
 
@@ -8,8 +8,6 @@ import { closeAllNotifications } from 'src/util/util';
 export class PrintService {
   isPrinting = false;
 
-  @Output() print: EventEmitter<String> = new EventEmitter();
-
   constructor(private router: Router) { }
 
   printDocument(documentName: string, documentData: string) {
@@ -18,19 +16,16 @@ export class PrintService {
       { outlets: {
         'print': ['print', documentName, documentData]
       }}]);
-    setTimeout(() => {
-      this.print.emit();
-    });
   }
 
   onDataReady() {
     closeAllNotifications();
     setTimeout(() => {
-      window.print(); 
+      window.print();
       setTimeout(() => {
-        this.isPrinting = false;
+        this.isPrinting = false; 
         this.router.navigate([{ outlets: { print: null }}]);
-      }, 500);
+      }, 500)
     }, 500);
   }
 }

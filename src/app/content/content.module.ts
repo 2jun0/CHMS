@@ -145,16 +145,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {userTypes: ['admin'], errorMsg: '마일리지 조회(관리자)는 관리자만 접근할 수 있습니다.'}
   },
-  {
-    path: 'print',
-    outlet: 'print',
-    component: PrintLayoutComponent,
-    children: [
-      { path: 'project/:id', component: PrintProjectComponent },
-      { path: 'mileage/:id', component: PrintMileageComponent },
-      { path: 'mileage-list/:filter', component: PrintMileageListComponent },
-    ]
-  }
 ]
 
 @NgModule({
@@ -186,10 +176,6 @@ const routes: Routes = [
     MyMileageComponent,
     MileageDetailComponent,
     ResetPasswordComponent,
-    PrintLayoutComponent,
-    PrintProjectComponent,
-    PrintMileageComponent,
-    PrintMileageListComponent,
     InputMileageComponent,
     MileageDetailComponent,
     AllMileageListComponent

@@ -17,7 +17,7 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './print-mileage.component.html',
   styleUrls: ['./print-mileage.component.scss']
 })
-export class PrintMileageComponent implements OnInit, AfterViewInit {
+export class PrintMileageComponent implements OnInit {
 
   mileage: Mileage;
   id: string;
@@ -44,14 +44,10 @@ export class PrintMileageComponent implements OnInit, AfterViewInit {
     this.mileageService.getMileage(this.id).subscribe(
       (mileage) => {
         this.mileage = mileage;
+        this.printService.onDataReady();
       },({error}) => {
         notifyError(error);
       }
     )
   }
-
-  ngAfterViewInit() {
-    this.printService.onDataReady();
-  }
-
 }

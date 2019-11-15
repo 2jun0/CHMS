@@ -8,4 +8,14 @@ table {
 th, td {
 	border: 1px solid #444444;
 	padding: 10px;
+
+	font-weight: 300;
+}
+
+.print-project {
+  page-break-after: always;
+}
+
+.print-project:last-child {
+  page-break-after: avoid;
 }

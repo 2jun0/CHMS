@@ -8,6 +8,8 @@ table {
 th, td {
 	border: 1px solid #444444;
 	padding: 10px;
+
+	font-weight: 300;
 }
 
 .center {
@@ -15,7 +17,8 @@ th, td {
 }
 
 .bold {
-	font-weight: bold;
+	//font-weight: bold;
+	font-weight: 300;
 }
 
 .title{

@@ -23,6 +23,10 @@ import { AuthService } from './services/auth.service';
 import { ProjectService } from './services/project.service';
 import { PrintService } from './services/print.service';
 import { MileageService } from './services/mileage.service';
+import { PrintLayoutComponent } from './print/print-layout/print-layout.component';
+import { PrintProjectComponent } from './print/print-project/print-project.component';
+import { PrintMileageComponent } from './print/print-mileage/print-mileage.component';
+import { PrintMileageListComponent } from './print/print-mileage-list/print-mileage-list.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,10 @@ import { MileageService } from './services/mileage.service';
     Error404Component,
     Error400Component,
     TopnaviComponent,
+    PrintLayoutComponent,
+    PrintProjectComponent,
+    PrintMileageComponent,
+    PrintMileageListComponent,
   ],
   imports: [
     BrowserModule,

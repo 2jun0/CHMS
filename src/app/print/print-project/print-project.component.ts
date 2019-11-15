@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 // models
@@ -14,12 +14,15 @@ import languages from 'src/assets/json/languages.json';
 // utils
 import { notifyError, formatDate } from 'src/util/util';
 
+@Injectable({
+  providedIn: 'root'
+}) 
 @Component({
   selector: 'app-print-project',
   templateUrl: './print-project.component.html',
   styleUrls: ['./print-project.component.scss']
 })
-export class PrintProjectComponent implements OnInit, AfterViewInit {
+export class PrintProjectComponent implements OnInit {
 
   appUrl = environment.apiUrl;
 
@@ -30,9 +33,8 @@ export class PrintProjectComponent implements OnInit, AfterViewInit {
   projectStates = projectStates;
   languageTypes = languages;
 
-  project: Project;
+  project: Promise<Project>;
   id: string;
-  invoiceDetails: Promise<any>[];
 
   constructor(
     private route: ActivatedRoute,
@@ -43,16 +45,19 @@ export class PrintProjectComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.projectService.getProject(this.id).subscribe(
-      (project) => {
-        this.project = project;
-      },({error}) => {
-        notifyError(error);
-      }
-    )
+    this.project = this.getProject(this.id);
+    this.project.then(() => this.printService.onDataReady());
   }
 
-  ngAfterViewInit() {
-    this.printService.onDataReady();
+  getProject(projectId): Promise<Project> {
+    return new Promise(resolve =>
+      this.projectService.getProject(projectId).subscribe(
+        (project) => {
+          resolve(project);
+        },({error}) => {
+          notifyError(error);
+        }
+      )
+    );
   }
 }
