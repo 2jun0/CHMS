@@ -40,14 +40,31 @@ export class PrintMileageComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.userService.getMyUser();
-
     this.mileageService.getMileage(this.id).subscribe(
       (mileage) => {
         this.mileage = mileage;
-        this.printService.onDataReady();
+        this.printService.onDataReady()
       },({error}) => {
         notifyError(error);
       }
     )
   }
+
+  // ngOnInit() {
+  //   this.user = this.userService.getMyUser();
+  //   this.mileage = this.getMileage(this.id);
+  //   this.mileage.then(() => this.printService.onDataReady());
+  // }
+
+  // getMileage(mileageId): Promise<Mileage> {
+  //   return new Promise(resolve => {
+  //     this.mileageService.getMileage(mileageId).subscribe(
+  //       (mileage) => {
+  //         resolve(mileage);
+  //       },({error}) => {
+  //         notifyError(error);
+  //       }
+  //     )
+  //   });
+  // }
 }
