@@ -11,7 +11,8 @@ th, td {
 }
 
 .print-project {
-  page-break-after: always;
+	page-break-after: always;
+	page-break-inside: auto;
 }
 
 .print-project:last-child {

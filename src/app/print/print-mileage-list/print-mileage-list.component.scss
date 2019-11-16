@@ -1,10 +1,19 @@
+.print-mileage-list{
+	min-height: 3000%;
+	background-color: #444444;
+}
 table {
 	width: 100%;
 	border: 1px solid #444444;
-    border-collapse: collapse;
+	border-collapse: collapse;
     
-    z-index: 5001;
+	z-index: 5001;
+
+	page-break-inside:auto;
 }
+tr    { page-break-inside:avoid; page-break-after:auto }
+thead { display:table-header-group }
+tfoot { display:table-footer-group }
 th, td {
 	border: 1px solid #444444;
 	padding: 10px;

@@ -1,91 +1,93 @@
-<ng-container *ngIf="user && user.user_type == 'student'">
-	<ng-container>
-		<p class="title center bold">마일리지 제출 보고서</p>
-		<br>
-		<p class="size1">
-			학과: {{user.department_type}}<br>
-			학번: {{user.user_num}}<br>
-			이름: {{user.name}}
-		</p>
-		<br>
-		<p class="size2 center">상기 본인은 마일리지 입력을 완료하였으므로<br>보고서를 제출합니다.</p>
-		<p class="size1 center">{{printDate}}</p>
-		<p class="size1 center">제출자:
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(인)</p>
+<div class="print-mileage-list">
+	<ng-container *ngIf="user && user.user_type == 'student'">
+		<ng-container>
+			<p class="title center bold">마일리지 제출 보고서</p>
+			<br>
+			<p class="size1">
+				학과: {{user.department_type}}<br>
+				학번: {{user.user_num}}<br>
+				이름: {{user.name}}
+			</p>
+			<br>
+			<p class="size2 center">상기 본인은 마일리지 입력을 완료하였으므로<br>보고서를 제출합니다.</p>
+			<p class="size1 center">{{printDate}}</p>
+			<p class="size1 center">제출자:
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(인)</p>
+		</ng-container>
+		<table *ngIf="mileages">
+			<colgroup>
+				<col witdh="10%"/>
+				<col *ngIf="user && user.user_type == 'admin'" width="15%"/>
+				<col width="8%"/>
+				<col width="22%"/>
+				<col witdh="10%"/>
+				<col witdh="10%"/>
+				<col witdh="20%"/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>입력 일자</th>
+					<th>코드</th>
+					<th>마일리지 명</th>
+					<th>예상 점수</th>
+					<th>발생일자</th>
+					<th>활동상세내역</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let mileage of mileages">
+					<td>{{formatDate(mileage.input_date)}}</td>
+					<td>{{mileage.code}}</td>
+					<td>{{mileageCodes[mileage.code].detail}}</td>
+					<td>{{mileageCodes[mileage.code].score}}</td>
+					<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
+					<td style="max-width: 180px;">
+						<span class="ellipsis-3">{{mileage.detail}}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</ng-container>
-	<table *ngIf="mileages">
-		<colgroup>
-			<col witdh="10%"/>
-			<col *ngIf="user && user.user_type == 'admin'" width="15%"/>
-			<col width="8%"/>
-			<col width="22%"/>
-			<col witdh="10%"/>
-			<col witdh="10%"/>
-			<col witdh="20%"/>
-		</colgroup>
-		<thead>
-			<tr>
-				<th>입력 일자</th>
-				<th>코드</th>
-				<th>마일리지 명</th>
-				<th>예상 점수</th>
-				<th>발생일자</th>
-				<th>활동상세내역</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let mileage of mileages">
-				<td>{{formatDate(mileage.input_date)}}</td>
-				<td>{{mileage.code}}</td>
-				<td>{{mileageCodes[mileage.code].detail}}</td>
-				<td>{{mileageCodes[mileage.code].score}}</td>
-				<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
-				<td style="max-width: 180px;">
-					<span class="ellipsis-3">{{mileage.detail}}</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</ng-container>
-<ng-container *ngIf="user && user.user_type == 'admin'">
-	<table *ngIf="mileages">
-		<colgroup>
-			<col witdh="10%"/>
-			<col width="12%"/>
-			<col width="8%"/>
-			<col width="20%"/>
-			<col witdh="10%"/>
-			<col witdh="8%"/>
-			<col/>
-		</colgroup>
-		<thead>
-			<tr>
-				<th>입력 일자</th>
-				<th>학생</th>
-				<th>코드</th>
-				<th>마일리지 명</th>
-				<th>예상 점수</th>
-				<th>발생일자</th>
-				<th>활동상세내역</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let mileage of mileages">
-				<td>{{formatDate(mileage.input_date)}}</td>
-				<td>{{mileage.user_name}}<br>#{{mileage.user_num}}</td>
-				<td>{{mileage.code}}</td>
-				<td>{{mileageCodes[mileage.code].detail}}</td>
-				<td>{{mileageCodes[mileage.code].score}}</td>
-				<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
-				<td style="max-width: 200px;">
-					<span class="ellipsis-3">{{mileage.detail}}</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</ng-container>
+	<ng-container *ngIf="user && user.user_type == 'admin'">
+		<table *ngIf="mileages">
+			<colgroup>
+				<col witdh="10%"/>
+				<col width="12%"/>
+				<col width="8%"/>
+				<col width="20%"/>
+				<col witdh="10%"/>
+				<col witdh="8%"/>
+				<col/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>입력 일자</th>
+					<th>학생</th>
+					<th>코드</th>
+					<th>마일리지 명</th>
+					<th>예상 점수</th>
+					<th>발생일자</th>
+					<th>활동상세내역</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let mileage of mileages">
+					<td>{{formatDate(mileage.input_date)}}</td>
+					<td>{{mileage.user_name}}<br>#{{mileage.user_num}}</td>
+					<td>{{mileage.code}}</td>
+					<td>{{mileageCodes[mileage.code].detail}}</td>
+					<td>{{mileageCodes[mileage.code].score}}</td>
+					<td>{{formatDate(mileage.act_date.from)}} ~ {{formatDate(mileage.act_date.to)}}</td>
+					<td style="max-width: 200px;">
+						<span class="ellipsis-3">{{mileage.detail}}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</ng-container>
+</div>

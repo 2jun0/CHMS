@@ -1170,6 +1170,12 @@ a.button {
         -webkit-font-smoothing: antialiased !important;
         font-family: "Roboto", "Helvetica Neue", Arial, sans-serif !important;
     }
+
+    div {
+        height: auto !important;
+        min-height: auto !important;
+        max-height: auto !important;
+    }
 }
 
 .college_department {
