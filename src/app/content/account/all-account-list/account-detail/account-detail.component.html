@@ -72,6 +72,14 @@
                     </ng-container>
                     <ng-container *ngIf="user.user_type === 'student'">
                         <tr>
+                            <th scope="row">깃허브 아이디</th>
+                            <td *ngIf="!isUpdateMode">{{user.github_id}}</td>
+                            <td *ngIf="isUpdateMode">
+                                <input formControlName="github_id" type="text" class="form-control"
+                                    value="{{user.github_id}}">
+                            </td>
+                        </tr>
+                        <tr>
                             <th scope="row">학년</th>
                             <td *ngIf="!isUpdateMode">{{user.year_of_study}}</td>
                             <td *ngIf="isUpdateMode">

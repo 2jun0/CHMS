@@ -9,6 +9,7 @@ const Mileage = mongoose.Schema({
     user_num:       { type: Number, required: true },
     user_name:      { type: String, required: true },
     department:     { type: String, required: true },
+    year_of_study:  { type: Number, required: true },
     input_date:     { type: Date, required: true, default: Date.now }, 
     code:           { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Mileage', required: true },
     score:          { type: Number },

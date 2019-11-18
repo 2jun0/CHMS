@@ -5,6 +5,7 @@ export interface Mileage {
 	user_num: number;
 	user_name: string;
 	department: string;
+	year_of_study: number;
 	input_date?: Date;
 	code: string;
 	score: number;

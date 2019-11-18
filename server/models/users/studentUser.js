@@ -15,6 +15,7 @@ const StudentUser = mongoose.Schema({
     year_of_study:    { type: Number, required: true },
     major_type: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Majortype'},
     department_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Departmenttype'},
+    github_id:  { type: String, required: true},
     email:      { type: String, required: true},
     auth_key:   { type: String, required: true},
     auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
@@ -45,7 +46,8 @@ const StudentUser = mongoose.Schema({
         year_of_study: user.year_of_study,
         major_type: major_type,
         department_type: department_type,
-        email: user.email, 
+        email: user.email,
+        github_id: user.github_id,
         auth_key: auth_key,
         auth_state: auth_state,
       }));
@@ -121,6 +123,7 @@ const StudentUser = mongoose.Schema({
       password: this.password,
       name: this.name,
       email: this.email,
+      github_id: this.github_id,
       auth_key: this.auth_key,
       auth_state: (this.auth_state)?this.auth_state.description:null,
       join_date: this.join_date,
@@ -152,6 +155,7 @@ const StudentUser = mongoose.Schema({
           major_type: (this.major_type)?this.major_type.description:null,
           department_type: (this.department_type)?this.department_type.description:null,
           email: this.email,
+          github_id: this.github_id,
         })
         break;
       default:

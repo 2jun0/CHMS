@@ -123,6 +123,9 @@ export class MyAccountComponent implements OnInit {
             Validators.required,
             Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
+          github_id: [studentUser.github_id, [
+            Validators.required
+          ]],
           year_of_study: [studentUser.year_of_study, [
             Validators.required
           ]],
@@ -309,6 +312,7 @@ export class MyAccountComponent implements OnInit {
   get name() { return this.updateForm.get('name'); }
 
   get email() { return this.updateForm.get('email'); }
+  get github_id() { return this.updateForm.get('github_id');}
   get workplace() { return this.updateForm.get('workplace'); }
   get department() { return this.updateForm.get('department'); }
   get college_type() { return this.updateForm.get('college_type'); }

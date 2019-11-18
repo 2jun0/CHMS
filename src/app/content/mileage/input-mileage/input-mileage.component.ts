@@ -122,6 +122,7 @@ export class InputMileageComponent implements OnInit {
       user_num : 유저 번호
       user_name : 유저 이름
       department : 유저 학과
+      year_of_study : 유저 학년
       code
       act_date
       detail
@@ -135,11 +136,12 @@ export class InputMileageComponent implements OnInit {
       // 유저 서비스에서 내 정보 가져오기
       let user = this.userService.getMyUser() as StudentUser;
 
-      // 새 마일리지 객체에 user_num, user_name, department값 추가
+      // 새 마일리지 객체에 user_num, user_name, department, year_of_study값 추가
       let newMileage = {
         department : user.department_type,
         user_num : user.user_num,
         user_name : user.name,
+        year_of_study : user.year_of_study,
         code: this.code.value,
         act_date: this.act_date.value,
         detail: this.detail.value,

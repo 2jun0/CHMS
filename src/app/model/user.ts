@@ -16,6 +16,7 @@ export interface StudentUser extends User {
     major_type: string
     department_type: string,
     email: string,
+    github_id: string,
     auth_key?: string,
     auth_state?: string,
 }

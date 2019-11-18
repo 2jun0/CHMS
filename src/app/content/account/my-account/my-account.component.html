@@ -35,6 +35,14 @@
                         </div>
                     </div>
                     <div class="row item">
+                        <label class="col-md-2">깃허브 아이디</label>
+                        <div class="col-md-8">
+                            <span *ngIf="!isUpdateMode">{{user.github_id}}</span>
+                            <input *ngIf="isUpdateMode" formControlName="github_id" class="form-control"
+                            type="text">
+                        </div>
+                    </div>
+                    <div class="row item">
                         <label class="col-md-2">학년</label>
                         <div class="col-md-8">
                             <span *ngIf="!isUpdateMode">{{user.year_of_study + "학년"}}</span>

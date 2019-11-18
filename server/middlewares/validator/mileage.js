@@ -39,11 +39,13 @@ function getCheckMileageBase(inputs_key) {
 exports.checkMileageInputs = function(inputs_key, showError = true) {
     let checkArray = getCheckMileageBase(inputs_key, showError).concat([
         body(inputs_key+'.user_num').exists().withMessage('사용자 번호를 입력해주세요!')
-            .isInt().withMessage('사용자 번호는 정수여야 합니다.'),
+            .isInt().withMessage('사용자 번호는 정수 여야 합니다.'),
         body(inputs_key+'.user_name').exists().withMessage('사용자 성명을 입력해주세요!')
             .isString().withMessage('사용자 성명은 문자열이여야 합니다.'),
         body(inputs_key+'.department').exists().withMessage('전공을 입력해주세요!')
             .isString().withMessage('전공은 문자열이여야 합니다.'),
+        body(inputs_key+'.year_of_study').exists().withMessage('학년을 입력해주세요')
+			.isInt({ min: 1, max: 4 }).withMessage('학년은 1과 4사이의 정수여야 합니다.'),
         body(inputs_key+'.code').exists().withMessage('마일리지 코드값을 입력해주세요!')
             .isString().withMessage('마일리지를 선택해 주세요!'),
     ])

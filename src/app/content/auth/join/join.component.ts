@@ -64,6 +64,8 @@ export class JoinComponent implements OnInit {
       email: ['', [Validators.required,
         Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
       ]],
+      github_id: ['', [Validators.required
+      ]],
       major_type: ['', [Validators.required
       ]],
       college_type: ['', [Validators.required
@@ -114,6 +116,7 @@ export class JoinComponent implements OnInit {
   get name() { return this.joinForm.get('name');}
   get year_of_study() { return this.joinForm.get('year_of_study');}
   get email() { return this.joinForm.get('email');}
+  get github_id() { return this.joinForm.get('github_id');}
   get major_type() { return this.joinForm.get('major_type');}
   get college_type() { return this.joinForm.get('college_type');}
   get department_type() { return this.joinForm.get('department_type');}

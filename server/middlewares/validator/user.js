@@ -75,9 +75,11 @@ function getCheckUserBase(inputs_key, user_type, isCreateMode = false, isAdmin=f
 exports.checkStudentUser = function(inputs_key, isCreateMode=false, isAdmin=false, showError = true) {
 	let checkArray = getCheckUserBase(inputs_key, 'student', isCreateMode, isAdmin).concat([
 		body(inputs_key+'.email').exists().withMessage('이메일을 입력해주세요')
-			.isEmail().withMessage('이메일 형식이 잘못되었습니다.'),
+			.isEmail().trim().withMessage('이메일 형식이 잘못되었습니다.'),
+		body(inputs_key+'.github_id').exists().withMessage('깃허브 아이디를 입력해주세요')
+			.isString().trim().withMessage('깃허브 아이디 형식이 잘못되었습니다.'),
 		body(inputs_key+'.year_of_study').exists().withMessage('학년을 입력해주세요')
-			.isInt({ min: 1, max: 4 }).withMessage('학년은 1과 4사이의 정수여야 합니다.'),
+			.isInt({  1, max: 4 }).withMessage('학년은 1과 4사이의 정수여야 합니다.'),
 		body(inputs_key+'.major_type').exists().withMessage('학과를 입력해주세요'),
 		body(inputs_key+'.department_type').exists().withMessage('소속학과를 입력해주세요')
 	]);
