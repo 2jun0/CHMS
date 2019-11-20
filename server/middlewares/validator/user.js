@@ -79,7 +79,7 @@ exports.checkStudentUser = function(inputs_key, isCreateMode=false, isAdmin=fals
 		body(inputs_key+'.github_id').exists().withMessage('깃허브 아이디를 입력해주세요')
 			.isString().trim().withMessage('깃허브 아이디 형식이 잘못되었습니다.'),
 		body(inputs_key+'.year_of_study').exists().withMessage('학년을 입력해주세요')
-			.isInt({  1, max: 4 }).withMessage('학년은 1과 4사이의 정수여야 합니다.'),
+			.isInt({min: 1, max: 4 }).withMessage('학년은 1과 4사이의 정수여야 합니다.'),
 		body(inputs_key+'.major_type').exists().withMessage('학과를 입력해주세요'),
 		body(inputs_key+'.department_type').exists().withMessage('소속학과를 입력해주세요')
 	]);
