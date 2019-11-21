@@ -56,7 +56,7 @@ function getCheckUserBase(inputs_key, user_type, isCreateMode = false, isAdmin=f
 
 	check = check.concat([
 		body(inputs_key+'.name').exists().not().isEmpty().withMessage('이름을 입력해주세요')
-			.matches(/^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/).withMessage('이름은 한글이나 알파벳의 조합으로 이루어져야 합니다.'),
+			.matches(/^[가-힣]{2,4}|[a-zA-Z]{2,20}\s[a-zA-Z]{2,20}$/).withMessage('이름은 한글이나 알파벳만으로 이루어져야 합니다.'),
 		body(inputs_key+'.join_date').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
 		body(inputs_key+'.user_type').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),
 		body(inputs_key+'.auth_key').not().exists().withMessage(STR_NOT_ALLOW_ACCESS),

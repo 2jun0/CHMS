@@ -121,12 +121,9 @@ router.post('/join/professor', isAuthenticated, verifyUserTypes(['admin']), chec
 router.post('/login', [
   // validation
   check('user_num')
-    .exists().withMessage('사용자번호을 입력해주세요!')
-    .matches(/[0-9]+/).withMessage('사용자번호는 숫자로만 입력해야 합니다!'),
+    .exists().not().isEmpty().withMessage('사용자번호을 입력해주세요!'),
   check('password')
-    .exists().withMessage('비밀번호를 입력해주세요!')
-    .isLength({ min:6, max:16 }).withMessage('비밀번호는 영문또는 숫자로 입력해야 합니다!')
-    .matches(/[a-zA-Z0-9!@#$%^&*]+/).withMessage('비밀번호는 최소 6자, 최대16자로 입력해야 합니다!')
+    .exists().not().isEmpty().withMessage('비밀번호를 입력해주세요!')
 ],
 (req, res) => {
   const { user_num, password } = req.body;
