@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Codetype = require('../codetype');
 
 const User = require('./user');
+const Mileage = require('../mileages/mileage');
+const TotalMileage = require('../mileages/totalMileage');
 
 const { filterNullInObject, cloneObject } = require('../../utils/utils');
 
@@ -181,6 +183,22 @@ const StudentUser = mongoose.Schema({
       .then(code => {
         this.auth_state = code;
       })
+  }
+
+  StudentUser.methods.update = function (user) {
+    const prevName = this.name;
+    const prevYearOfStudy = this.year_of_study;
+    const prevDepartment = this.department_type;
+
+    // 만약, 위의 세개 중에 변경된 점이 있으면, 마일리지를 수정해야 한다.
+    if (prevName != user.name || prevYearOfStudy != user.year_of_study || prevDepartment.description != user.department_type.description) {
+      // 이게 전부 수정하는 것이고 하나만 수정하는 것은 updateOne
+      Mileage.update({user_num: this.user_num}, {name: user.name, year_of_study: user.year_of_study, department_type: user.department_type });
+      TotalMileage.update({user_num: this.user_num}, {name: user.name, year_of_study: user.year_of_study });
+    }
+
+    this.set(user);
+    this.save();
   }
 
   // password 검증

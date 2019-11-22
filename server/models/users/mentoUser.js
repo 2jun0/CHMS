@@ -168,6 +168,12 @@ const MentoUser = mongoose.Schema({
       })
   }
 
+  MentoUser.methods.update = function(user) {
+    this.set(user);
+    this.save();
+  }
+
+
   // password 검증
   MentoUser.methods.verifyPassword = function (password) {
     return this.password === encrypt(password);
