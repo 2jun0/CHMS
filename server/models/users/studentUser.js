@@ -8,17 +8,17 @@ const { filterNullInObject, cloneObject } = require('../../utils/utils');
 // Define Schemes
 const StudentUser = mongoose.Schema({
     user_num:   { type: Number, required: true, unique: true },
-    user_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Usertype'},
+    user_type:  { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Usertype'},
     password:   { type: String, required: true },
     name:       { type: String, required: true },
     join_date:  { type: Date, default: Date.now },
     year_of_study:    { type: Number, required: true },
-    major_type: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Majortype'},
-    department_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Departmenttype'},
+    major_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Majortype'},
+    department_type:  { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Departmenttype'},
     github_id:  { type: String, required: true},
     email:      { type: String, required: true},
     auth_key:   { type: String, required: true},
-    auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
+    auth_state: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Authstate'},
     new_email:  { type: String },
     new_password:     { type: String }
   }, {
