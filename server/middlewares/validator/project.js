@@ -63,7 +63,7 @@ exports.checkProjectInputs = function(inputs_key, containOutputs, containEvaluat
 		oneOf([
 			body(inputs_key+'.mento_num').not().exists(),
 			body(inputs_key+'.mento_num').isIn([null, undefined]),
-			body(inputs_key+'.mento_num').exists().not().isEmpty().isInt().withMessage('멘토번호 는 숫자여야합니다.')
+			body(inputs_key+'.mento_num').exists().not().isEmpty().isInt().withMessage('멘토번호는 숫자여야합니다.')
 		]),
 
 		body(inputs_key+'.project_type').exists().not().isEmpty().withMessage('프로젝트 구분을 입력해야 합니다.')
