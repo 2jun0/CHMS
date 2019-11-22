@@ -25,7 +25,8 @@
                                     <option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
                                 </select>
                                 <h6 *ngIf="accept_method" class="extra">*증빙서류 : {{accept_method}}</h6>
-                                <h6 *ngIf="remark" class="extra">*비고     : {{remark}}</h6>
+                                <pre *ngIf="remark" class="extra" style="font-size: 12px ; font-family: Noto Sans KR;
+                                font-weight: 300;">*비고 : {{remark}}</pre>
                             </div>
                         </div>
                     </div>

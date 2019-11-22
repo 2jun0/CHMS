@@ -40,6 +40,7 @@ export class InputMileageComponent implements OnInit {
   majorDescription : string;
   accept_method: string;
   remark: string;
+  tmp: string;
 
   constructor(
     private router : Router,
@@ -107,7 +108,10 @@ export class InputMileageComponent implements OnInit {
       this.code_preview.setValue(value);
       this.score.setValue(mileageCode[value]['score']);
       this.accept_method = mileageCode[value]['accept_method'];
-      this.remark = mileageCode[value]['remark'];
+
+      this.tmp = mileageCode[value]['remark'];
+      console.log();
+      this.remark = this.tmp.split("ent").join("\n");
     }
     
     //메뉴 선택시 이전 값들 제거
