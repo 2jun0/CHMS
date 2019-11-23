@@ -1,297 +1,295 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">프로젝트 생성</h4>
-            </div>
-            <div class="card-body">
-                <form [formGroup]='newProjectForm' (ngSubmit)='addProject()'>
-                    <div class="col">
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">프로젝트 제목(한글)</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <input formControlName="kr_title" type="text" class="form-control">
-                                </div>
+<div class="center-content">
+    <div class="card p70">
+        <div class="card-header">
+            <h4 class="card-title">프로젝트 생성</h4>
+        </div>
+        <div class="card-body">
+            <form [formGroup]='newProjectForm' (ngSubmit)='addProject()'>
+                <div class="col">
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">프로젝트 제목(한글)</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input formControlName="kr_title" type="text" class="form-control">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">프로젝트 제목(영문)</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <input formControlName="en_title" type="text" class="form-control">
-                                </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">프로젝트 제목(영문)</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input formControlName="en_title" type="text" class="form-control">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">예상 수행 팀원 수</label>
-                                <div class="col row">
-                                    <div class="col sm"> 
-                                        <input formControlName="member_count" type="text" class="form-control">
-                                    </div>
-                                    <span class="input-extra">(명)</span>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">예상 수행 팀원 수</label>
+                            <div class="col row">
+                                <div class="col sm"> 
+                                    <input formControlName="member_count" type="number" min="1" step="1" class="form-control">
                                 </div>
+                                <span class="input-extra">(명)</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">지도교수 성명</label>
-                                <div class="col-sm-10 col-md-3">
-                                    <input *ngIf="!prof_num.value" #profName type="text" class="form-control" (keydown.enter)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">
-                                    <input *ngIf="prof_num.value"  type="text" class="form-control" value="{{newProf.name}}#{{prof_num.value}}" [disabled]="true">
-                                </div>
-                                <button *ngIf="!prof_num.value" class="btn btn-fill" type="button" (click)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
-                                <button *ngIf="prof_num.value" class="btn icon-btn" (click)="removeProfNum()" type="button">
-                                        <i class="nc-icon nc-simple-remove"></i></button>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">지도교수 성명</label>
+                            <div class="col-sm-10 col-md-3">
+                                <input *ngIf="!prof_num.value" #profName type="text" class="form-control" (keydown.enter)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">
+                                <input *ngIf="prof_num.value"  type="text" class="form-control" value="{{newProf.name}}#{{prof_num.value}}" [disabled]="true">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">멘토 성명</label>
-                                <div class="col-sm-10 col-md-3">
-                                    <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control" (keydown.enter)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
-                                    <input *ngIf="mento_num.value"  type="text" class="form-control" value="{{newMento.name}}#{{mento_num.value}}" [disabled]="true">
-                                </div>
-                                <button *ngIf="!mento_num.value" class="btn btn-fill" type="button" (click)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
-                                <button *ngIf="mento_num.value" class="btn icon-btn" (click)="removeMentoNum()" type="button">
+                            <button *ngIf="!prof_num.value" class="btn btn-fill" type="button" (click)="searchProfMento.openModal(((profName)?profName.value:''), 'professor')">검색</button>
+                            <button *ngIf="prof_num.value" class="btn icon-btn" (click)="removeProfNum()" type="button">
                                     <i class="nc-icon nc-simple-remove"></i></button>
-                            </div>
                         </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">팀원 모집기간</label>
-                                <div formGroupName="recruit_period" class="col-sm-10 col-md-6 edit-date-range">
-                                    <div class="start">
-                                        <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
-                                            bsDatepicker [minDate]="today" [maxDate]="recruit_period.value.end_date"
-                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
-                                    </div>
-                                    <span>~</span>
-                                    <div class="end">
-                                        <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
-                                            bsDatepicker [minDate]="recruit_period.value.start_date" [maxDate]="exec_period.value.start_date"
-                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">멘토 성명</label>
+                            <div class="col-sm-10 col-md-3">
+                                <input *ngIf="!mento_num.value" #mentoName type="text" class="form-control" (keydown.enter)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">
+                                <input *ngIf="mento_num.value"  type="text" class="form-control" value="{{newMento.name}}#{{mento_num.value}}" [disabled]="true">
                             </div>
+                            <button *ngIf="!mento_num.value" class="btn btn-fill" type="button" (click)="searchProfMento.openModal(((mentoName)?mentoName.value:''), 'mento')">검색</button>
+                            <button *ngIf="mento_num.value" class="btn icon-btn" (click)="removeMentoNum()" type="button">
+                                <i class="nc-icon nc-simple-remove"></i></button>
                         </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">수행 기간</label>
-                                <div formGroupName="exec_period" class="col-sm-10 col-md-6 edit-date-range">
-                                    <div class="start">
-                                        <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
-                                            bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
-                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
-                                    </div>
-                                    <span>~</span>
-                                    <div class="end">
-                                        <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
-                                            bsDatepicker [minDate]="exec_period.value.start_date"
-                                            [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
-                                    </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">팀원 모집기간</label>
+                            <div formGroupName="recruit_period" class="col-sm-10 col-md-6 edit-date-range">
+                                <div class="start">
+                                    <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
+                                        bsDatepicker [minDate]="today" [maxDate]="recruit_period.value.end_date"
+                                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">프로젝트 구분</label>
-                                <div class="col radio-wapper">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" value='class'
-                                            id="project_type1" name="project_type" formControlName="project_type"
-                                            class="custom-control-input">
-                                        <label class="custom-control-label" for="project_type1">교과목 프로젝트</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" value='contest'
-                                            id="project_type2" name="project_type" formControlName="project_type"
-                                            class="custom-control-input">
-                                        <label class="custom-control-label" for="project_type2">공모전 프로젝트</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" value='others'
-                                            id="project_type3" name="project_type" formControlName="project_type"
-                                            class="custom-control-input">
-                                        <label class="custom-control-label" for="project_type3">기타 프로젝트</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="project_type.value == 'class'" class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">교과목 이름</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <input formControlName="class_contest_name" type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div *ngIf="project_type.value == 'contest'" class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">공모전 이름</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <input formControlName="class_contest_name" type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">프로젝트 영역</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <select formControlName="project_area_type"  class="form-control">
-                                        <option *ngFor="let option of projectAreaOptions"
-                                            [ngValue]="option.key">{{option.value}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div> 
-                        <ng-container formGroupName="intro">
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 주요 내용 소개(한글)</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <textarea formControlName="kr_description" type="text"
-                                            class="form-control long-textarea"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 주요 내용 소개(영문)</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <textarea formControlName="en_description" type="text"
-                                            class="form-control long-textarea"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 기대효과 및 활용분야</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <textarea formControlName="expected_effect" type="text"
-                                            class="form-control short-textarea"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 개발 배경 및 필요성</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <textarea formControlName="necessity" type="text"
-                                            class="form-control short-textarea"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 예상 결과물 이미지</label>
-                                    <div class="col-sm-10 col-md-6">
-                                            <img *ngIf="previewImage" [src]="previewImage" class="preview-img md">
-                                        <div class="custom-file">
-                                            <input accept="image/*" class="custom-file-input" type="file" id="inputGroupFile01" #img_predicted (change)="onPredictedImgChange(img_predicted.files)">
-                                            <label *ngIf="img_predicted.files && img_predicted.files.length > 0" class="custom-file-label" for="inputGroupFile01">{{img_predicted.files[0].name}}</label>
-                                            <label *ngIf="!img_predicted.files || img_predicted.files.length == 0" class="custom-file-label" for="inputGroupFile01">파일 선택</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 개발환경</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <input formControlName="develop_env" type="text" class="form-control">
-                                    </div>
-                                </div>
-                            </div> 
-                            <div class="form-group">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 주요기능 소개</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <textarea formControlName="functions" type="text"
-                                            class="form-control long-textarea"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="item row languages" formArrayName="languages">
-                                    <label class="col-md-2 control-label">프로젝트 사용언어</label>
-                                    <div class="col-md-6">
-                                        <ng-container *ngFor="let language of languages.controls; let i = index;">
-                                            <ng-container [formGroupName]="i">
-                                                <span *ngIf="i < languages.controls.length - 1">
-                                                    {{languageTypes[language.get('type').value]}}
-                                                </span>
-                                                <span *ngIf="i == languages.controls.length - 1">
-                                                    <div class="update">
-                                                        <select formControlName="type" class="type" (change)="onSelectLanguage(language.get('type').value)">
-                                                            <ng-container *ngFor="let option of languageOptions">
-                                                                <option [hidden]="selectedLanguageOptions.includes(option)"
-                                                                    [ngValue]="option.key">{{option.value}}</option>
-                                                            </ng-container>
-                                                        </select>
-                                                        <i (click)="delLanguageForm(language)" class="material-icons">clear</i>
-                                                    </div>
-                                                </span>
-                                            </ng-container>
-                                        </ng-container>
-                                        <button (click)="addLanguageForm()" type="button" class="btn extra-btn"><i
-                                            class="material-icons">add</i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group opensources">
-                                <div class="item row">
-                                    <label class="col-md-2 control-label">프로젝트 활용 오픈소스 소프트웨어</label>
-                                    <div class="col-sm-10 col-md-6">
-                                        <ul class="line" formArrayName="opensources">
-                                            <li *ngFor="let opensource of opensources.controls; let i = index;">
-                                                <div [formGroupName]="i">
-                                                    <div class="item row">
-                                                        <label class="col-md-2">이름</label>
-                                                        <input formControlName="name" type="text" class="form-control col-md-10">
-                                                    </div>
-                                                    <div class="item row">
-                                                        <label class="col-md-2">라이선스</label>
-                                                        <input formControlName="license" type="text" class="form-control col-md-10">
-                                                    </div>
-                                                    <div class="item row">
-                                                        <label class="col-md-2">활용분야</label>
-                                                        <input formControlName="application_field" type="text"
-                                                            class="form-control col-md-10">
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="add-del-btn col-md-2">
-                                        <!-- 삭제와 추가 버튼(순서대로) -->
-                                        <button *ngIf="(opensourceCount != 1)"
-                                            class="btn btn-fill icon-btn" (click)="delOpensourceForm()" type="button">
-                                            <i class="nc-icon nc-simple-remove"></i>
-                                        </button>
-                                        <button class="btn btn-fill icon-btn"
-                                            (click)="addOpensourceForm()" type="button">
-                                            <i class="nc-icon nc-simple-add"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </ng-container>
-                        <div class="form-group">
-                            <div class="item row">
-                                <label class="col-md-2 control-label">키워드 설정(,로 구분)</label>
-                                <div class="col-sm-10 col-md-6">
-                                    <input formControlName="keywords" type="text" class="form-control">
+                                <span>~</span>
+                                <div class="end">
+                                    <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
+                                        bsDatepicker [minDate]="recruit_period.value.start_date" [maxDate]="exec_period.value.start_date"
+                                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-fill pull-right">추가</button>
-                    <div class="clearfix"></div>
-                </form>
-            </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">수행 기간</label>
+                            <div formGroupName="exec_period" class="col-sm-10 col-md-6 edit-date-range">
+                                <div class="start">
+                                    <input formControlName="start_date" type="text" class="form-control" placeholder="시간 날짜" 
+                                        bsDatepicker [minDate]="recruit_period.value.end_date" [maxDate]="exec_period.value.end_date"
+                                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
+                                </div>
+                                <span>~</span>
+                                <div class="end">
+                                    <input formControlName="end_date" type="text" class="form-control" placeholder="종료 날짜" 
+                                        bsDatepicker [minDate]="exec_period.value.start_date"
+                                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">프로젝트 구분</label>
+                            <div class="col radio-wapper">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" value='class'
+                                        id="project_type1" name="project_type" formControlName="project_type"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="project_type1">교과목 프로젝트</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" value='contest'
+                                        id="project_type2" name="project_type" formControlName="project_type"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="project_type2">공모전 프로젝트</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" value='others'
+                                        id="project_type3" name="project_type" formControlName="project_type"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="project_type3">기타 프로젝트</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="project_type.value == 'class'" class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">교과목 이름</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input formControlName="class_contest_name" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="project_type.value == 'contest'" class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">공모전 이름</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input formControlName="class_contest_name" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">프로젝트 영역</label>
+                            <div class="col-sm-10 col-md-6">
+                                <select formControlName="project_area_type"  class="form-control">
+                                    <option *ngFor="let option of projectAreaOptions"
+                                        [ngValue]="option.key">{{option.value}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> 
+                    <ng-container formGroupName="intro">
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 주요 내용 소개(한글)</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <textarea formControlName="kr_description" type="text"
+                                        class="form-control long-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 주요 내용 소개(영문)</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <textarea formControlName="en_description" type="text"
+                                        class="form-control long-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 기대효과 및 활용분야</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <textarea formControlName="expected_effect" type="text"
+                                        class="form-control short-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 개발 배경 및 필요성</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <textarea formControlName="necessity" type="text"
+                                        class="form-control short-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 예상 결과물 이미지</label>
+                                <div class="col-sm-10 col-md-6">
+                                        <img *ngIf="previewImage" [src]="previewImage" class="preview-img md">
+                                    <div class="custom-file">
+                                        <input accept="image/*" class="custom-file-input" type="file" id="inputGroupFile01" #img_predicted (change)="onPredictedImgChange(img_predicted.files)">
+                                        <label *ngIf="img_predicted.files && img_predicted.files.length > 0" class="custom-file-label" for="inputGroupFile01">{{img_predicted.files[0].name}}</label>
+                                        <label *ngIf="!img_predicted.files || img_predicted.files.length == 0" class="custom-file-label" for="inputGroupFile01">파일 선택</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 개발환경</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <input formControlName="develop_env" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 주요기능 소개</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <textarea formControlName="functions" type="text"
+                                        class="form-control long-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="item row languages" formArrayName="languages">
+                                <label class="col-md-3 control-label">프로젝트 사용언어</label>
+                                <div class="col-md-6">
+                                    <ng-container *ngFor="let language of languages.controls; let i = index;">
+                                        <ng-container [formGroupName]="i">
+                                            <span *ngIf="i < languages.controls.length - 1">
+                                                {{languageTypes[language.get('type').value]}}
+                                            </span>
+                                            <span *ngIf="i == languages.controls.length - 1">
+                                                <div class="update">
+                                                    <select formControlName="type" class="type" (change)="onSelectLanguage(language.get('type').value)">
+                                                        <ng-container *ngFor="let option of languageOptions">
+                                                            <option [hidden]="selectedLanguageOptions.includes(option)"
+                                                                [ngValue]="option.key">{{option.value}}</option>
+                                                        </ng-container>
+                                                    </select>
+                                                    <i (click)="delLanguageForm(language)" class="material-icons">clear</i>
+                                                </div>
+                                            </span>
+                                        </ng-container>
+                                    </ng-container>
+                                    <button (click)="addLanguageForm()" type="button" class="btn extra-btn"><i
+                                        class="material-icons">add</i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group opensources">
+                            <div class="item row">
+                                <label class="col-md-3 control-label">프로젝트 활용 오픈소스 소프트웨어</label>
+                                <div class="col-sm-10 col-md-6">
+                                    <ul class="line" formArrayName="opensources">
+                                        <li *ngFor="let opensource of opensources.controls; let i = index;">
+                                            <div [formGroupName]="i">
+                                                <div class="item row">
+                                                    <label class="col-md-3">이름</label>
+                                                    <input formControlName="name" type="text" class="form-control col-md-10">
+                                                </div>
+                                                <div class="item row">
+                                                    <label class="col-md-3">라이선스</label>
+                                                    <input formControlName="license" type="text" class="form-control col-md-10">
+                                                </div>
+                                                <div class="item row">
+                                                    <label class="col-md-3">활용분야</label>
+                                                    <input formControlName="application_field" type="text"
+                                                        class="form-control col-md-10">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="add-del-btn col-md-2">
+                                    <!-- 삭제와 추가 버튼(순서대로) -->
+                                    <button *ngIf="(opensourceCount != 1)"
+                                        class="btn btn-fill icon-btn" (click)="delOpensourceForm()" type="button">
+                                        <i class="nc-icon nc-simple-remove"></i>
+                                    </button>
+                                    <button class="btn btn-fill icon-btn"
+                                        (click)="addOpensourceForm()" type="button">
+                                        <i class="nc-icon nc-simple-add"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="form-group">
+                        <div class="item row">
+                            <label class="col-md-3 control-label">키워드 설정(,로 구분)</label>
+                            <div class="col-sm-10 col-md-6">
+                                <input formControlName="keywords" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-fill pull-right">추가</button>
+                <div class="clearfix"></div>
+            </form>
         </div>
     </div>
-    <app-search-prof-mento #searchProfMento (setProf)="setProf($event)" (setMento)="setMento($event)"></app-search-prof-mento>
 </div>
+<app-search-prof-mento #searchProfMento (setProf)="setProf($event)" (setMento)="setMento($event)"></app-search-prof-mento>

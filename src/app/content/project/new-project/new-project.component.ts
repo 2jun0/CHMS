@@ -66,7 +66,7 @@ export class NewProjectComponent implements OnInit {
     this.newProjectForm = this.formBuilder.group({
       kr_title: ['', [Validators.required]],
       en_title: ['', [Validators.required]],
-      member_count: ['', [Validators.required]],
+      member_count: [1, [Validators.required]],
       prof_num: 0,
       mento_num: 0,
       recruit_period: this.formBuilder.group({
