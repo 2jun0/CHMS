@@ -169,6 +169,11 @@ const ProfessorUser = mongoose.Schema({
       })
   }
 
+  ProfessorUser.methods.update = function(user) {
+    this.set(user);
+    this.save();
+  }
+
   // password 검증
   ProfessorUser.methods.verifyPassword = function (password) {
     return this.password === User.encrypt(password);

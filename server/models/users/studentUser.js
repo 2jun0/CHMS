@@ -2,23 +2,25 @@ const mongoose = require('mongoose');
 const Codetype = require('../codetype');
 
 const User = require('./user');
+const Mileage = require('../mileages/mileage');
+const TotalMileage = require('../mileages/totalMileage');
 
 const { filterNullInObject, cloneObject } = require('../../utils/utils');
 
 // Define Schemes
 const StudentUser = mongoose.Schema({
     user_num:   { type: Number, required: true, unique: true },
-    user_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Usertype'},
+    user_type:  { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Usertype'},
     password:   { type: String, required: true },
     name:       { type: String, required: true },
     join_date:  { type: Date, default: Date.now },
     year_of_study:    { type: Number, required: true },
-    major_type: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Majortype'},
-    department_type:  { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Departmenttype'},
+    major_type: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Majortype'},
+    department_type:  { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Departmenttype'},
     github_id:  { type: String, required: true},
     email:      { type: String, required: true},
     auth_key:   { type: String, required: true},
-    auth_state: { type: mongoose.Schema.Types.ObjectId, ref: 'Codetype.Authstate'},
+    auth_state: { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Authstate'},
     new_email:  { type: String },
     new_password:     { type: String }
   }, {
@@ -181,6 +183,22 @@ const StudentUser = mongoose.Schema({
       .then(code => {
         this.auth_state = code;
       })
+  }
+
+  StudentUser.methods.update = function (user) {
+    const prevName = this.name;
+    const prevYearOfStudy = this.year_of_study;
+    const prevDepartment = this.department_type;
+
+    // 만약, 위의 세개 중에 변경된 점이 있으면, 마일리지를 수정해야 한다.
+    if (prevName != user.name || prevYearOfStudy != user.year_of_study || prevDepartment.description != user.department_type.description) {
+      // 이게 전부 수정하는 것이고 하나만 수정하는 것은 updateOne
+      Mileage.update({user_num: this.user_num}, {name: user.name, year_of_study: user.year_of_study, department_type: user.department_type });
+      TotalMileage.update({user_num: this.user_num}, {name: user.name, year_of_study: user.year_of_study });
+    }
+
+    this.set(user);
+    this.save();
   }
 
   // password 검증

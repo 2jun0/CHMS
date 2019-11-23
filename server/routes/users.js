@@ -106,12 +106,10 @@ router.post('/update-user', isAuthenticated, doesUserExist('user_num'),
           doc.new_email = doc.email;
           delete doc.email;
 
-          req.user.set(doc);
+          req.user.update(doc);
 
           sendAuthEmail(doc.new_email, doc.name, req.user.auth_key);
-          return req.user.setAuthState('email-changed').then(() => {
-            req.user.save();
-          });
+          return req.user.setAuthState('email-changed');
         }
       }
 

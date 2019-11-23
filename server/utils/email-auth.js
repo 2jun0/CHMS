@@ -21,7 +21,7 @@ exports.sendAuthEmail = (user_email, user_name, auth_key) => {
     html = createEmailAuthHtml(user_name, auth_key);
 
     // TODO :: 변경 필요
-    sendMail({from: '나는 사업단이다. <soo28819test@gmail.com>', to: user_email, subject: 'CHMS 이메일 인증', html: html});
+    sendMail({from: 'CHMS 관리자 <bearpo@naver.com>', to: user_email, subject: 'CHMS 이메일 인증', html: html});
 };
 
 var createNewPasswordHtml = (user_name, new_password) => {

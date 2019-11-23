@@ -394,11 +394,17 @@ router.post('/get-member-project-count', isAuthenticated, (req, res) => {
         projectIds.push(member.project_id);
       }
 
-      return projectFilter = createFilter({
-        _id: projectIds
-      })
-    }).then(filter => {
-      return Project.getCountWithFilter(filter)
+      return projectIds;
+    }).then(projectIds => {
+      if(projectIds.length > 0) {
+        let filter = createFilter({
+          _id: projectIds
+        });
+        
+        return Project.getCountWithFilter(filter)
+      }else{
+        return 0;
+      }
     }).then(count => {
       return res.send(''+count)
     }).catch(err => {
@@ -424,11 +430,17 @@ router.post('/get-member-projects', isAuthenticated, (req, res) => {
         projectIds.push(member.project_id);
       }
 
-      return projectFilter = createFilter({
-        _id: projectIds
-      });
-    }).then(filter => {
-      return Project.findWithFilter(filter, _dataIndex)
+      return projectIds;
+    }).then(projectIds => {
+      if(projectIds.length > 0) {
+        let filter = createFilter({
+          _id: projectIds
+        });
+  
+        return Project.findWithFilter(filter, _dataIndex)
+      }else{
+        return [];
+      }
     }).then(project_docs => {
       objs = [];
       for(var i = 0; i < project_docs.length; i++){
