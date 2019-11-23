@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const MileageCode = require('../mileages/mileageCode');
+
 const TotalMileage = mongoose.Schema({
     user_num:           { type: Number, required: true, unique: true },
     user_name:          { type: String, required: true },
@@ -8,18 +10,18 @@ const TotalMileage = mongoose.Schema({
         code:               { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Mileage', required: true },
         score:              { type: Number, required: true }
     }],
-    total_score:        { type: Number, required: true },
-    last_update_date:   { type: Date, required: true }
+    total_score:        { type: Number, required: true, default: 0 },
+    last_update_date:   { type: Date, required: true, default: Date.now }
 }, {
     collection: 'TotalMileage'
   });
 
-  TotalMileage.statics.create = function () {
-
+  TotalMileage.statics.create = function (data) {
+    return Promise.resolve(this(data));
   }
 
   TotalMileage.statics.delScore = function(mileage_code, score) {
-
+    
   }
 
   TotalMileage.statics.addScore = function(mileage_code, score) {

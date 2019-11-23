@@ -95,6 +95,12 @@ export class AllMileageListComponent implements OnInit {
       user_name: null,
       user_num: null,
       department: null,
+      year_of_study: this.formBuilder.group({
+        1: true,
+        2: true,
+        3: true,
+        4: true
+      }),
       accepted: true,
       not_accepted: true
     });
@@ -164,7 +170,7 @@ export class AllMileageListComponent implements OnInit {
       ({ error }) => {
         notifyError(error);
       }
-    );
+    ); 
 
     this.mileageService.getSumOfScoreInMileage(filter).subscribe(
       (sumOfScore) => {
@@ -270,8 +276,16 @@ export class AllMileageListComponent implements OnInit {
       is_acceptedFilter.push(false)
     }
     if(is_acceptedFilter.length > 0) {
-      filter['is_accepted'] = {$in : is_acceptedFilter};
     }
+    filter['is_accepted'] = {$in : is_acceptedFilter};
+    
+    let year_of_studyFilter = [];
+    for(let i = 1; i <= 4; i++) {
+      if(this.year_of_study.get(i+'').value) {
+        year_of_studyFilter.push(i);
+      }
+    }
+    filter['year_of_study'] = {$in : year_of_studyFilter};
 
     return filter;
   }
@@ -398,6 +412,7 @@ export class AllMileageListComponent implements OnInit {
   get user_name() {return this.searchForm.get('user_name');}
   get user_num() {return this.searchForm.get('user_num');}
   get department() {return this.searchForm.get('department');}
+  get year_of_study() { return this.searchForm.get('year_of_study'); }
   get accepted() {return this.searchForm.get('accepted');}
   get not_accepted() {return this.searchForm.get('not_accepted');}
 }

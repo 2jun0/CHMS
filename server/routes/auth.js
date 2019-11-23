@@ -7,6 +7,7 @@ const { isAuthenticated, verifyUserTypes } = require('../middlewares/auth');
 const { checkStudentUser, checkProfessorUser, checkMentoUser } = require('../middlewares/validator/user');
 // model
 const User = require('../models/users/user');
+const TotalMileage = require('../models/mileages/totalMileage');
 // utils
 const { sendAuthEmail } = require('../utils/email-auth');
 
@@ -35,9 +36,18 @@ router.post('/join/student', checkStudentUser('user', true), (req, res) => {
           .then(doc => {
             sendAuthEmail(doc.email, doc.name, doc.auth_key);
             return doc.save();
+          }).then(doc => {
+            return TotalMileage.create({
+              user_num: doc.user_num,
+              user_name: doc.name,
+              year_of_study: doc.year_of_study,
+              mileage_score: []
+            });
+          }).then(doc => {
+            return doc.save();
           }).catch(err => {
             throw err;
-          });
+          })
       }
     })
     .then(() => res.json({ success: true }))

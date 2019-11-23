@@ -129,6 +129,31 @@
 						</select>
 					</div>
 					<div class="search-item">
+						<label class="control-label">학년으로 검색</label>
+						<div class="check-wapper" formGroupName="year_of_study">
+								<div class="custom-control custom-checkbox">
+										<input type="checkbox" id="1year_of_study" formControlName="1"
+												class="custom-control-input" (change)="gotoPage(0)">
+										<label class="custom-control-label" for="1year_of_study">1학년</label>
+								</div>
+								<div class="custom-control custom-checkbox">
+										<input type="checkbox" id="2year_of_study" formControlName="2"
+												class="custom-control-input" (change)="gotoPage(0)">
+										<label class="custom-control-label" for="2year_of_study">2학년</label>
+								</div>
+								<div class="custom-control custom-checkbox">
+										<input type="checkbox" id="3year_of_study" formControlName="3"
+												class="custom-control-input" (change)="gotoPage(0)">
+										<label class="custom-control-label" for="3year_of_study">3학년</label>
+								</div>
+								<div class="custom-control custom-checkbox">
+										<input type="checkbox" id="4year_of_study" formControlName="4"
+												class="custom-control-input" (change)="gotoPage(0)">
+										<label class="custom-control-label" for="4year_of_study">4학년</label>
+								</div>
+						</div>
+				</div>
+					<div class="search-item">
 						<label class="control-label">사업단 확인 여부</label>
 						<div class="check-wapper">
 							<div class="custom-control custom-checkbox">
