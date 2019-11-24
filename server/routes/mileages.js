@@ -10,6 +10,7 @@ const Mileage = require('../models/mileages/mileage');
 const MileageCode = require('../models/mileages/mileageCode');
 const MajorMileage = require('../models/mileages/majorMileage');
 const MinorMileage = require('../models/mileages/minorMileage');
+const TotalMileage = require('../models/mileages/totalMileage');
 
 // index
 router.get('/', (req, res) => {
@@ -29,6 +30,11 @@ router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']
   Mileage.create(mileage)
     .then(doc => {
       doc.save();
+
+      return TotalMileage.findOneByUserNum(mileage.user_num);
+    }).then(total_doc => {
+      return total_doc.addScore(mileage.code[0], mileage.score);
+    }).then(()=> {
       res.send({ success: true});
     }).catch(err => {
       res.status(403).json({ success: false, message: err.message });
@@ -90,7 +96,19 @@ router.post('/update-is-accepted', isAuthenticated, verifyUserTypes(['admin']), 
 
   mileage.updateIsAccepted(is_accepted);
 
-  return res.json({ success: true })
+  TotalMileage.findOneByUserNum(mileage.user_num)
+    .then(total_doc => {
+      if(!mileage.is_accepted && is_accepted) {
+        return total_doc.addScore(mileage.code[0], mileage.score);
+      }else if(mileage.is_accepted){
+        return total_doc.delScore(mileage.code[0], mileage.score);
+      }
+    }).then(() => {
+      return res.json({ success: true });
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
 });
 
 /*
@@ -105,6 +123,10 @@ router.post('/delete-mileage', isAuthenticated, verifyUserTypes(['student','admi
 
   Mileage.deleteById(mileage_id)
     .then(() => {
+      return TotalMileage.findOneByUserNum(mileage.user_num);
+    }).then(total_doc => {
+      return total_doc.delScore(mileage.code[0], mileage.score);
+    }).then(() => {
       return res.json({ success: true })
     }).catch(err => {
       res.status(403).json({ success: false, message: err.message });

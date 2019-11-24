@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
-const MileageCode = require('../mileages/mileageCode');
+const MajorMileage = require('../mileages/majorMileage');
 
 const TotalMileage = mongoose.Schema({
     user_num:           { type: Number, required: true, unique: true },
     user_name:          { type: String, required: true },
     year_of_study:      { type: Number, required: true },
     mileage_score:      [{
-        code:               { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.Mileage', required: true },
+        code:               { type: mongoose.SchemaTypes.ObjectId, ref: 'Codetype.MajorMileage', required: true },
         score:              { type: Number, required: true }
     }],
     total_score:        { type: Number, required: true, default: 0 },
@@ -20,12 +20,44 @@ const TotalMileage = mongoose.Schema({
     return Promise.resolve(this(data));
   }
 
-  TotalMileage.statics.delScore = function(mileage_code, score) {
-    
+  TotalMileage.methods.delScore = function(major_code, score) {
+    for(let item of this.mileage_score) {
+        if(item.code.description == major_code) {
+            item.code.score -= score;
+            this.save();
+            return;
+        }
+    }
   }
 
-  TotalMileage.statics.addScore = function(mileage_code, score) {
+  TotalMileage.methods.addScore = function(major_code, score) {
+    let isExists = false;
 
+    for(let item of this.mileage_score) {
+        if(item.code.description == major_code) {
+            isExists = true;
+
+            item.code.score += score;
+            this.save();
+            return;
+        }
+    }
+
+    if(!isExists) {
+        return MajorMileage.findOneByCode(major_code).then(code => {
+            this.mileage_score.push(
+                {
+                    code,
+                    score
+                }
+            )
+            this.save();
+        })
+    }
+  }
+
+  TotalMileage.methods.findOneByUserNum = function(user_num) {
+      this.find({user_nunm: user_num}).populate({})
   }
 
   TotalMileage.methods.toCustomObject = function() {
