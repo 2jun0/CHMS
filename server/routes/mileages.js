@@ -187,7 +187,7 @@ router.post('/get-my-mileage-count', isAuthenticated, verifyUserTypes(['student'
 });
 
 /*
-  마일리지 얻기
+  Get 마일리지
   POST /mileage/get-mileages
   JWT Token admin / _dataIndex{start, count}, _filter
 */
@@ -232,6 +232,52 @@ router.post('/get-mileage-count', isAuthenticated, verifyUserTypes(['admin']), (
         console.log(err);
       });
   });
+});
+
+/*
+  마일리지 총합 개수 구하기
+  POST /mileage/get-total-mileage-count
+  JWT Token admin / _filter
+*/
+router.post('/get-total-mileage-count', isAuthenticated, verifyUserTypes(['admin']), (req, res) => {
+  console.log('[POST] /mileage/get-total-mileage-count');
+
+  const { _filter } = req.body;
+  let filter = _filter;
+
+  TotalMileage.findCountWithFilter(filter)
+    .then(count => {
+      return res.send(count+'');
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
+});
+
+/*
+  Gett 마일리지 총합
+  POST /mileage/get-total-mileages
+  JWT Token admin / _dataIndex{start, count}, _filter
+*/
+router.post('/get-total-mileages', isAuthenticated, verifyUserTypes(['admin']), (req, res) => {
+  console.log('[POST] /mileage/get-total-mileages');
+
+  const { _dataIndex, _filter } = req.body;
+  let filter = _filter;
+
+  TotalMileage.findWithFilter(filter, _dataIndex)
+    .then(docs => {
+      let objs = [];
+
+      for(var doc of docs) {
+        objs.push(doc.toCustomObject());
+      }
+
+      return res.send(objs);
+    }).catch(err => {
+      res.status(403).json({ success: false, message: err.message });
+      console.log(err);
+    });
 });
 
 /*

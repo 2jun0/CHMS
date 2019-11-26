@@ -121,12 +121,36 @@ TotalMileage.methods.resetScore = function(user_num) {
 }
 
 TotalMileage.methods.toCustomObject = function () {
+  let mileage_score = [];
+
+  for(var item of this.mileage_score) {
+    mileage_score.push({
+      code: item.code.code,
+      score: item.score
+    });
+  }
+
   return {
     id: this._id,
     user_num: this.user_num,
     user_name: this.user_name,
     year_of_study: this.year_of_study,
-    //......
+    mileage_score: mileage_score,
+    total_score: this.total_score,
+    last_update_date: this.last_update_date,
+  }
+}
+
+TotalMileage.statics.getCountwithFilter = function(filter) {
+  return this.count(filter);
+}
+
+TotalMileage.statics.findWithFilter = function(filter, dataIndex) {
+  // if start exists
+  if(dataIndex){
+    return this.find(filter).populate({ path: 'mileage_score.code' }).sort({ "created_date" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+  }else{
+    return this.find(filter).populate({ path: 'mileage_score.code' }).sort({ "created_date" : -1 });
   }
 }
 
