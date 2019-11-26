@@ -80,8 +80,8 @@ exports.checkStudentUser = function(inputs_key, isCreateMode=false, isAdmin=fals
 			.isString().trim().withMessage('깃허브 아이디 형식이 잘못되었습니다.'),
 		body(inputs_key+'.year_of_study').exists().not().isEmpty().withMessage('학년을 입력해주세요')
 			.isInt({ min: 1, max: 4 }).withMessage('학년은 1과 4사이의 정수여야 합니다.'),
-		body(inputs_key+'.major_type').exists().not().isEmpty().withMessage('학과를 입력해주세요'),
-		body(inputs_key+'.department_type').exists().not().isEmpty().withMessage('소속학과를 입력해주세요')
+		body(inputs_key+'.department_type').exists().not().isEmpty().withMessage('소속학과를 입력해주세요'),
+		body(inputs_key+'.major_type').exists().not().isEmpty().withMessage('전공을 입력해주세요'),
 	]);
 
 	if(showError) { return checks(checkArray); }

@@ -19,7 +19,7 @@ const TotalMileage = mongoose.Schema({
 });
 
 TotalMileage.statics.create = function (data) {
-  return Promise.resolve(this(data));
+  return Promise.resolve(new this(data));
 }
 
 TotalMileage.methods.delScore = function (major_code, score) {
@@ -99,8 +99,8 @@ TotalMileage.statics.findOneByUserNum = function (user_num) {
           return docs[0];
         }
       }
-    ).then(() => {
-      return this.resetScore();
+    ).then((doc) => {
+      return doc.resetScore();
     });
 }
 
