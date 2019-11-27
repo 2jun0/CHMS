@@ -26,6 +26,9 @@ TotalMileage.methods.delScore = function (major_code, score) {
   for (let item of this.mileage_score) {
     if (item.code.description == major_code) {
       item.code.score -= score;
+      // 토탈에서 뺌
+      this.total_score -= score;
+      this.last_update_date = new Date();
       this.save();
       return;
     }
@@ -43,6 +46,8 @@ TotalMileage.methods.addScore = function (major_code, score) {
 
       // 더해!
       item.code.score += score;
+      // 토탈도 더해!
+      this.total_score += score;
       // 저 - 장
       this.last_update_date = new Date();
       this.save();
@@ -113,10 +118,15 @@ TotalMileage.methods.resetScore = function(user_num) {
 
     for(var doc of docs) {
       let mileageCode = doc.code;
-      promiseArray.push(this.addScore(mileageCode.code[0], mileageCode.score));
+      promiseArray.push(this.addScore(mileageCode.code[0], mileageCode.score)
+        .then(() => {
+          this.total_score += mileageCode.score;
+        }));
     }
 
-    return Promise.all(promiseArray);
+    return Promise.all(promiseArray).then(()=> {
+      this.last_update_date = new Date();
+    });
   })
 }
 
