@@ -105,7 +105,8 @@ TotalMileage.statics.findOneByUserNum = function (user_num) {
         }
       }
     ).then((doc) => {
-      return doc.resetScore();
+      doc.resetScore();
+      return doc;
     });
 }
 
