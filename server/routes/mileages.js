@@ -17,6 +17,15 @@ router.get('/', (req, res) => {
   res.send('mileage router');
 });
 
+//임시함수 : 마일리지 통합 테이블 리셋!
+router.get('/reset-total-score', (req, res) => {
+  TotalMileage.resetAllScore().then(()=> {
+    res.send('초기화 성공~');
+  }).catch(err => {
+    res.status(403).json({ success: false, message: err.message });
+    console.log(err);
+  });
+});
 /* 
   마일리지 추가
   POST /mileage/add-mileage
@@ -33,7 +42,7 @@ router.post('/add-mileage', isAuthenticated, verifyUserTypes(['student','admin']
 
       return TotalMileage.findOneByUserNum(mileage.user_num);
     }).then(total_doc => {
-      return total_doc.addScore(mileage.code[0], mileage.score);
+      return total_doc.addScore(mileage.code.code[0], mileage.score);
     }).then(()=> {
       res.send({ success: true});
     }).catch(err => {
@@ -99,9 +108,9 @@ router.post('/update-is-accepted', isAuthenticated, verifyUserTypes(['admin']), 
   TotalMileage.findOneByUserNum(mileage.user_num)
     .then(total_doc => {
       if(!mileage.is_accepted && is_accepted) {
-        return total_doc.addScore(mileage.code[0], mileage.score);
+        return total_doc.addScore(mileage.code.code[0], mileage.score);
       }else if(mileage.is_accepted){
-        return total_doc.delScore(mileage.code[0], mileage.score);
+        return total_doc.delScore(mileage.code.code[0], mileage.score);
       }
     }).then(() => {
       return res.json({ success: true });
@@ -119,13 +128,14 @@ router.post('/update-is-accepted', isAuthenticated, verifyUserTypes(['admin']), 
 router.post('/delete-mileage', isAuthenticated, verifyUserTypes(['student','admin']),  doesMileageExist('mileage_id'), forceByAdmin(isMileageMine), (req, res) => {
   console.log('[POST] /mileage/delete-mileage');
 
+  const { mileage } = req;
   const { mileage_id } = req.body;
 
   Mileage.deleteById(mileage_id)
     .then(() => {
       return TotalMileage.findOneByUserNum(mileage.user_num);
     }).then(total_doc => {
-      return total_doc.delScore(mileage.code[0], mileage.score);
+      return total_doc.delScore(mileage.code.code[0], mileage.score);
     }).then(() => {
       return res.json({ success: true });
     }).catch(err => {

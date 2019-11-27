@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const MajorMileage = require('../mileages/majorMileage');
-const StudentUser = require('../users/studentUser');
+const User = require('../users/user');
 const Mileage = require('../mileages/mileage');
 
 const TotalMileage = mongoose.Schema({
@@ -57,7 +57,7 @@ TotalMileage.methods.delScore = function (major_code, score) {
 }
 
 TotalMileage.methods.addScore = function (major_code, score) {
-    // 각 마일리지 메이져 코드를 찾아서 점수값을 더한다.
+  // 각 마일리지 메이져 코드를 찾아서 점수값을 더한다.
   switch(major_code) {
     case 'A':
       this.a_total_score += score;
@@ -100,33 +100,48 @@ TotalMileage.statics.findOneByUserNum = function (user_num) {
 
   // 임시 코드 : 테이블이 없으면 추가해서 던져준다.
   return this.find({ user_num: user_num })
-    .then(
-      (docs) => {
+    .then(docs => {
         if (docs.length == 0) {
-          return StudentUser.findOneByUserNum(user_num)
+          const User = require('../users/user');
+          return User.findOneByUserNum(user_num)
             .then(doc => {
-              return TotalMileage.create({
+              return this.create({
                 user_num: doc.user_num,
                 user_name: doc.name,
                 year_of_study: doc.year_of_study
               });
             }).then(doc => {
               return doc.save();
-            }).then(doc => {
-              return doc.resetScore();
             });
         } else {
           return docs[0];
         }
       }
-    ).then((doc) => {
+    ).then(doc => {
       return doc;
     });
 }
 
 // 임시함수 : 총 합을 모든 마일리지 테이블에서 계산해서 넣어준다.
-TotalMileage.methods.resetScore = function(user_num) {
-  return Mileage.findByUserNum(user_num)
+TotalMileage.statics.resetAllScore = function() {
+  const User = require('../users/user');
+  return User.Student.find({})
+    .then(user_docs => {
+      let promiseArray = [];
+      for(var user_doc of user_docs) {
+        promiseArray.push(this.findOneByUserNum(user_doc.user_num)
+          .then(doc => {
+            return doc.resetScore();
+          }));
+      }
+
+      return Promise.all(promiseArray);
+    })
+}
+
+// 임시함수 : 총 합을 모든 마일리지 테이블에서 계산해서 넣어준다.
+TotalMileage.methods.resetScore = function() {
+  return Mileage.findByUserNum(this.user_num)
     .then(docs => {
       let promiseArray = [];
 
@@ -135,9 +150,7 @@ TotalMileage.methods.resetScore = function(user_num) {
         promiseArray.push(this.addScore(mileageCode.code[0], mileageCode.score));
       }
 
-      return Promise.all(promiseArray).then(()=> {
-        this.last_update_date = new Date();
-      });
+      return Promise.all(promiseArray);
   });
 }
 
