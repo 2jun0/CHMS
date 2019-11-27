@@ -127,7 +127,7 @@ router.post('/delete-mileage', isAuthenticated, verifyUserTypes(['student','admi
     }).then(total_doc => {
       return total_doc.delScore(mileage.code[0], mileage.score);
     }).then(() => {
-      return res.json({ success: true })
+      return res.json({ success: true });
     }).catch(err => {
       res.status(403).json({ success: false, message: err.message });
       console.log(err);
