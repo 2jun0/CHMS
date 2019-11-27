@@ -114,8 +114,13 @@ const Mileage = mongoose.Schema({
 
     // find mileages & count by user num
     Mileage.statics.findByUserNum = function(user_num, dataIndex) {
-        return this.find({user_num}).sort({ "input_date" : -1 }).sort({"user_name": -1}).sort({"code.code": -1}).skip(dataIndex.start).limit(dataIndex.count)
+        if(dataIndex) {
+            return this.find({user_num}).sort({ "input_date" : -1 }).sort({"user_name": -1}).sort({"code.code": -1}).skip(dataIndex.start).limit(dataIndex.count)
             .populate({path:'code', populate:{path:"minor", populate:{path:'major'}}});
+        }else{
+            return this.find({user_num}).sort({ "input_date" : -1 }).sort({"user_name": -1}).sort({"code.code": -1})
+            .populate({path:'code', populate:{path:"minor", populate:{path:'major'}}});
+        }
     };
 
     Mileage.statics.findCountByUserNum = function(user_num) {
