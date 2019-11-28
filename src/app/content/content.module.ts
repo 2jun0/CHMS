@@ -46,6 +46,7 @@ import { InputMileageComponent } from './mileage/input-mileage/input-mileage.com
 import { PrintMileageComponent } from '../print/print-mileage/print-mileage.component';
 import { AllMileageListComponent } from './mileage/all-mileage-list/all-mileage-list.component';
 import { PrintMileageListComponent } from '../print/print-mileage-list/print-mileage-list.component';
+import { MileageRankingComponent } from './mileage/mileage-ranking/mileage-ranking.component';
 
 
 defineLocale('ko', koLocale);
@@ -145,6 +146,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {userTypes: ['admin'], errorMsg: '마일리지 조회(관리자)는 관리자만 접근할 수 있습니다.'}
   },
+  {
+    path: 'mileage/mileage-ranking',
+    component: MileageRankingComponent,
+    canActivate: [AuthGuard],
+    data: {userTypes: ['admin'], errorMsg: '마일리지 조회(관리자)는 관리자만 접근할 수 있습니다.'}
+  },
 ]
 
 @NgModule({
@@ -178,7 +185,8 @@ const routes: Routes = [
     ResetPasswordComponent,
     InputMileageComponent,
     MileageDetailComponent,
-    AllMileageListComponent
+    AllMileageListComponent,
+    MileageRankingComponent
   ],
   
   exports: [
