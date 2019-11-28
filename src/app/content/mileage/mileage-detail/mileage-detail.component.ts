@@ -147,8 +147,12 @@ export class MileageDetailComponent implements OnInit {
       if (minor.key == value)
         this.viewMinor = minor.value;
     }
+    for (let code of this.mileageCodeOptions){
+      if (code.key == this.mileage.code)
+        this.viewCode = code.value;
+    }
+
     this.MileageForm.value.minor_code = value;
-    this.viewCode = this.mileageCodeOptions[0].value;
     this.accept_method = mileageCode[thisCode]['accept_method'];
     this.remark = mileageCode[thisCode]['remark'];
   }//end 초기 조회를 위한 함수
