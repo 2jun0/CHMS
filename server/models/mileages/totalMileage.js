@@ -189,6 +189,7 @@ TotalMileage.statics.getCountwithFilter = function(filter) {
 
 TotalMileage.statics.findWithFilter = function(filter, dataIndex) {
   // if start exists
+  console.log(filter);
   if(dataIndex){
     return this.find(filter).sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
   }else{

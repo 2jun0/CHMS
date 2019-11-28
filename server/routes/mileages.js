@@ -255,7 +255,7 @@ router.post('/get-total-mileage-count', isAuthenticated, verifyUserTypes(['admin
   const { _filter } = req.body;
   let filter = _filter;
 
-  TotalMileage.findCountWithFilter(filter)
+  TotalMileage.getCountwithFilter(filter)
     .then(count => {
       return res.send(count+'');
     }).catch(err => {
