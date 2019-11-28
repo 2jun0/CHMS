@@ -107,6 +107,7 @@ export class AccountDetailComponent implements OnInit {
           email: [(studentUser.email)?studentUser.email:'', [
             Validators.required,  Validators.pattern(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/)
           ]],
+          github_id: [(studentUser.github_id)?studentUser.github_id:'', Validators.required],
           auth_state: [(studentUser.auth_state)?studentUser.auth_state:'', Validators.required],
           year_of_study: [(studentUser.year_of_study)?studentUser.year_of_study:'', Validators.required],
           major_type: [(studentUser.major_type)?studentUser.major_type:'', Validators.required],
@@ -301,6 +302,7 @@ export class AccountDetailComponent implements OnInit {
   get auth_state() { return this.userForm.get('auth_state'); }
   get year_of_study() { return this.userForm.get('year_of_study'); }
   get major_type() { return this.userForm.get('major_type'); }
+  get github_id() { return this.userForm.get('github_id'); }
   get workplace() { return this.userForm.get('workplace'); }
   get department() { return this.userForm.get('department'); }
   get job_position() { return this.userForm.get('job_position'); }

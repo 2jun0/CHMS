@@ -41,6 +41,7 @@ router.post('/join/student', checkStudentUser('user', true), (req, res) => {
               user_num: doc.user_num,
               user_name: doc.name,
               year_of_study: doc.year_of_study,
+              department: doc.department_type.description,
             });
           }).then(doc => {
             return doc.save();

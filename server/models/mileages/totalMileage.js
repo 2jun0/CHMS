@@ -7,7 +7,8 @@ const Mileage = require('../mileages/mileage');
 const TotalMileage = mongoose.Schema({
   user_num: { type: Number, required: true, unique: true },
   user_name: { type: String, required: true },
-  year_of_study: { type: Number, required: true, default: 0 },
+  department:    { type: String, required: true },
+  year_of_study: { type: Number, required: true },
   a_total_score: { type: Number, required: true, default: 0 },
   b_total_score: { type: Number, required: true, default: 0 },
   c_total_score: { type: Number, required: true, default: 0 },
@@ -89,8 +90,15 @@ TotalMileage.methods.addScore = function (major_code, score) {
 
 // 모든 점수를 전부 날려버림
 TotalMileage.methods.clearScore = function() {
-  this.mileage_score = [];
   this.total_score = 0;
+  this.a_total_score = 0;
+  this.b_total_score = 0;
+  this.c_total_score = 0;
+  this.d_total_score = 0;
+  this.e_total_score = 0;
+  this.f_total_score = 0;
+  this.g_total_score = 0;
+
   this.last_update_date = new Date();
   return Promise.resolve(this.save());
 }
@@ -108,7 +116,8 @@ TotalMileage.statics.findOneByUserNum = function (user_num) {
               return this.create({
                 user_num: doc.user_num,
                 user_name: doc.name,
-                year_of_study: doc.year_of_study
+                year_of_study: doc.year_of_study,
+                department: doc.department_type.description
               });
             }).then(doc => {
               return doc.save();
@@ -131,6 +140,8 @@ TotalMileage.statics.resetAllScore = function() {
       for(var user_doc of user_docs) {
         promiseArray.push(this.findOneByUserNum(user_doc.user_num)
           .then(doc => {
+            return doc.clearScore();
+          }).then(doc => {
             return doc.resetScore();
           }));
       }

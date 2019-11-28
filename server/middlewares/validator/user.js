@@ -15,7 +15,7 @@ exports.checkUserUpdate = function(inputs_key) {
 			case 'student':
 				checkArray = exports.checkStudentUser(inputs_key, undefined, (token.user_type=='admin')?true:false);
 				break;
-			case 'professor':
+			case 'professor':ĺ
 				checkArray = exports.checkProfessorUser(inputs_key, undefined, (token.user_type=='admin')?true:false);
 				break;
 			case 'mento':
