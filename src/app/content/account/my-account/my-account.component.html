@@ -14,8 +14,8 @@
                 <div class="row item">
                     <label class="col-md-2">이름</label>
                     <div class="col-md-8">
-                        <span *ngIf="!isUpdateMode">{{name.value}}</span>
-                        <input *ngIf="isUpdateMode" formControlName="name" class="form-control"
+                        <span *ngIf="!isUpdateMode || user.user_type == 'admin'">{{name.value}}</span>
+                        <input *ngIf="isUpdateMode && user.user_type != 'admin'" formControlName="name" class="form-control"
                             type="text">
                     </div>
                 </div>
@@ -142,7 +142,7 @@
                     </div>
                 </ng-container>
             </div>
-            <button *ngIf="!isUpdateMode" class="btn pull-right" (click) = "activateUpdateMode()">수정</button>
+            <button *ngIf="!isUpdateMode  && user.user_type != 'admin'" class="btn pull-right" (click) = "activateUpdateMode()">수정</button>
             <button *ngIf="!isUpdateMode" class="btn pull-right" (click) = "openPasswordUpdateModal()">비밀번호 변경</button>
             <button *ngIf="isUpdateMode" class="btn pull-right" (click) = "updateUser()">저장</button>
             <button *ngIf="isUpdateMode" class="btn pull-right" (click) = "deactivateUpdateMode()">취소</button>

@@ -199,6 +199,14 @@ TotalMileage.statics.findWithFilter = function(filter, dataIndex) {
       return this.find(filter).sort({ "b_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
     } else if(filter.major_code == "C"){
       return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == "D"){
+      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == "E"){
+      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == "F"){
+      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == "G"){
+      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
     } else if(filter.major_code == null){
       return this.find(filter).sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
     } 

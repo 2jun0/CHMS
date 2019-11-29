@@ -140,8 +140,8 @@ router.post('/login', checkLogin(), (req, res) => {
       // 비밀번호 체크
       if (!user.verifyPassword(password)) {
         // 관리자 인가요? -> 관리자는 verifyNewPassword 함수가 없다.
-        if(user.user_type == 'admin') {
-          throw new Error('비밀번호가 일치하지 않습니다.'); 
+        if(user.user_type.description == 'admin') {
+          throw new Error('비밀번호가 일치하지 않습니다.');
         }else{
           // 비밀번호 바꾼건가요? (비밀번호 초기화 기능을 사용했는지 여부를 묻는 것)
           if (!user.verifyNewPassword(password)) {
