@@ -90,10 +90,10 @@ export class AllAccountListComponent implements OnInit {
         unauthenticated: true
       }),
       year_of_study: this.formBuilder.group({
-        one: true,
-        two: true,
-        three: true,
-        four: true
+        1: true,
+        2: true,
+        3: true,
+        4: true
       }),
       join_date: null,
     })
@@ -155,28 +155,36 @@ export class AllAccountListComponent implements OnInit {
   createFilter() {
     let filter = {};
 
-    const nameVal = this.name.value.trim();
-    const userNumVal = this.user_num.value;
-
-    if(nameVal) {
-      filter['name'] = nameVal;
+    if(this.name.value) {
+      filter['name'] = this.name.value.trim();
     }
 
-    if(userNumVal) {
-      filter['user_num'] = userNumVal;
+    if(this.user_num.value) {
+      filter['user_num'] = this.user_num.value;
     }
 
-    filter['user_type'] = [];
+    let user_typeFilter = [];
+    if(this.mento_user_type.value) { user_typeFilter.push('mento'); }
+    if(this.professor_user_type.value) { user_typeFilter.push('professor'); }
+    // 학생 세부검색
     if(this.student_user_type.value) {
-      filter['user_type'].push('student');
-  
-      filter['auth_state'] = [];
-      if(this.authenticated_auth_state.value) { filter['auth_state'].push('authenticated'); }
-      if(this.unauthenticated_auth_state.value) { filter['auth_state'].push('unauthenticated'); }
+      user_typeFilter.push('student');
+      
+      let auth_stateFilter = [];
+      if(this.authenticated_auth_state.value) { auth_stateFilter.push('authenticated'); }
+      if(this.unauthenticated_auth_state.value) { auth_stateFilter.push('unauthenticated'); }
+      filter['auth_state'] = {$in : auth_stateFilter};
+      
+      let year_of_studyFilter = [];
+      for(let i = 1; i <= 4; i++) {
+        if(this.year_of_study.get(i+'').value) {
+          year_of_studyFilter.push(i);
+        }
+      }
+      filter['year_of_study'] = {$in : year_of_studyFilter};
     }
-    if(this.mento_user_type.value) { filter['user_type'].push('mento'); }
-    if(this.professor_user_type.value) { filter['user_type'].push('professor'); }
-
+    filter['user_type'] = {$in : user_typeFilter};
+    
     if(this.join_date.value) {
       filter['join_date'] = {$gte: this.join_date.value[0], $lte: this.join_date.value[1]};
     }
@@ -257,9 +265,5 @@ export class AllAccountListComponent implements OnInit {
   get authenticated_auth_state() { return this.auth_state.get('authenticated'); }
   get unauthenticated_auth_state() { return this.auth_state.get('unauthenticated'); }
   get year_of_study() { return this.searchForm.get('year_of_study'); }
-  get one_year_of_study() { return this.year_of_study.get('one'); }
-  get two_year_of_study() { return this.year_of_study.get('two'); }
-  get three_year_of_study() { return this.year_of_study.get('three'); }
-  get four_year_of_study() { return this.year_of_study.get('four'); }
   get join_date() { return this.searchForm.get('join_date'); }
 }

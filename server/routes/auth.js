@@ -130,8 +130,8 @@ router.post('/join/professor', isAuthenticated, verifyUserTypes(['admin']), chec
 */
 router.post('/login', [
   // validation
-  check('user_num')
-    .exists().not().isEmpty().withMessage('사용자번호을 입력해주세요!'),
+  body(inputs_key+'.user_num').exists().not().isEmpty().withMessage('사용자 번호를 입력해주세요.')
+		.isInt().withMessage("사용자 번호는 숫자로만 입력해야 합니다!"),
   check('password')
     .exists().not().isEmpty().withMessage('비밀번호를 입력해주세요!')
 ],

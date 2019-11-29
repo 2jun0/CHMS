@@ -41,7 +41,7 @@ function getCheckUserBase(inputs_key, user_type, isCreateMode = false, isAdmin=f
 	if(isCreateMode) {
 		check = [
 			body(inputs_key+'.user_num').exists().not().isEmpty().withMessage('사용자 번호를 입력해주세요.')
-				.isInt().withMessage("사용자 번호는 정수여야 합니다."),
+				.isInt().withMessage("사용자 번호는 숫자로만 입력해야 합니다!"),
 			body(inputs_key+'.password').exists().not().isEmpty().withMessage('비밀번호를 입력해주세요.')
 				.isLength({ min:6, max:16 }).withMessage('비밀번호는 영문또는 숫자로 입력해야 합니다.')
 				.matches(/[a-zA-Z0-9!@#$%^&*]+/).withMessage('비밀번호는 최소 6자, 최대16자로 입력해야 합니다.')

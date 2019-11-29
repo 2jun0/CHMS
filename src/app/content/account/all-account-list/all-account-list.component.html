@@ -128,7 +128,7 @@
                     </div>
                 </div>
 
-                <!-- <ng-container *ngIf="false">
+                <ng-container *ngIf="student_user_type.value">
                     <h4 class="search-title">학생 세부 검색</h4>
                     <div formGroupName="auth_state" class="search-item">
                         <label class="control-label">이메일 인증 여부</label>
@@ -152,28 +152,28 @@
                         <label class="control-label">학년으로 검색</label>
                         <div class="check-wapper">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" id="1year_of_study" formControlName="one"
-                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <input type="checkbox" id="1year_of_study" formControlName="1"
+                                    class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
                                 <label class="custom-control-label" for="1year_of_study">1학년</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" id="2year_of_study" formControlName="two"
-                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <input type="checkbox" id="2year_of_study" formControlName="2"
+                                    class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
                                 <label class="custom-control-label" for="2year_of_study">2학년</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" id="3year_of_study" formControlName="three"
-                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <input type="checkbox" id="3year_of_study" formControlName="3"
+                                    class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
                                 <label class="custom-control-label" for="3year_of_study">3학년</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" id="4year_of_study" formControlName="four"
-                                    class="custom-control-input" [checked]='false' (change)="gotoPage(0)">
+                                <input type="checkbox" id="4year_of_study" formControlName="4"
+                                    class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
                                 <label class="custom-control-label" for="4year_of_study">4학년</label>
                             </div>
                         </div>
                     </div>
-                </ng-container> -->
+                </ng-container>
             </form>
         </div>
     </div>
