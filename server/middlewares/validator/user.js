@@ -72,6 +72,17 @@ function getCheckUserBase(inputs_key, user_type, isCreateMode = false, isAdmin=f
 	return check;
 }
 
+exports.checkLogin = function(showError = true) {
+	let check = [
+		body('user_num').exists().not().isEmpty().withMessage('사용자 번호를 입력해주세요.')
+		    .isInt().withMessage("사용자 번호는 숫자로만 입력해야 합니다!"),
+	    body('password').exists().not().isEmpty().withMessage('비밀번호를 입력해주세요.')
+	];
+
+	if(showError) { return checks(checkArray); }
+	else{ return checkArray; }
+}
+
 exports.checkStudentUser = function(inputs_key, isCreateMode=false, isAdmin=false, showError = true) {
 	let checkArray = getCheckUserBase(inputs_key, 'student', isCreateMode, isAdmin).concat([
 		body(inputs_key+'.email').exists().not().isEmpty().withMessage('이메일을 입력해주세요')

@@ -241,6 +241,8 @@ router.get('/get-college-types', (req, res) => {
 });
 
 function getFilterOfAllUser(_filter) {
+  let f
+
   return new Promise((resolve, reject) => {
     let filter;
     if (_filter) {

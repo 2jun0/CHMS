@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator');
 const { createToken } = require('../lib/token');
 // middlewares
 const { isAuthenticated, verifyUserTypes } = require('../middlewares/auth');
-const { checkStudentUser, checkProfessorUser, checkMentoUser } = require('../middlewares/validator/user');
+const { checkStudentUser, checkProfessorUser, checkMentoUser, checkLogin } = require('../middlewares/validator/user');
 // model
 const User = require('../models/users/user');
 const TotalMileage = require('../models/mileages/totalMileage');
@@ -128,14 +128,7 @@ router.post('/join/professor', isAuthenticated, verifyUserTypes(['admin']), chec
   POST /auth/login
   { user_num, password }
 */
-router.post('/login', [
-  // validation
-  body(inputs_key+'.user_num').exists().not().isEmpty().withMessage('사용자 번호를 입력해주세요.')
-		.isInt().withMessage("사용자 번호는 숫자로만 입력해야 합니다!"),
-  check('password')
-    .exists().not().isEmpty().withMessage('비밀번호를 입력해주세요!')
-],
-(req, res) => {
+router.post('/login', checkLogin(), (req, res) => {
   const { user_num, password } = req.body;
 
   // user_num에 의한 user 검색
