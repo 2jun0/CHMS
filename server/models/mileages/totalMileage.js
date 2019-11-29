@@ -189,9 +189,19 @@ TotalMileage.statics.getCountwithFilter = function(filter) {
 
 TotalMileage.statics.findWithFilter = function(filter, dataIndex) {
   // if start exists
-  console.log(filter);
+  
+
   if(dataIndex){
-    return this.find(filter).sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    if(filter.major_code == "A"){
+      return this.find(filter).sort({ "a_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == "B"){
+      return this.find(filter).sort({ "b_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == "C"){
+      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } else if(filter.major_code == null){
+      return this.find(filter).sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+    } 
+    
   }else{
     return this.find(filter).sort({ "total_score" : -1 });
   }
