@@ -73,7 +73,7 @@ function getCheckUserBase(inputs_key, user_type, isCreateMode = false, isAdmin=f
 }
 
 exports.checkLogin = function(showError = true) {
-	let check = [
+	let checkArray = [
 		body('user_num').exists().not().isEmpty().withMessage('사용자 번호를 입력해주세요.')
 		    .isInt().withMessage("사용자 번호는 숫자로만 입력해야 합니다!"),
 	    body('password').exists().not().isEmpty().withMessage('비밀번호를 입력해주세요.')
