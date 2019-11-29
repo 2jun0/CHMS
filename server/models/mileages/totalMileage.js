@@ -180,6 +180,7 @@ TotalMileage.methods.toCustomObject = function () {
     g_total_score: this.g_total_score,
     total_score: this.total_score,
     last_update_date: this.last_update_date,
+    department: this.department
   }
 }
 
