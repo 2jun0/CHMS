@@ -44,40 +44,22 @@ export class LoginComponent implements OnInit {
   login() {
     console.log('[payload]', this.loginForm.value);
 
-    let user_num = this.user_num;
-    let password = this.password;
-    if (user_num.errors) {
-      if (user_num.errors.required) {
-        notifyError(new Error('사용자 번호를 입력하세요!'));
-      } else if (user_num.errors.pattern && user_num.touched) {
-        notifyError(new Error('사용자 번호를 숫자로만 입력해야 합니다!'));
-      }
-    } else if(password.errors) {
-      if (password.errors.required) {
-        notifyError(new Error('비밀번호를 입력하세요!'));
-      } else if (password.errors.pattern && password.touched) {
-        notifyError(new Error('비밀번호는 영문또는 숫자로 입력해야 합니다!'));
-      } else if (password.errors.minlength && password.touched || password.errors.maxlength && password.touched) {
-        notifyError(new Error('비밀번호는 최소 6자, 최대16자로 입력해야 합니다!'));
-      }
-    }else {
-      this.auth.login(this.loginForm.value)
-        .subscribe(
-          () => {
-            let userType = this.auth.getUserType();
-            if(userType == 'student') {
-              this.router.navigate(['/project/my-list', 1])
-            }else if(['mento','professor'].includes(userType)) {
-              this.router.navigate(['/project/manage-list', 1])
-            }else if(userType == 'admin'){
-              this.router.navigate(['/']);
-            }
-          },
-          ({ error }) => {
-            notifyError(error);
+    this.auth.login(this.loginForm.value)
+      .subscribe(
+        () => {
+          let userType = this.auth.getUserType();
+          if(userType == 'student') {
+            this.router.navigate(['/project/my-list', 1])
+          }else if(['mento','professor'].includes(userType)) {
+            this.router.navigate(['/project/manage-list', 1])
+          }else if(userType == 'admin'){
+            this.router.navigate(['/']);
           }
-        )
-    }
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      );
   }
 
   get user_num() { return this.loginForm.get('user_num'); }

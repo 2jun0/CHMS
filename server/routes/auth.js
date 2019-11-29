@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator');
 const { createToken } = require('../lib/token');
 // middlewares
 const { isAuthenticated, verifyUserTypes } = require('../middlewares/auth');
-const { checkStudentUser, checkProfessorUser, checkMentoUser } = require('../middlewares/validator/user');
+const { checkStudentUser, checkProfessorUser, checkMentoUser, checkLogin } = require('../middlewares/validator/user');
 // model
 const User = require('../models/users/user');
 const TotalMileage = require('../models/mileages/totalMileage');
@@ -128,14 +128,7 @@ router.post('/join/professor', isAuthenticated, verifyUserTypes(['admin']), chec
   POST /auth/login
   { user_num, password }
 */
-router.post('/login', [
-  // validation
-  check('user_num')
-    .exists().not().isEmpty().withMessage('사용자번호을 입력해주세요!'),
-  check('password')
-    .exists().not().isEmpty().withMessage('비밀번호를 입력해주세요!')
-],
-(req, res) => {
+router.post('/login', checkLogin(), (req, res) => {
   const { user_num, password } = req.body;
 
   // user_num에 의한 user 검색
@@ -147,8 +140,8 @@ router.post('/login', [
       // 비밀번호 체크
       if (!user.verifyPassword(password)) {
         // 관리자 인가요? -> 관리자는 verifyNewPassword 함수가 없다.
-        if(user.user_type == 'admin') {
-          throw new Error('비밀번호가 일치하지 않습니다.'); 
+        if(user.user_type.description == 'admin') {
+          throw new Error('비밀번호가 일치하지 않습니다.');
         }else{
           // 비밀번호 바꾼건가요? (비밀번호 초기화 기능을 사용했는지 여부를 묻는 것)
           if (!user.verifyNewPassword(password)) {
