@@ -191,28 +191,36 @@ TotalMileage.statics.getCountwithFilter = function(filter) {
 TotalMileage.statics.findWithFilter = function(filter, dataIndex) {
   // if start exists
   
+  let docs;
+
+  if(filter.major_code) {
+    // 필터에 major_code가 있으면 안되겠죠??
+    let major_code = filter.major_code;
+    delete filter.major_code;
+
+    if(major_code == "A"){
+      docs = this.find(filter).sort({ "a_total_score" : -1 });
+    } else if(major_code == "B"){
+      docs = this.find(filter).sort({ "b_total_score" : -1 });
+    } else if(major_code == "C"){
+      docs = this.find(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "D"){
+      docs = this.find(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "E"){
+      docs = this.find(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "F"){
+      docs = this.find(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "G"){
+      docs = this.find(filter).sort({ "c_total_score" : -1 });
+    }
+  } else {
+    docs = this.find(filter);
+  }
 
   if(dataIndex){
-    if(filter.major_code == "A"){
-      return this.find(filter).sort({ "a_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == "B"){
-      return this.find(filter).sort({ "b_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == "C"){
-      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == "D"){
-      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == "E"){
-      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == "F"){
-      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == "G"){
-      return this.find(filter).sort({ "c_total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } else if(filter.major_code == null){
-      return this.find(filter).sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
-    } 
-    
+    return docs.sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
   }else{
-    return this.find(filter).sort({ "total_score" : -1 });
+    return docs.sort({ "total_score" : -1 });;
   }
 }
 

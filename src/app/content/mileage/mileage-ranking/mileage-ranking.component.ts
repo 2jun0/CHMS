@@ -19,7 +19,6 @@ import { getMinorMileagesCodes, getMileagesCodes, getDepartmentTypes } from 'src
 
 // models
 import { TotalMileage } from 'src/app/model/mileage';
-import { NumberValueAccessor } from '@angular/forms';
 
 
 @Component({

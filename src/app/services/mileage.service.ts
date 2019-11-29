@@ -96,10 +96,10 @@ export class MileageService {
 
   // get total mileages & count (Only admin)
   getTotalMileageCount(filter?): Observable<number> {
-    return this.http.post<number>(`${this.appUrl}/mileage/get-total-mileage-count`, {_filter: filter}, {headers : this.headers})
+    return this.http.post<number>(`${this.appUrl}/mileage/get-total-mileage-count`, {_filter: filter}, {headers : this.headers});
   }
   getTotalMileages(start: number, count: number, filter?): Observable<TotalMileage[]> {
-    return this.http.post<TotalMileage[]>(`${this.appUrl}/mileage/get-total-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers})
+    return this.http.post<TotalMileage[]>(`${this.appUrl}/mileage/get-total-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers});
   }
 
   // 마일리지 점수 총합 구하기

@@ -265,7 +265,7 @@ router.post('/get-total-mileage-count', isAuthenticated, verifyUserTypes(['admin
 });
 
 /*
-  Gett 마일리지 총합
+  Get 마일리지 총합
   POST /mileage/get-total-mileages
   JWT Token admin / _dataIndex{start, count}, _filter
 */
@@ -442,12 +442,14 @@ async function getFilterOfMileage(_filter) {
         filter.code = {$in: code};
       }).catch(err => {
         console.log(err);
+        throw new Error("필터의 형식이 잘못되었습니다.");
       });
     }else{
       await MileageCode.findOneByCode({'$regex': RegExp('^'+filter.code)}).then(code => {
         filter.code = code;
       }).catch(err => {
         console.log(err);
+        throw new Error("필터의 형식이 잘못되었습니다.");
       });
     }
   }
