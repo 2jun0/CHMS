@@ -39,3 +39,19 @@ export interface MajorMileage {
 	code: string;
 	description: string;
 }
+
+export interface TotalMileage{
+	user_num: number;
+	user_name: string;
+	year_of_study: number;
+	a_total_score: number;
+	b_total_score: number;
+	c_total_score: number;
+	d_total_score: number;
+	e_total_score: number;
+	f_total_score: number;
+	g_total_score: number;
+	total_score: number;
+	last_update_date: Date;
+
+}

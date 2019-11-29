@@ -9,7 +9,7 @@ import mileageCode from "src/assets/json/mileageCode.json";
 import majorMileageCode from "src/assets/json/majorMileageCode.json";
 import minorMileageCode from "src/assets/json/minorMileageCode.json";
 // models
-import { Mileage, MinorMileage, MajorMileage, MileageCode } from '../model/mileage';
+import { Mileage, MinorMileage, MajorMileage, MileageCode, TotalMileage } from '../model/mileage';
 // services
 import { AuthService } from './auth.service';
 
@@ -92,6 +92,14 @@ export class MileageService {
   getMileages(start: number, count: number, filter?): Observable<Mileage[]> {
     return this.http.post<Mileage[]>(`${this.appUrl}/mileage/get-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers})
       .pipe(map(res => { MileageService.adjustMileagesType(res); return res; }));
+  }
+
+  // get total mileages & count (Only admin)
+  getTotalMileageCount(filter?): Observable<number> {
+    return this.http.post<number>(`${this.appUrl}/mileage/get-total-mileage-count`, {_filter: filter}, {headers : this.headers})
+  }
+  getTotalMileages(start: number, count: number, filter?): Observable<TotalMileage[]> {
+    return this.http.post<TotalMileage[]>(`${this.appUrl}/mileage/get-total-mileages`, {_dataIndex:{ start, count}, _filter:filter}, {headers : this.headers})
   }
 
   // 마일리지 점수 총합 구하기

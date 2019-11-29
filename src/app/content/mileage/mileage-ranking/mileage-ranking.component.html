@@ -4,117 +4,111 @@
 			<h4 class="card-title">마일리지 순위 조회(관리자)</h4>
 			<div class="extra">
 				<button class="extra-btn" (click)="downloadExcel()"><img src="/assets/img/excel-icon.png"> </button>
-				<button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button>
+				<!-- <button class="extra-btn" (click)="print()"><i class="material-icons">print</i></button> -->
 			</div>
 		</div>
 		<div class="card-body">
+				<button class="t1 pull-right refresh-btn" (click)="refresh()"><img src="/assets/img/refresh.png"></button>
+				<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
+				<ul class="pagination pagination-sm">
+						<li *ngIf="!isFirstPageRange" class="page-item">	
+							<a class="page-link" (click)="gotoFirstPage()">
+								<i class="material-icons">first_page</i>
+							</a>
+						</li>
+						<li *ngIf="!isFirstPageRange" class="page-item">
+							<a class="page-link" (click)="gotoPreviousPageRange()">
+								<i class="material-icons">chevron_left</i>
+							</a>
+						</li>
+						<ng-container *ngFor="let i of pageIndexRange">
+							<li *ngIf="i === pageIndex" class="page-item active">
+								<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+							</li>
+							<li *ngIf="i !== pageIndex" class="page-item">
+								<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
+							</li>
+						</ng-container>
+						<li *ngIf="!isLastPageRange" class="page-item">
+							<a class="page-link" (click)="gotoNextPageRange()">
+								<i class="material-icons">chevron_right</i>
+							</a>
+						</li>
+						<li *ngIf="!isLastPageRange" class="page-item">
+							<a class="page-link" (click)="gotoLastPage()">
+								<i class="material-icons">last_page</i>
+							</a>
+						</li>
+					</ul>
+					<div>
 				<table class="table table-hover">
 						<thead>
 						  <tr>
-							<th scope="col">순위</th>
+							<th scope="col" style="padding-left: 8px;">순위</th>
 							<th scope="col">학번</th>
+							<th scope="col">학과</th>
 							<th scope="col">이름</th>
 							<th scope="col">총점</th>
+							<th scope="col">참여</th>
+							<th scope="col">우수</th>
+							<th scope="col">봉사</th>
 						  </tr>
 						</thead>
 						<tbody>
-						  <tr>
-							<th scope="row">1</th>
-							<td>2014</td>
-							<td>박</td>
-							<td>35</td>
-						  </tr>
-						  <tr>
-							<th scope="row">2</th>
-							<td>2015</td>
-							<td>김</td>
-							<td>60</td>
-						  </tr>
-						  <tr>
-							<th scope="row">3</th>
-							<td >2016</td>
-							<td>이</td>
-							<td>75</td>
-						  </tr>
+							<tr *ngFor="let totalMileage of totalMileages; let rank = index" >
+								<td style="width: 8%;">{{rank+1+pageIndex*10 }}</td>
+								<td>{{totalMileage.user_num}}</td>
+								<td>{{totalMileage.department}}</td>
+								<td>{{totalMileage.user_name}}</td>
+								<!-- 총합 -->
+								<td>{{totalMileage.total_score}}점</td>
+								<!-- 참여 -->
+								<td>{{totalMileage.a_total_score}}점</td>
+								<!-- 우수 -->
+								<td>{{totalMileage.b_total_score}}점</td>
+								<!-- 봉사 -->
+								<td>{{totalMileage.c_total_score}}점</td>
+							</tr>
 						</tbody>
 					  </table>
-
-
-			<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
-			<ul class="pagination pagination-sm">
-				<li *ngIf="!isFirstPageRange" class="page-item">	
-					<a class="page-link" (click)="gotoFirstPage()">
-						<i class="material-icons">first_page</i>
-					</a>
-				</li>
-				<li *ngIf="!isFirstPageRange" class="page-item">
-					<a class="page-link" (click)="gotoPreviousPageRange()">
-						<i class="material-icons">chevron_left</i>
-					</a>
-				</li>
-				<ng-container *ngFor="let i of pageIndexRange">
-					<li *ngIf="i === pageIndex" class="page-item active">
-						<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
-					</li>
-					<li *ngIf="i !== pageIndex" class="page-item">
-						<a class="page-link" (click)="gotoPage(i)">{{i+1}}</a>
-					</li>
-				</ng-container>
-				<li *ngIf="!isLastPageRange" class="page-item">
-					<a class="page-link" (click)="gotoNextPageRange()">
-						<i class="material-icons">chevron_right</i>
-					</a>
-				</li>
-				<li *ngIf="!isLastPageRange" class="page-item">
-					<a class="page-link" (click)="gotoLastPage()">
-						<i class="material-icons">last_page</i>
-					</a>
-				</li>
-			</ul>
+					</div>
 		</div>
 	</div>
 	<div *ngIf="isSearchActivated" class="card right search">
 			<div class="card-body">
-				<!-- <form [formGroup]='searchForm' class="form-inline form-search" role="form">
+				<form [formGroup]='searchForm' class="form-inline form-search" role="form">
 					<div class="search-item">
-						<label class="control-label">입력날짜 검색</label>
-						<div class="date-wapper">
-							<input formControlName="input_date" type="text" class="form-control date" placeholder="입력날짜"
-								bsDaterangepicker [maxDate]="today" (bsValueChange)="onInputDateChange($event)"
-								[bsConfig]="{ adaptivePosition: true, rangeInputFormat: 'YYYY-MM-DD', isAnimated: true,  containerClass: 'theme-green'}">
-							<a class="reset-btn" (click)="clearInputDate()"><i class="material-icons">clear</i></a>
-						</div>
-					</div>
-					<div class="search-item multi-select">
 						<label class="control-label">마일리지 구분</label>
-						<select formControlName="major_code" class="form-control" (change)="onChangeMajorMileageCode(major_code.value)">
+						<select formControlName="major_code" class="form-control" (change)="onChangeMajorMileageCode(0)">
 							<option [ngValue]="null">모두</option>
 							<option *ngFor="let option of majorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
 						</select>
-						<select *ngIf="major_code.value != null" formControlName="minor_code" class="form-control" (change)="onChangeMinorMileageCode(minor_code.value)">
-							<option [ngValue]="null">모두</option>
-							<option *ngFor="let option of minorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
-						</select>
-						<select *ngIf="major_code.value != null && minor_code.value != null" formControlName="mileage_code" class="form-control" (change)="gotoPage(0)">
-							<option [ngValue]="null">모두</option>
-							<option *ngFor="let option of mileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>
-						</select>
 					</div>
+
 					<div class="search-item">
-						<label class="control-label">학생 이름으로 검색</label>
-						<div>
-							<input formControlName="user_name" class="form-control search-input" type="text"
-								(keyup.enter)="gotoPage(0)" placeholder="학생 이름">
-							<button class="btn" (click)="gotoPage(0)">검색</button>
-						</div>
-					</div>
-					<div class="search-item">
-						<label class="control-label">학번으로 검색</label>
-						<div>
-							<input formControlName="user_num" class="form-control search-input" type="text"
-								(keyup.enter)="gotoPage(0)" placeholder="학번">
-							<button class="btn" (click)="gotoPage(0)">검색</button>
-						</div>
+							<label class="control-label">학년으로 검색</label>
+							<div class="check-wapper" formGroupName="year_of_study">
+									<div class="custom-control custom-checkbox">
+											<input type="checkbox" id="1year_of_study" formControlName="1"
+													class="custom-control-input" (change)="gotoPage(0)">
+											<label class="custom-control-label" for="1year_of_study">1학년</label>
+									</div>
+									<div class="custom-control custom-checkbox">
+											<input type="checkbox" id="2year_of_study" formControlName="2"
+													class="custom-control-input" (change)="gotoPage(0)">
+											<label class="custom-control-label" for="2year_of_study">2학년</label>
+									</div>
+									<div class="custom-control custom-checkbox">
+											<input type="checkbox" id="3year_of_study" formControlName="3"
+													class="custom-control-input" (change)="gotoPage(0)">
+											<label class="custom-control-label" for="3year_of_study">3학년</label>
+									</div>
+									<div class="custom-control custom-checkbox">
+											<input type="checkbox" id="4year_of_study" formControlName="4"
+													class="custom-control-input" (change)="gotoPage(0)">
+											<label class="custom-control-label" for="4year_of_study">4학년</label>
+									</div>
+							</div>
 					</div>
 					<div class="search-item multi-select">
 						<label class="control-label">학과로 검색</label>
@@ -126,22 +120,7 @@
 							<option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
 						</select>
 					</div>
-					<div class="search-item">
-						<label class="control-label">사업단 확인 여부</label>
-						<div class="check-wapper">
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" id="accepted" formControlName="accepted"
-									class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
-								<label class="custom-control-label" for="accepted">확인</label>
-							</div>
-							<div class="custom-control custom-checkbox">
-								<input type="checkbox" id="not_accepted" formControlName="not_accepted"
-									class="custom-control-input" [checked]='true' (change)="gotoPage(0)">
-								<label class="custom-control-label" for="not_accepted">미확인</label>
-							</div>
-						</div>
-					</div>
-				</form> -->
+				</form>
 			</div>
 		</div>
 </div>

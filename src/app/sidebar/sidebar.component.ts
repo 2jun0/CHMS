@@ -94,7 +94,7 @@ export class SidebarComponent implements OnInit {
   }
 
   gotoAllMileageRanking() {
-    this.router.navigate(['mileage/mileage-ranking']);
+    this.router.navigate(['mileage/mileage-ranking', 1]);
   }
 
   logout() {

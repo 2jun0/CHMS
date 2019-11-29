@@ -147,7 +147,7 @@ const routes: Routes = [
     data: {userTypes: ['admin'], errorMsg: '마일리지 조회(관리자)는 관리자만 접근할 수 있습니다.'}
   },
   {
-    path: 'mileage/mileage-ranking',
+    path: 'mileage/mileage-ranking/:page',
     component: MileageRankingComponent,
     canActivate: [AuthGuard],
     data: {userTypes: ['admin'], errorMsg: '마일리지 조회(관리자)는 관리자만 접근할 수 있습니다.'}

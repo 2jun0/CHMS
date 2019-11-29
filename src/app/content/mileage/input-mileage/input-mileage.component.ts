@@ -110,7 +110,6 @@ export class InputMileageComponent implements OnInit {
       this.accept_method = mileageCode[value]['accept_method'];
 
       this.tmp = mileageCode[value]['remark'];
-      console.log();
       this.remark = this.tmp.split("ent").join("\n");
     }
     
