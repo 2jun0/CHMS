@@ -55,6 +55,7 @@ export class MileageDetailComponent implements OnInit {
   viewCode: string;
   accept_method: string;
   remark: string;
+  tmp: string;
 
   constructor(
     private router : Router,
@@ -154,7 +155,9 @@ export class MileageDetailComponent implements OnInit {
 
     this.MileageForm.value.minor_code = value;
     this.accept_method = mileageCode[thisCode]['accept_method'];
-    this.remark = mileageCode[thisCode]['remark'];
+
+    this.tmp = mileageCode[thisCode]['remark'];
+    this.remark = this.tmp.split("ent").join("\n");
   }//end 초기 조회를 위한 함수
 
   onSubmit(){

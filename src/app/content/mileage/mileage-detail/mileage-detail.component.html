@@ -24,7 +24,8 @@
                                 <br>
                                 <input type="text" class="form-control" value="{{viewCode}}" readonly>
                                 <h6 *ngIf="viewMinor" class="sub">*증빙서류 : {{accept_method}}</h6>
-                                <h6 *ngIf="remark" class="sub">*비고     : {{remark}}</h6>
+                                <pre *ngIf="remark" class="extra1" style="font-size: 12px ; font-family: Noto Sans KR;
+                                font-weight: 300;">*비고 : {{remark}}</pre>
                             </div>  
                         </div>
                     </div>
