@@ -495,7 +495,7 @@ $card-t1-item-margin-size: 30px;
     // left right로 분리됨
     .card{
         &.left{
-            width: 70%;
+            width: 80%;
 
             @media screen and (max-width: 991px){
                 width: 100%;
