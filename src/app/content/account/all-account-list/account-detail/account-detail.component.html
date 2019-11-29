@@ -166,7 +166,7 @@
             </table>
         </form>
 
-        <button *ngIf="!isUpdateMode" class="btn pull-right" (click)="openConfirmDeleteUserModal()">삭제</button>
+        <button *ngIf="!isUpdateMode" class="btn pull-right" (click)="openConfirmDeleteUserModal()">계정 정지</button>
         <button *ngIf="!isUpdateMode" class="btn pull-right" (click)="activateUpdateMode()">수정</button>
         <button *ngIf="isUpdateMode" class="btn pull-right" (click)="updateUser()">저장</button>
         <button *ngIf="isUpdateMode" class="btn pull-right" (click)="deactivateUpdateMode()">취소</button>
@@ -197,10 +197,11 @@
 </ng-template>
 <ng-template #confirmDeleteUserTemplate>
     <div class="modal-header">
-        <h4 class="modal-title">사용자 삭제</h4>
+        <h4 class="modal-title">사용자 계정 정지</h4>
     </div>
     <div class="modal-body text-center">
-        <p>사용자를 정말로 삭제하시겠습니까?</p>
+        <p>사용자 계장을 정말로 정지하시겠습니까?</p>
+        <p>계정이 정지되면 로그인이 제한됩니다.</p>
         <button type="button" class="btn btn-fill btn-default" (click)="closeConfirmDeleteUserModal()">아니오</button>
         <button type="button" class="btn btn-fill btn-primary" (click)="deleteUser()">네</button>
     </div>

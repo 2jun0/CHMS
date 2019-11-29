@@ -135,17 +135,28 @@
                         <div class="check-wapper">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" value='authenticated' id="auth_state1"
-                                    formControlName="authenticated" class="custom-control-input" [checked]='false'
+                                    formControlName="authenticated" class="custom-control-input" [checked]='true'
                                     (change)="gotoPage(0)">
                                 <label class="custom-control-label" for="auth_state1">인증</label>
                             </div>
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" value='unauthenticated' id="auth_state2"
-                                    formControlName="unauthenticated" class="custom-control-input" [checked]='false'
+                                    formControlName="unauthenticated" class="custom-control-input" [checked]='true'
                                     (change)="gotoPage(0)">
                                 <label class="custom-control-label" for="auth_state2">미인증</label>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="search-item">
+                        <label class="control-label">학과로 검색</label>
+						<select #college class="form-control" (change)="onChangeCollegeType(college.value)">
+							<option [ngValue]="null" selected>모두</option>
+							<option *ngFor="let option of collegeTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
+						<select *ngIf="department.value != null" formControlName="department" class="form-control" (change)="this.gotoPage(0)">
+							<option *ngFor="let option of departmentTypeOptions" [ngValue]="option.key">{{option.value}}</option>
+						</select>
                     </div>
 
                     <div formGroupName="year_of_study" class="search-item">

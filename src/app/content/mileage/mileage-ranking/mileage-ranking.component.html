@@ -78,7 +78,7 @@
 			<div class="card-body">
 				<form [formGroup]='searchForm' class="form-inline form-search" role="form">
 					<div class="search-item">
-						<label class="control-label">마일리지 구분</label>
+						<label class="control-label">마일리지 정렬</label>
 						<select formControlName="major_code" class="form-control" (change)="onChangeMajorMileageCode(0)">
 							<option [ngValue]="null">모두</option>
 							<option *ngFor="let option of majorMileageCodeOptions" [ngValue]="option.key">{{option.value}}</option>

@@ -240,27 +240,62 @@ router.get('/get-college-types', (req, res) => {
     });
 });
 
-function getFilterOfAllUser(_filter) {
-  let f
+async function getFilterOfAllUser(_filter) {
+  let filter = {};
 
-  return new Promise((resolve, reject) => {
-    let filter;
-    if (_filter) {
-      filter = createFilter({
-        name: _filter.name,
-        user_num: _filter.user_num,
-        join_date: _filter.join_date
-      })
+  if(_filter) {
+    filter = _filter;
 
-      return addCodetypeToFilter(filter, 'user_type', _filter.user_type, Codetype.Usertype)
-        .then(() => {
-          resolve(filter);
-        })
-    } else {
-      filter = {};
-      resolve(filter);
+    for(var i = 0; i < filter.$or.length; i++) {
+      var userFilter = filter.$or[i];
+
+      switch(userFilter.user_type) {
+        case 'student':
+          // 계정 상태
+          if(userFilter.auth_state) {
+            for(var j = 0; j < userFilter.auth_state.$in.length; j++) {
+              var auth_state = userFilter.auth_state.$in[j];
+
+              await Codetype.Authstate.findOneByDescription(auth_state)
+                .then(code => {
+                  filter.$or[i].auth_state.$in[j] = code;
+                }).catch(err => {
+                  console.log(err);
+                  throw new Error("필터의 형식이 잘못되었습니다.");
+                });
+            }
+          }
+
+          // 학과
+          if(userFilter.department_type) {
+            await Codetype.Departmenttype.findOneByDescription(userFilter.department_type)
+              .then(code => {
+                filter.$or[i].department_type = code;
+              }).catch(err => {
+                console.log(err);
+                throw new Error("필터의 형식이 잘못되었습니다.");
+              });
+          }
+          break;
+        case 'mento':
+          break;
+        case 'professor':
+          break;
+      }
+
+      if(userFilter.user_type) {
+        await Codetype.Usertype.findOneByDescription(userFilter.user_type)
+          .then(code => {
+            filter.$or[i].user_type = code;
+          }).catch(err => {
+            console.log(err);
+            throw new Error("필터의 형식이 잘못되었습니다.");
+          });
+      }
     }
-  });
+  }
+
+  return filter;
 }
 
 module.exports = router;

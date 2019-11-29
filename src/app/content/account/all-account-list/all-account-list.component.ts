@@ -16,6 +16,7 @@ import { UserService } from 'src/app/services/user.service';
 // utils
 import { formatDate, notifyInfo, notifyError } from 'src/util/util';
 import { Option, parseJsonToOptions } from 'src/util/options';
+import { getDepartmentTypes } from 'src/util/codes';
 
 @Component({
   selector: 'app-all-account-list',
@@ -53,6 +54,10 @@ export class AllAccountListComponent implements OnInit {
   pageIndex: number;
   maxPageIndex: number;
   pageIndexRange: Array<number>;
+
+  majorMileageCodeOptions: Option[];
+  collegeTypeOptions: Option[];
+  departmentTypeOptions: Option[];
 
   isFirstPageRange: boolean;
   isLastPageRange: boolean;
@@ -96,8 +101,16 @@ export class AllAccountListComponent implements OnInit {
         4: true
       }),
       join_date: null,
-    })
-    
+      department: null,
+    });
+
+    this.userService.loadCodes.subscribe(
+      () => {
+        this.loadDepartmentTypes();
+      }
+    );
+    this.loadDepartmentTypes();
+
     this.reloadUsers();
   }
 
@@ -163,27 +176,47 @@ export class AllAccountListComponent implements OnInit {
       filter['user_num'] = this.user_num.value;
     }
 
-    let user_typeFilter = [];
-    if(this.mento_user_type.value) { user_typeFilter.push('mento'); }
-    if(this.professor_user_type.value) { user_typeFilter.push('professor'); }
+    let userFilter = [];
+    // 멘토 세부검색
+    if(this.mento_user_type.value) { 
+      let mentoFilter = {};
+      mentoFilter['user_type'] = 'mento';
+      userFilter.push(mentoFilter);
+    }
+    // 교수 세부검색
+    if(this.professor_user_type.value) {
+      let professorFilter = {};
+      professorFilter['user_type'] = 'professor';
+      userFilter.push(professorFilter);
+    }
     // 학생 세부검색
     if(this.student_user_type.value) {
-      user_typeFilter.push('student');
+      let studentFilter = {};
+      studentFilter['user_type'] = 'student';
       
+      // 이메일 인증
       let auth_stateFilter = [];
-      if(this.authenticated_auth_state.value) { auth_stateFilter.push('authenticated'); }
+      if(this.authenticated_auth_state.value) { auth_stateFilter.push('authenticated'); auth_stateFilter.push('email-changed'); }
       if(this.unauthenticated_auth_state.value) { auth_stateFilter.push('unauthenticated'); }
-      filter['auth_state'] = {$in : auth_stateFilter};
-      
+      studentFilter['auth_state'] = {$in : auth_stateFilter};
+
+      // 학과
+      if(this.department.value) {
+        studentFilter['department_type'] = this.department.value;
+      }
+
+      // 학년
       let year_of_studyFilter = [];
       for(let i = 1; i <= 4; i++) {
         if(this.year_of_study.get(i+'').value) {
           year_of_studyFilter.push(i);
         }
       }
-      filter['year_of_study'] = {$in : year_of_studyFilter};
+      studentFilter['year_of_study'] = {$in : year_of_studyFilter};
+
+      userFilter.push(studentFilter);
     }
-    filter['user_type'] = {$in : user_typeFilter};
+    filter['$or'] = userFilter;
     
     if(this.join_date.value) {
       filter['join_date'] = {$gte: this.join_date.value[0], $lte: this.join_date.value[1]};
@@ -238,6 +271,25 @@ export class AllAccountListComponent implements OnInit {
     this.gotoPage(0);
   }
 
+  loadDepartmentTypes() {
+    this.collegeTypeOptions = parseJsonToOptions(collegeTypes, undefined, (json, key) => {
+      return json[key].description
+    });
+  }
+
+  onChangeCollegeType(value) {
+    this.departmentTypeOptions = parseJsonToOptions(getDepartmentTypes(value), undefined, (json, key)=>{
+      return json[key].description;
+    });
+    if(value == '모두' || value == null) {
+      this.department.setValue(null);
+    }else{
+      this.department.setValue(this.departmentTypeOptions[0].key);
+    }
+
+    this.gotoPage(0);
+  }
+
   onFKeyPress(){
     if(this.accountDetailTemplate['isShown']) return; 
 
@@ -258,6 +310,7 @@ export class AllAccountListComponent implements OnInit {
   get name(){ return this.searchForm.get('name'); }
   get user_num(){ return this.searchForm.get('user_num'); }
   get user_type() { return this.searchForm.get('user_type'); }
+  get department() {return this.searchForm.get('department');}
   get student_user_type() { return this.user_type.get('student'); }
   get mento_user_type() { return this.user_type.get('mento'); }
   get professor_user_type() { return this.user_type.get('professor'); }
