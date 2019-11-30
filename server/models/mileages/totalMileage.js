@@ -185,7 +185,37 @@ TotalMileage.methods.toCustomObject = function () {
 }
 
 TotalMileage.statics.getCountwithFilter = function(filter) {
-  return this.count(filter);
+  let docs;
+
+  if(filter.major_code) {
+    // 필터에 major_code가 있으면 안되겠죠??
+    let major_code = filter.major_code;
+    delete filter.major_code;
+
+    if(major_code == "A"){
+      docs = this.count(filter).sort({ "a_total_score" : -1 });
+    } else if(major_code == "B"){
+      docs = this.count(filter).sort({ "b_total_score" : -1 });
+    } else if(major_code == "C"){
+      docs = this.count(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "D"){
+      docs = this.count(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "E"){
+      docs = this.count(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "F"){
+      docs = this.count(filter).sort({ "c_total_score" : -1 });
+    } else if(major_code == "G"){
+      docs = this.count(filter).sort({ "c_total_score" : -1 });
+    }
+  } else {
+    docs = this.count(filter);
+  }
+
+  if(dataIndex){
+    return docs.sort({ "total_score" : -1 }).skip(dataIndex.start).limit(dataIndex.count);
+  }else{
+    return docs.sort({ "total_score" : -1 });;
+  }
 }
 
 TotalMileage.statics.findWithFilter = function(filter, dataIndex) {
