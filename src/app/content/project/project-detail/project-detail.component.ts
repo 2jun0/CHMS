@@ -135,6 +135,7 @@ export class ProjectDetailComponent implements OnInit {
     this.projectService.getProject(projectId)
       .subscribe(
         (project) => {
+          console.log(project);
           this.project = project;
           this.initUpdateForm();
           
@@ -492,7 +493,7 @@ export class ProjectDetailComponent implements OnInit {
     this.projectService.updateProject(this.project.id, payload, this.updatePredictedImgFile)
       .subscribe(
         () => {
-          notifyInfo('정상적으로 수정되었습니다.')
+          notifyInfo('정상적으로 수정되었습니다.');
           this.loadProject(this.projectId);
           this.isUpdateMode = false;
         },

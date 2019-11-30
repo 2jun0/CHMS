@@ -19,7 +19,6 @@ import { PeerReview } from '../model/peerReview';
 })
 export class ProjectService {
   appUrl = environment.apiUrl;
-  TOKEN_NAME = 'jwt_project_token';
 
   constructor(
     private http: HttpClient,
@@ -33,9 +32,15 @@ export class ProjectService {
         map(res => {
           if(img_predicted_file){
             this.uploadFile(img_predicted_file, 'img_predicted_file', res.id)
-              .subscribe(() => {},({ error }) => { throw error; });
+              .subscribe(
+                () => { },
+                error => { throw error; }
+              );
+
+            return res;
+          }else{
+            return res;
           }
-          return res;
         })
       );
   }
