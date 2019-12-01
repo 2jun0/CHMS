@@ -218,8 +218,8 @@ export class NewProjectComponent implements OnInit {
     this.project.addProject(payload, this.predictedImgFile)
       .subscribe(
         (project) => { 
-          notifyInfo('성공적으로 생성되었습니다.');
-          this.router.navigate(['project/detail', project.id]);
+            notifyInfo('성공적으로 생성되었습니다.');
+            this.router.navigate(['/project/detail', project.id]);
         },
         ({ error }) => {
           console.log(error.message);
