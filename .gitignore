@@ -51,4 +51,6 @@ server/.env
 src/environments/*
 src/environments/
 server/files/*
+server/files/projects/*
+server/files/temp/*
 .vscode/launch.json
