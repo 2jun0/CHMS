@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const MajorMileage = require('../mileages/majorMileage');
-const User = require('../users/user');
+const StudentUser = require('../users/studentUser');
 const Mileage = require('../mileages/mileage');
 
 const TotalMileage = mongoose.Schema({
@@ -133,8 +133,8 @@ TotalMileage.statics.findOneByUserNum = function (user_num) {
 
 // 임시함수 : 총 합을 모든 마일리지 테이블에서 계산해서 넣어준다.
 TotalMileage.statics.resetAllScore = function() {
-  const User = require('../users/user');
-  return User.Student.find({})
+  const StudentUser = require('../users/studentUser');
+  return StudentUser.find({})
     .then(user_docs => {
       let promiseArray = [];
       for(var user_doc of user_docs) {
@@ -154,14 +154,14 @@ TotalMileage.statics.resetAllScore = function() {
 TotalMileage.methods.resetScore = function() {
   return Mileage.findByUserNum(this.user_num)
     .then(docs => {
-      let promiseArray = [];
+      return new Promise(async (resolve, reject) => {
+        for(var doc of docs) {
+          let mileageCode = doc.code;
+          await this.addScore(mileageCode.code[0], mileageCode.score);
+        }
 
-      for(var doc of docs) {
-        let mileageCode = doc.code;
-        promiseArray.push(this.addScore(mileageCode.code[0], mileageCode.score));
-      }
-
-      return Promise.all(promiseArray);
+        resolve(this);
+      })
   });
 }
 

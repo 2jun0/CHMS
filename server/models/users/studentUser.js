@@ -112,7 +112,17 @@ const StudentUser = mongoose.Schema({
   StudentUser.statics.findOneByUserNum = function (user_num) {
     return this.joinPromise(this.findOne({ user_num: user_num}));
   };
-  
+
+  // 모든 학생 검색
+  StudentUser.statics.find = function (filter) {
+    const User = require('./user');
+
+    return Codetype.Usertype.findOneByDescription('student')
+      .then(code => {
+        filter.user_type = code;
+        return User.find(filter);
+      });
+  };
   /*
     StudentUser methods function 
   */
