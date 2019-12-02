@@ -56,6 +56,7 @@ export class MileageRankingComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private excelService: ExcelService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -286,6 +287,57 @@ export class MileageRankingComponent implements OnInit {
 
     return filter;
   }
+
+  downloadExcel() {
+    let filter = this.createFilter();
+    this.mileageService.getTotalMileages(0, this.totalMileageCount, filter)
+      .subscribe(
+        (totalmileages) => {
+          let rank = 1;
+          for(var totalmileage of totalmileages) {
+            // id 삭제
+            delete totalmileage.id;
+            //필요없는 데이터 삭제
+            delete totalmileage.d_total_score;
+            delete totalmileage.e_total_score;
+            delete totalmileage.f_total_score;
+            delete totalmileage.g_total_score;
+            delete totalmileage.last_update_date;
+
+            totalmileage['순위'] = rank;
+
+            totalmileage['학년'] = totalmileage.year_of_study;
+            delete totalmileage.year_of_study;
+            
+            totalmileage['학번'] = totalmileage.user_num;
+            delete totalmileage.user_num;
+
+            totalmileage['학과'] = totalmileage.department;
+            delete totalmileage.department;
+            
+            totalmileage['학생 이름'] = totalmileage.user_name;
+            delete totalmileage.user_name;
+
+            totalmileage['마일리지 전체총점'] = totalmileage.total_score;
+            delete totalmileage.total_score;
+            totalmileage['마일리지 참여총점'] = totalmileage.a_total_score;
+            delete totalmileage.a_total_score;
+            totalmileage['마일리지 우수총점'] = totalmileage.b_total_score;
+            delete totalmileage.b_total_score;
+            totalmileage['마일리지 봉사총점'] = totalmileage.c_total_score;
+            delete totalmileage.c_total_score;
+
+            rank = rank+1;
+          }
+
+          this.excelService.exportAsExcelFile(totalmileages, '마일리지 랭킹');
+        },
+        ({ error }) => {
+          notifyError(error);
+        }
+      )
+  }
+
   refresh(){
     this.router.navigate(['http://113.198.137.68:8080/mileage/reset-total-score']);
   }
