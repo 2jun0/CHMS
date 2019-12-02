@@ -308,7 +308,7 @@ export class MileageRankingComponent implements OnInit {
 
             totalmileage['학년'] = totalmileage.year_of_study;
             delete totalmileage.year_of_study;
-            
+
             totalmileage['학번'] = totalmileage.user_num;
             delete totalmileage.user_num;
 
@@ -336,10 +336,6 @@ export class MileageRankingComponent implements OnInit {
           notifyError(error);
         }
       )
-  }
-
-  refresh(){
-    this.router.navigate(['http://113.198.137.68:8080/mileage/reset-total-score']);
   }
 
   get major_code() {return this.searchForm.get('major_code');}
