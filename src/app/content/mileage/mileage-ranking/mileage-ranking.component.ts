@@ -20,6 +20,9 @@ import { getMinorMileagesCodes, getMileagesCodes, getDepartmentTypes } from 'src
 // models
 import { TotalMileage } from 'src/app/model/mileage';
 
+// envs
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-mileage-ranking',
@@ -27,6 +30,7 @@ import { TotalMileage } from 'src/app/model/mileage';
   styleUrls: ['./mileage-ranking.component.scss']
 })
 export class MileageRankingComponent implements OnInit {
+  appUrl = environment.apiUrl;
 
   MILEAGE_COUNT_IN_PAGE: number = 10;
   PAGE_COUNT_IN_RANGE: number = 5;
@@ -287,7 +291,7 @@ export class MileageRankingComponent implements OnInit {
     return filter;
   }
   refresh(){
-    this.router.navigate(['http://113.198.137.68:8080/mileage/reset-total-score']);
+    this.router.navigate([`${this.appUrl}/mileage/reset-total-score`]);
   }
 
   get major_code() {return this.searchForm.get('major_code');}
