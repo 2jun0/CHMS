@@ -199,7 +199,12 @@ export class MileageDetailComponent implements OnInit {
     .subscribe(
       () => {
         this.modify = false;
-        this.router.navigate(['mileage/my-mileage',1]);
+        if(this.authService.getUserType() == "admin"){
+          history.back();
+        }
+        else{
+          this.router.navigate(['mileage/my-mileage',1]);
+        }
         notifyInfo('정상적으로 삭제되었습니다.');
       },
       ({ error }) => {

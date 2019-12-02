@@ -8,7 +8,8 @@
 			</div>
 		</div>
 		<div class="card-body">
-				<button class="t1 pull-right refresh-btn" (click)="refresh()"><img src="/assets/img/refresh.png"></button>
+				<button class="t1 pull-right refresh-btn"><a href="http://113.198.137.68:8080/mileage/reset-total-score">
+					<img src="/assets/img/refresh.png"></a></button>
 				<button class="t1 pull-right filter-btn" (click)="onFKeyPress()">필터(f)</button>
 				<ul class="pagination pagination-sm">
 						<li *ngIf="!isFirstPageRange" class="page-item">	

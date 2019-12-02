@@ -41,6 +41,7 @@ export interface MajorMileage {
 }
 
 export interface TotalMileage{
+	id: string;
 	user_num: number;
 	user_name: string;
 	year_of_study: number;
@@ -53,5 +54,5 @@ export interface TotalMileage{
 	g_total_score: number;
 	total_score: number;
 	last_update_date: Date;
-
+	department: string;
 }
