@@ -82,7 +82,7 @@ Tip 2: you can also add an image using data-image tag
             <li>
                 <div class="collapse" id="mileage">
                     <ul class="nav">
-                        <li>
+                        <li *ngIf="!(menuMode=='admin')">
                             <a class="nav-link" data-toggle="collapse" href="#input-my-mileage" aria-expanded="true">
                                 <i class="nc-icon nc-bullet-list-67"></i>
                                 <p>My 마일리지 입력</p>
@@ -117,7 +117,7 @@ Tip 2: you can also add an image using data-image tag
                                 </li> -->
                             </ul>
                         </div>
-                        <li>
+                        <li *ngIf="!(menuMode=='admin')">
                             <a class="nav-link" (click)="gotoMyMileage()" aria-expanded="true">
                                 <i class="nc-icon nc-single-copy-04"></i>
                                 <p>My 마일리지 조회</p>
